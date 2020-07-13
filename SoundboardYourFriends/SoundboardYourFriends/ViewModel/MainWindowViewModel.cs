@@ -8,6 +8,8 @@ using SoundboardYourFriends.View;
 using SoundboardYourFriends.Core;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using SoundboardYourFriends.Model;
+using System.Collections.ObjectModel;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -15,6 +17,8 @@ namespace SoundboardYourFriends.ViewModel
     {
         #region Member Variables..
         private Key? _recordHotKey;
+        private ObservableCollection<SoundboardRecording> _soundboardRecordingCollection = new ObservableCollection<SoundboardRecording>();
+        private SoundboardRecording _selectedSoundboardRecording;
         private string _recordHotKeyDisplay = "N/A";
         private HwndSource _hwndSource;
 
@@ -46,6 +50,30 @@ namespace SoundboardYourFriends.ViewModel
             }
         }
         #endregion RecordHotkeyDisplay
+
+        #region SelectedSoundboardRecording
+        public SoundboardRecording SelectedSoundboardRecording 
+        { 
+            get { return _selectedSoundboardRecording; }
+            set 
+            { 
+                _selectedSoundboardRecording = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion SelectedSoundboardRecording
+
+        #region SoundboardRecordingCollection
+        public ObservableCollection<SoundboardRecording> SoundboardRecordingCollection 
+        { 
+            get { return _soundboardRecordingCollection; }
+            set 
+            { 
+                _soundboardRecordingCollection = value;
+                RaisePropertyChanged();
+            } 
+        }
+        #endregion SoundboardRecordingCollection
         #endregion Properties..
 
         #region Constructors..
@@ -63,27 +91,28 @@ namespace SoundboardYourFriends.ViewModel
 
         #region Windows..
         [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vlc);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         public IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            // CTRL
             const int WM_HOTKEY = 0x0312;
             switch (msg)
             {
                 case WM_HOTKEY:
 
-                    RecordHotkeyDisplay = "Detected";
                     switch (wParam.ToInt32())
                     {
                         case RECORD_HOTKEY_ID:
                             int vkey = (((int)lParam >> 16) & 0xFFFF);
-                            if (vkey == KeyInterop.VirtualKeyFromKey(Key.F7))
+                            uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(RecordHotkey.Value).ToString("X"), 16);
+
+                            if (vkey == keyCode)
                             {
-                                _recordHotKeyDisplay = "Detected";
+                                BeginAudioRecording();
                             }
+
                             handled = true;
                             break;
                     }
@@ -93,6 +122,14 @@ namespace SoundboardYourFriends.ViewModel
             return IntPtr.Zero;
         }
         #endregion Windows..
+
+        #region BeginAudioRecording
+        private void BeginAudioRecording()
+        {
+            SoundboardRecording TestRecording = new SoundboardRecording() { Name = "Test Recording" };
+            SoundboardRecordingCollection.Add(TestRecording);
+        }
+        #endregion BeginAudioRecording
 
         #region SetAudioDevice
         public void SetAudioDevice(AudioDeviceType audioDeviceType)
@@ -113,18 +150,27 @@ namespace SoundboardYourFriends.ViewModel
             _hwndSource.AddHook(HwndHook);
 
             // Modifiers
-            const int MOD_NONE = 0; // (none)
-            //const int MOD_ALT = 1; // ALT
-            //const int MOD_CONTROL = 2; // CTRL
-            //const int MOD_SHIFT = 4; // SHIFT
-            //const int MOD_WIN = 8; // WINDOWS
+            const uint MOD_NONE = 0x0000; // (none)
+            //const uint MOD_ALT = 0x0001; // ALT
+            //const uint MOD_CONTROL = 0x0002; // CTRL
+            //const uint MOD_SHIFT = 0x0004; // SHIFT
+            //const uint MOD_WIN = 0x0008; // WINDOWS
 
-            if (!RegisterHotKey(viewHandle, RECORD_HOTKEY_ID, MOD_NONE, (int)key))
+            uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(key).ToString("X"), 16);
+            if (!RegisterHotKey(viewHandle, RECORD_HOTKEY_ID, MOD_NONE, keyCode))
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
         }
         #endregion SetRecordHotKey
+
+        #region UnregisterRecordHotkey
+        public void UnregisterRecordHotkey(IntPtr viewHandle)
+        {
+            _hwndSource?.RemoveHook(HwndHook);
+            UnregisterHotKey(viewHandle, RECORD_HOTKEY_ID);
+        }
+        #endregion UnregisterRecordHotkey
         #endregion Methods..
     }
 }

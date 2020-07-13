@@ -76,8 +76,12 @@
 
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0, 10, 0, 0">
-            <ListView>
-
+            <ListView Name="lstSoundboardRecordings" ItemsSource="{Binding SoundboardRecordingCollection}" SelectedItem="{Binding SelectedSoundboardRecording}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="100" Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                    </GridView>
+                </ListView.View>
             </ListView>
         </DockPanel>
     </Grid>

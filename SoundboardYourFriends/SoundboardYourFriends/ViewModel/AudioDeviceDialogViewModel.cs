@@ -42,15 +42,15 @@ namespace SoundboardYourFriends.ViewModel
             var deviceEnumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
             NAudio.CoreAudioApi.DataFlow dataFlow = NAudio.CoreAudioApi.DataFlow.All;
 
-            switch (AudioDeviceType)
-            {
-                case AudioDeviceType.Input:
-                    dataFlow = NAudio.CoreAudioApi.DataFlow.Capture;
-                    break;
-                case AudioDeviceType.Output:
-                    dataFlow = NAudio.CoreAudioApi.DataFlow.Render;
-                    break;
-            }
+            //switch (AudioDeviceType)
+            //{
+            //    case AudioDeviceType.Input:
+            //        dataFlow = NAudio.CoreAudioApi.DataFlow.Capture;
+            //        break;
+            //    case AudioDeviceType.Output:
+            //        dataFlow = NAudio.CoreAudioApi.DataFlow.Render;
+            //        break;
+            //}
 
             foreach (var endpoint in deviceEnumerator.EnumerateAudioEndPoints(dataFlow, NAudio.CoreAudioApi.DeviceState.Active))
             {

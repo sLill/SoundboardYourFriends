@@ -29,13 +29,13 @@ namespace SoundboardYourFriends.View
 
         #region Methods..
         #region Events..
-        #region OnRecordKeyPressed
-        public void OnRecordKeyPressed(object sender, KeyEventArgs e)
+        #region OnKeyPressed
+        public void OnKeyPressed(object sender, KeyEventArgs e)
         {
             _mainWindowViewModel.SetRecordHotKey(new WindowInteropHelper(this).Handle, e.Key);
-            this.KeyDown -= OnRecordKeyPressed;
+            this.KeyDown -= OnKeyPressed;
         }
-        #endregion OnRecordKeyPressed
+        #endregion OnKeyPressed
 
         #region btnListeningDevice_MouseUp
         private void btnListeningDevice_MouseUp(object sender, MouseButtonEventArgs e)
@@ -54,11 +54,19 @@ namespace SoundboardYourFriends.View
         #region btnRecordButton_MouseUp
         private void btnRecordButton_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            this.KeyDown += OnRecordKeyPressed;
+            this.KeyDown += OnKeyPressed;
             _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
         }
         #endregion btnRecordButton_MouseUp
         #endregion Events..
+
+        #region OnClosed
+        protected override void OnClosed(EventArgs e)
+        {
+            _mainWindowViewModel.UnregisterRecordHotkey(new WindowInteropHelper(this).Handle);
+            base.OnClosed(e);
+        }
+        #endregion OnClosed
         #endregion Methods..
     }
 }
