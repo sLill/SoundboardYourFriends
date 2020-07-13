@@ -16,7 +16,11 @@ namespace SoundboardYourFriends.ViewModel
     public class MainWindowViewModel : ObservableObject
     {
         #region Member Variables..
+        private AudioDevice _selectedListeningDevice;
+        private AudioDevice _selectedRecordingDevice;
         private Key? _recordHotKey;
+        private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
+        private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
         private ObservableCollection<SoundboardRecording> _soundboardRecordingCollection = new ObservableCollection<SoundboardRecording>();
         private SoundboardRecording _selectedSoundboardRecording;
         private string _recordHotKeyDisplay = "N/A";
@@ -26,6 +30,30 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Member Variables..
 
         #region Properties..
+        #region SelectedListeningDevicesCollection
+        public ObservableCollection<AudioDevice> SelectedListeningDevicesCollection
+        {
+            get { return _selectedListeningDevicesCollection; }
+            set
+            {
+                _selectedListeningDevicesCollection = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion SelectedListeningDevicesCollection
+
+        #region SelectedOutputDevicesCollection
+        public ObservableCollection<AudioDevice> SelectedOutputDevicesCollection
+        {
+            get { return _selectedOutputDevicesCollection; }
+            set
+            {
+                _selectedOutputDevicesCollection = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion SelectedOutputDevicesCollection
+
         #region RecordHotkey
         public Key? RecordHotkey
         {
@@ -80,7 +108,8 @@ namespace SoundboardYourFriends.ViewModel
         #region MainWindowViewModel
         public MainWindowViewModel()
         {
-
+            SelectedListeningDevicesCollection.Add(new AudioDevice() { FriendlyName = "Logitech Wireless G3310" });
+            SelectedOutputDevicesCollection.Add(new AudioDevice() { FriendlyName = "Realtek HD Audio Speakers" });
         }
         #endregion MainWindowViewModel
         #endregion Constructors..

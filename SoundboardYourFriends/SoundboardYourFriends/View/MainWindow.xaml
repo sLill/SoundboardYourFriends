@@ -5,18 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundboardYourFriends"
         mc:Ignorable="d"
-        Title="Soundboard Your Friends" Height="450" Width="700">
+        Title="Soundboard Your Friends" Height="600" Width="700">
 
     <Window.Resources>
+        <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="8"/>
             <RowDefinition Height="26"/>
-            <RowDefinition Height="24"/>
+            <RowDefinition Height="48"/>
             <RowDefinition Height="26"/>
-            <RowDefinition Height="24"/>
+            <RowDefinition Height="48"/>
             <RowDefinition Height="26*"/>
             <RowDefinition Height="8"/>
         </Grid.RowDefinitions>
@@ -35,7 +38,7 @@
                 </StackPanel>
             </Button>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top">
-                <TextBlock TextDecorations="Underline">Listening Device</TextBlock>
+                <TextBlock TextDecorations="Underline">Listening Devices</TextBlock>
             </Label>
             <ProgressBar BorderThickness="0" Margin="9,10,10,7" Value="30"/>
         </DockPanel>
@@ -52,9 +55,15 @@
         </DockPanel>
         
         <!--Row 2-->
-        <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,-5,0,0">
-            <TextBlock VerticalAlignment="Top" Opacity="0.7">Logitech Wireless G3310</TextBlock>
-        </Label>
+        <DockPanel  Grid.Row="2" Grid.Column="1">
+            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedListeningDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
+                <ListView.View>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
+                        <GridViewColumn DisplayMemberBinding="{Binding FriendlyName}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </DockPanel>
 
         <!--Row 3-->
         <DockPanel Grid.Row="3" Grid.Column="1">
@@ -64,15 +73,21 @@
                 </StackPanel>
             </Button>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top">
-                <TextBlock TextDecorations="Underline">Recording Device</TextBlock>
+                <TextBlock TextDecorations="Underline">Output Devices</TextBlock>
             </Label>
             <ProgressBar BorderThickness="0" Margin="4,10,10,7" Value="60"/>
         </DockPanel>
 
         <!--Row 4-->
-        <Label Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,-5,0,0">
-            <TextBlock VerticalAlignment="Top" Opacity="0.7">Steelseries Arctic Wireless</TextBlock>
-        </Label>
+        <DockPanel Grid.Row="4" Grid.Column="1">
+            <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
+                <ListView.View>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
+                        <GridViewColumn DisplayMemberBinding="{Binding FriendlyName}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </DockPanel>
 
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0, 10, 0, 0">
