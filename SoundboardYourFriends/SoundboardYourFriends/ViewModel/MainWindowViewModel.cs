@@ -10,14 +10,13 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using SoundboardYourFriends.Model;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SoundboardYourFriends.ViewModel
 {
     public class MainWindowViewModel : ObservableObject
     {
         #region Member Variables..
-        private AudioDevice _selectedListeningDevice;
-        private AudioDevice _selectedRecordingDevice;
         private Key? _recordHotKey;
         private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
         private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
@@ -108,8 +107,7 @@ namespace SoundboardYourFriends.ViewModel
         #region MainWindowViewModel
         public MainWindowViewModel()
         {
-            SelectedListeningDevicesCollection.Add(new AudioDevice() { FriendlyName = "Logitech Wireless G3310" });
-            SelectedOutputDevicesCollection.Add(new AudioDevice() { FriendlyName = "Realtek HD Audio Speakers" });
+            GetApplicationConfiguration();
         }
         #endregion MainWindowViewModel
         #endregion Constructors..
@@ -160,12 +158,33 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion BeginAudioRecording
 
+        #region GetApplicationConfiguration
+        private void GetApplicationConfiguration()
+        {
+            RecordHotkey = Key.Up;
+            SelectedListeningDevicesCollection.Add(new AudioDevice() { FriendlyName = "No device(s) selected" });
+            SelectedOutputDevicesCollection.Add(new AudioDevice() { FriendlyName = "No device(s) selected" });
+        }
+        #endregion GetApplicationConfiguration
+
         #region SetAudioDevice
         public void SetAudioDevice(AudioDeviceType audioDeviceType)
         {
             using (AudioDeviceDialog audioDeviceDialog = new AudioDeviceDialog(audioDeviceType))
             {
                 audioDeviceDialog.ShowDialog();
+
+                ObservableCollection<AudioDevice> AudioDeviceCollection = audioDeviceDialog.SelectedAudioDevices == null ? null : new ObservableCollection<AudioDevice>(audioDeviceDialog.SelectedAudioDevices);
+
+                switch(audioDeviceType)
+                {
+                    case AudioDeviceType.Input:
+                        SelectedListeningDevicesCollection =  AudioDeviceCollection;
+                        break;
+                    case AudioDeviceType.Output:
+                        SelectedOutputDevicesCollection =  AudioDeviceCollection;
+                        break;
+                }
             }
         }
         #endregion SetAudioDevice

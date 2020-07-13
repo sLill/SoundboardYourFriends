@@ -1,6 +1,9 @@
-﻿using SoundboardYourFriends.ViewModel;
+﻿using SoundboardYourFriends.Model;
+using SoundboardYourFriends.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,13 +23,16 @@ namespace SoundboardYourFriends.View
         #endregion Member Variables..
 
         #region Properties..
+        #region SelectedAudioDevices
+        public IEnumerable<AudioDevice> SelectedAudioDevices { get { return lstAudioDevices.SelectedItems.Cast<AudioDevice>();  } }
+        #endregion SelectedAudioDevices
         #endregion Properties..
 
         #region Constructors..
         public AudioDeviceDialog(AudioDeviceType audioDeviceType)
         {
             InitializeComponent();
-
+            
             _audioDeviceDialogViewModel = new AudioDeviceDialogViewModel(audioDeviceType);
             DataContext = _audioDeviceDialogViewModel;
         }
