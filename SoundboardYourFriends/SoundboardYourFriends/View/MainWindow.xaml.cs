@@ -1,46 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Interop;
+using SoundboardYourFriends.ViewModel;
 
 namespace SoundboardYourFriends.View
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        #region Member Variables..
+        MainWindowViewModel _mainWindowViewModel;
+        #endregion Member Variables..
+
+        #region Properties..
+        #endregion Properties..
+
+        #region Constructors..
+        #region MainWindow
+        public MainWindow() 
         {
             InitializeComponent();
-        }
 
+            _mainWindowViewModel = new MainWindowViewModel();
+            DataContext = _mainWindowViewModel;
+        }
+        #endregion MainWindow
+        #endregion Constructors..
+
+        #region Methods..
+        #region Events..
+        #region OnRecordKeyPressed
+        public void OnRecordKeyPressed(object sender, KeyEventArgs e)
+        {
+            _mainWindowViewModel.SetRecordHotKey(new WindowInteropHelper(this).Handle, e.Key);
+            this.KeyDown -= OnRecordKeyPressed;
+        }
+        #endregion OnRecordKeyPressed
+
+        #region btnListeningDevice_MouseUp
         private void btnListeningDevice_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            using (AudioDeviceDialog audioDeviceDialog = new AudioDeviceDialog(AudioDeviceType.Output))
-            {
-                audioDeviceDialog.ShowDialog();
-            }
+            _mainWindowViewModel.SetAudioDevice(AudioDeviceType.Output);
         }
+        #endregion btnListeningDevice_MouseUp
 
+        #region btnRecordingDevice_MouseUp
         private void btnRecordingDevice_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            using (AudioDeviceDialog audioDeviceDialog = new AudioDeviceDialog(AudioDeviceType.Input))
-            {
-                audioDeviceDialog.ShowDialog();
-            }
+            _mainWindowViewModel.SetAudioDevice(AudioDeviceType.Input);
         }
+        #endregion btnRecordingDevice_MouseUp
 
+        #region btnRecordButton_MouseUp
         private void btnRecordButton_MouseUp(object sender, MouseButtonEventArgs e)
         {
-
+            this.KeyDown += OnRecordKeyPressed;
+            _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
         }
+        #endregion btnRecordButton_MouseUp
+        #endregion Events..
+        #endregion Methods..
     }
 }

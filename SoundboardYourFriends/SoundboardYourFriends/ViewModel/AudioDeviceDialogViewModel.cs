@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Management;
+using NAudio;
+using SoundboardYourFriends.Core;
 
 namespace SoundboardYourFriends.ViewModel
 {
-    public class AudioDeviceDialogViewModel
+    public class AudioDeviceDialogViewModel : ObservableObject
     {
         #region Member Variables..
         #endregion Member Variables..
 
         #region Properties..
+        #region AudioDevices
+        public List<string> AudioDevices { get; private set; }
+        #endregion AudioDevices
+
         #region AudioDeviceType
         public AudioDeviceType AudioDeviceType { get; private set; }
         #endregion AudioDeviceType
@@ -32,15 +37,24 @@ namespace SoundboardYourFriends.ViewModel
         #region GetWindowsAudioDevices
         private void GetWindowsAudioDevices()
         {
-            ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_SoundDevice");
-            ManagementObjectCollection managementObjectCollection = managementObjectSearcher.Get();
+            AudioDevices = new List<string>();
 
-            foreach (var audioDevice in managementObjectCollection)
+            var deviceEnumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+            NAudio.CoreAudioApi.DataFlow dataFlow = NAudio.CoreAudioApi.DataFlow.All;
+
+            switch (AudioDeviceType)
             {
-               foreach(PropertyData audioDevicePropertyData in audioDevice.Properties)
-                {
+                case AudioDeviceType.Input:
+                    dataFlow = NAudio.CoreAudioApi.DataFlow.Capture;
+                    break;
+                case AudioDeviceType.Output:
+                    dataFlow = NAudio.CoreAudioApi.DataFlow.Render;
+                    break;
+            }
 
-                }
+            foreach (var endpoint in deviceEnumerator.EnumerateAudioEndPoints(dataFlow, NAudio.CoreAudioApi.DeviceState.Active))
+            {
+                AudioDevices.Add(endpoint.FriendlyName);
             }
         }
         #endregion GetWindowsAudioDevices

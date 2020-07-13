@@ -26,9 +26,7 @@
             <Label DockPanel.Dock="Top">
                 <TextBlock VerticalAlignment="Top" FontSize="12" Text="{Binding AudioDeviceType, StringFormat=Audio {0} Devices}"></TextBlock>
             </Label>
-            <ListView Name="lstAudioDevices" DockPanel.Dock="Top" Margin="0,0,0,0">
-
-            </ListView>
+            <ListView Name="lstAudioDevices" DockPanel.Dock="Top" Margin="0,0,0,0" ItemsSource="{Binding AudioDevices}"/>
         </DockPanel>
                 
         <!--Row 3-->
