@@ -32,7 +32,7 @@
 
         <!--Row 1-->
         <DockPanel Grid.Row="1" Grid.Column="1">
-            <Button Name="btnListeningDevice" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" PreviewMouseLeftButtonUp="btnListeningDevice_MouseUp">
+            <Button Name="btnListeningDevices" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" PreviewMouseLeftButtonUp="btnListeningDevices_MouseUp">
                 <StackPanel>
                     <Image Source="/Resources/SettingsGear.png"/>
                 </StackPanel>
@@ -67,7 +67,7 @@
 
         <!--Row 3-->
         <DockPanel Grid.Row="3" Grid.Column="1">
-            <Button Name="btnRecordingDevice" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" PreviewMouseLeftButtonUp="btnRecordingDevice_MouseUp">
+            <Button Name="btnOutputDevices" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" PreviewMouseLeftButtonUp="btnOutputDevices_MouseUp">
                 <StackPanel>
                     <Image Source="/Resources/SettingsGear.png"/>
                 </StackPanel>

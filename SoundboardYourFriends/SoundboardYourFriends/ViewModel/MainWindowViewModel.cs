@@ -11,19 +11,23 @@ using System.ComponentModel;
 using SoundboardYourFriends.Model;
 using System.Collections.ObjectModel;
 using System.Linq;
+using NAudio.Wave;
+using System.IO;
 
 namespace SoundboardYourFriends.ViewModel
 {
     public class MainWindowViewModel : ObservableObject
     {
         #region Member Variables..
+        private bool _isRecording = false;
+        private HwndSource _hwndSource;
         private Key? _recordHotKey;
         private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
         private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
         private ObservableCollection<SoundboardRecording> _soundboardRecordingCollection = new ObservableCollection<SoundboardRecording>();
         private SoundboardRecording _selectedSoundboardRecording;
         private string _recordHotKeyDisplay = "N/A";
-        private HwndSource _hwndSource;
+        private WasapiLoopbackCapture _wasapiLoopbackCapture;
 
         private const int RECORD_HOTKEY_ID = 9000;
         #endregion Member Variables..
@@ -117,11 +121,17 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Events..
 
         #region Windows..
+        #region RegisterHotKey
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vlc);
+        #endregion RegisterHotKey
+
+        #region UnregisterHotKey
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        #endregion UnregisterHotKey
 
+        #region HwndHook
         public IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             const int WM_HOTKEY = 0x0312;
@@ -137,7 +147,14 @@ namespace SoundboardYourFriends.ViewModel
 
                             if (vkey == keyCode)
                             {
-                                BeginAudioRecording();
+                                if (_wasapiLoopbackCapture == null)
+                                {
+                                    BeginAudioRecording();
+                                }
+                                else
+                                {
+                                    StopAudioRecording();
+                                }
                             }
 
                             handled = true;
@@ -148,20 +165,44 @@ namespace SoundboardYourFriends.ViewModel
 
             return IntPtr.Zero;
         }
+        #endregion HwndHook
         #endregion Windows..
 
         #region BeginAudioRecording
         private void BeginAudioRecording()
         {
-            SoundboardRecording TestRecording = new SoundboardRecording() { Name = "Test Recording" };
-            SoundboardRecordingCollection.Add(TestRecording);
+            //SoundboardRecording TestRecording = new SoundboardRecording() { Name = "Test Recording" };
+            //SoundboardRecordingCollection.Add(TestRecording);
+
+            string outputFilePath = Path.Combine(Environment.CurrentDirectory, $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav");
+            _wasapiLoopbackCapture = new WasapiLoopbackCapture();
+
+            WaveFileWriter RecordedAudioWriter = new WaveFileWriter(outputFilePath, _wasapiLoopbackCapture.WaveFormat);
+
+            // When the capturer receives audio, start writing the buffer into the mentioned file
+            _wasapiLoopbackCapture.DataAvailable += (s, a) =>
+            {
+                // Write buffer into the file of the writer instance
+                RecordedAudioWriter.Write(a.Buffer, 0, a.BytesRecorded);
+            };
+
+            // When the Capturer Stops, dispose instances of the capturer and writer
+            _wasapiLoopbackCapture.RecordingStopped += (s, a) =>
+            {
+                RecordedAudioWriter.Dispose();
+                RecordedAudioWriter = null;
+
+                _wasapiLoopbackCapture.Dispose();
+                _wasapiLoopbackCapture = null;
+            };
+
+            _wasapiLoopbackCapture.StartRecording();
         }
         #endregion BeginAudioRecording
 
         #region GetApplicationConfiguration
         private void GetApplicationConfiguration()
         {
-            RecordHotkey = Key.Up;
             SelectedListeningDevicesCollection.Add(new AudioDevice() { FriendlyName = "No device(s) selected" });
             SelectedOutputDevicesCollection.Add(new AudioDevice() { FriendlyName = "No device(s) selected" });
         }
@@ -211,6 +252,14 @@ namespace SoundboardYourFriends.ViewModel
             }
         }
         #endregion SetRecordHotKey
+
+
+        #region StopAudioRecording
+        private void StopAudioRecording()
+        {
+            _wasapiLoopbackCapture.StopRecording();
+        }
+        #endregion StopAudioRecording
 
         #region UnregisterRecordHotkey
         public void UnregisterRecordHotkey(IntPtr viewHandle)

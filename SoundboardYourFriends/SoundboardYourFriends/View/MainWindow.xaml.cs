@@ -37,19 +37,19 @@ namespace SoundboardYourFriends.View
         }
         #endregion OnKeyPressed
 
-        #region btnListeningDevice_MouseUp
-        private void btnListeningDevice_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            _mainWindowViewModel.SetAudioDevice(AudioDeviceType.Output);
-        }
-        #endregion btnListeningDevice_MouseUp
-
-        #region btnRecordingDevice_MouseUp
-        private void btnRecordingDevice_MouseUp(object sender, MouseButtonEventArgs e)
+        #region btnListeningDevices_MouseUp
+        private void btnListeningDevices_MouseUp(object sender, MouseButtonEventArgs e)
         {
             _mainWindowViewModel.SetAudioDevice(AudioDeviceType.Input);
         }
-        #endregion btnRecordingDevice_MouseUp
+        #endregion btnListeningDevices_MouseUp
+
+        #region btnOutputDevices_MouseUp
+        private void btnOutputDevices_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            _mainWindowViewModel.SetAudioDevice(AudioDeviceType.Output);
+        }
+        #endregion btnOutputDevices_MouseUp
 
         #region btnRecordButton_MouseUp
         private void btnRecordButton_MouseUp(object sender, MouseButtonEventArgs e)
