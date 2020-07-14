@@ -2,7 +2,9 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using SoundboardYourFriends.Model;
 using SoundboardYourFriends.ViewModel;
+using NAudio.Gui;
 
 namespace SoundboardYourFriends.View
 {
@@ -29,10 +31,17 @@ namespace SoundboardYourFriends.View
 
         #region Methods..
         #region Events..
+        #region lstSoundboardSamples_MouseDoubleClick
+        private void lstSoundboardSamples_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            _mainWindowViewModel.PlayAudioSample((SoundboardSample)lstSoundboardSamples.SelectedItem);
+        }
+        #endregion lstSoundboardSamples_MouseDoubleClick
+
         #region OnKeyPressed
         public void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            _mainWindowViewModel.SetRecordHotKey(new WindowInteropHelper(this).Handle, e.Key);
+            _mainWindowViewModel.RegisterRecordHotKey(new WindowInteropHelper(this).Handle, e.Key);
             this.KeyDown -= OnKeyPressed;
         }
         #endregion OnKeyPressed
@@ -58,6 +67,21 @@ namespace SoundboardYourFriends.View
             _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
         }
         #endregion btnRecordButton_MouseUp
+
+        #region btnSetting_MouseUp
+        private void btnSettings_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.Show();
+        }
+        #endregion btnSetting_MouseUp
+
+        #region Window_Closing
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _mainWindowViewModel.Closing();
+        }
+        #endregion Window_Closing
         #endregion Events..
 
         #region OnClosed

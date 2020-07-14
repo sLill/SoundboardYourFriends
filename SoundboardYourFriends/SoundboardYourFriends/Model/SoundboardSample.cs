@@ -5,13 +5,17 @@ using System.Text;
 
 namespace SoundboardYourFriends.Model
 {
-    public class SoundboardRecording : ObservableObject
+    public class SoundboardSample : ObservableObject
     {
         #region Member Variables..
         private string _name;
         #endregion Member Variables..
 
         #region Properties..
+        #region FilePath
+        public string FilePath { get; set; }
+        #endregion FilePath
+
         #region Name
         public string Name 
         {
@@ -26,9 +30,9 @@ namespace SoundboardYourFriends.Model
         #endregion Properties..
 
         #region Constructors..
-        #region SoundboardRecording
-        public SoundboardRecording() { }
-        #endregion SoundboardRecording
+        #region SoundboardSample
+        public SoundboardSample() { }
+        #endregion SoundboardSample
         #endregion Constructors..
 
         #region Methods..
