@@ -107,14 +107,30 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel>
-                                        <TextBox Text="{Binding Name}"></TextBox>
-                                        <Button Content="Play"/>
-                                        <Button Content="Stop"/>
-                                        <Button Content="Delete"/>
-                                        <DockPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                        <TextBox Text="{Binding Name}" BorderThickness="0" VerticalAlignment="Center"></TextBox>
+                                        <DockPanel VerticalAlignment="Center" Margin="15,0,0,0">
                                             <TextBlock VerticalAlignment="Center" Text="Hotkey"/>
-                                            <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="Unassigned"/>
+                                            <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="Unassigned" Margin="5,0,0,0"/>
                                         </DockPanel>
+
+                                        <DockPanel Name="pnlMediaPanel" HorizontalAlignment="Right" Margin="25,0,0,0">
+                                            <Button VerticalAlignment="Center" BorderThickness="0">
+                                                <StackPanel>
+                                                    <Image Source="/Resources/PlayButton.png" Height="20" Width="20"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button VerticalAlignment="Center" BorderThickness="0" Margin="3,0,0,0">
+                                                <StackPanel>
+                                                    <Image Source="/Resources/StopButton.png" Height="20" Width="20"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0">
+                                                <StackPanel>
+                                                    <Image Source="/Resources/DeleteButton.png" Height="20" Width="20"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </DockPanel>
+
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

@@ -118,10 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DeleteButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="PlayButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PlayButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="RecordButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RecordButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="SettingsGear" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SettingsGear.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="StopButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StopButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

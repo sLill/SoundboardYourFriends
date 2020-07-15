@@ -3,6 +3,8 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Text;
+//using SharpDX.DirectSound;
+using System.Linq;
 
 namespace SoundboardYourFriends.Core
 {
@@ -67,10 +69,20 @@ namespace SoundboardYourFriends.Core
             WaveStream waveStream = new WaveFileReader(filePath);
             WaveChannel32 volumeStream = new WaveChannel32(waveStream);
 
-            WaveOutEvent player = new WaveOutEvent();
+            //WaveOutEvent player = new WaveOutEvent();
 
-            player.Init(volumeStream);
-            player.Play();
+            //var devices = DirectSound.GetDevices();
+            //var g = DirectSoundCapture.GetDevices();
+            //DirectSoundCapture dsc = new DirectSoundCapture();
+
+            using (DirectSoundOut directSoundOut = new DirectSoundOut(new Guid("af78ec66-3a04-4f77-a633-6b298601d14c")))
+            {
+                directSoundOut.Init(volumeStream);
+                directSoundOut.Play();
+            }
+
+            //player.Init(volumeStream);
+            //player.Play();
         }
         #endregion PlayAudio
 

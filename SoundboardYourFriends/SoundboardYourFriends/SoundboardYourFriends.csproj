@@ -7,16 +7,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\DeleteButton.png" />
+    <None Remove="Resources\PlayButton.png" />
     <None Remove="Resources\RecordButton.png" />
     <None Remove="Resources\SettingsGear.png" />
+    <None Remove="Resources\StopButton.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\DeleteButton.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\PlayButton.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\SettingsGear.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\RecordButton.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StopButton.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
@@ -42,6 +54,7 @@
 
   <ItemGroup>
     <PackageReference Include="NAudio" Version="1.10.0" />
+    <PackageReference Include="SharpDX.DirectSound" Version="4.2.0" />
     <PackageReference Include="System.Management" Version="4.7.0" />
   </ItemGroup>
 
