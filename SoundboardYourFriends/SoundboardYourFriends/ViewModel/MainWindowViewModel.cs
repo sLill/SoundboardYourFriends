@@ -19,7 +19,6 @@ namespace SoundboardYourFriends.ViewModel
     public class MainWindowViewModel : ObservableObject
     {
         #region Member Variables..
-        private AudioAgent _audioAgent;
         private HwndSource _hwndSource;
         private Key? _recordHotKey;
         private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
@@ -114,8 +113,7 @@ namespace SoundboardYourFriends.ViewModel
             GetApplicationConfiguration();
             LoadAudioSamples();
 
-            _audioAgent = new AudioAgent();
-            _audioAgent.RecordingStopped += AudioAgent_OnRecordingStopped;
+            AudioAgent.RecordingStopped += AudioAgent_OnRecordingStopped;
         }
         #endregion MainWindowViewModel
         #endregion Constructors..
@@ -166,17 +164,10 @@ namespace SoundboardYourFriends.ViewModel
 
                             if (vkey == keyCode)
                             {
-                                if (_audioAgent.AudioState == AudioState.Idle)
-                                {
-                                    string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
-                                    string outputFilePath = Path.Combine(_audioSampleDirectory, fileName);
+                                string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
+                                string outputFilePath = Path.Combine(_audioSampleDirectory, fileName);
 
-                                    _audioAgent.BeginAudioRecording(outputFilePath);
-                                }
-                                else if (_audioAgent.AudioState == AudioState.Recording)
-                                {
-                                    _audioAgent.StopAudioRecording();
-                                }
+                                AudioAgent.WriteAudioBuffer(outputFilePath);
                             }
 
                             handled = true;
@@ -193,10 +184,8 @@ namespace SoundboardYourFriends.ViewModel
         #region Closing
         public void Closing()
         {
-            if (_audioAgent.AudioState == AudioState.Recording)
-            {
-                _audioAgent.StopAudioRecording();
-            }
+            AudioAgent.StopListening();
+            AudioAgent.RecordingStopped -= AudioAgent_OnRecordingStopped;
         }
         #endregion Closing
 
@@ -226,7 +215,7 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample)
         {
-            _audioAgent.PlayAudio(soundboardSample.FilePath);
+            AudioAgent.PlayAudio(soundboardSample.FilePath);
         }
         #endregion PlayAudioSample
 
