@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.ViewModel;
-using NAudio.Gui;
+using WPF.JoshSmith.ServiceProviders.UI;
 
 namespace SoundboardYourFriends.View
 {
@@ -82,6 +82,13 @@ namespace SoundboardYourFriends.View
             _mainWindowViewModel.Closing();
         }
         #endregion Window_Closing
+
+        #region Window_Loaded
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            new ListViewDragDropManager<SoundboardSample>(this.lstSoundboardSamples);
+        }
+        #endregion Window_Loaded
         #endregion Events..
 
         #region OnClosed
@@ -91,6 +98,7 @@ namespace SoundboardYourFriends.View
             base.OnClosed(e);
         }
         #endregion OnClosed
+
         #endregion Methods..
     }
 }

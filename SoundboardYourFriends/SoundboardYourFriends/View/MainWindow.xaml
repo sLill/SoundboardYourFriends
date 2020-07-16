@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundboardYourFriends"
         mc:Ignorable="d"
-        Title="Soundboard Your Friends" Height="600" Width="550" Closing="Window_Closing">
+        Title="Soundboard Your Friends" Height="600" Width="550" Closing="Window_Closing" Loaded="Window_Loaded">
 
     <Window.Resources>
         <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
@@ -29,7 +29,7 @@
             <ColumnDefinition Width="50*"/>
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
-
+        
         <!--Row 1-->
         <DockPanel Grid.Row="1" Grid.Column="1">
             <Button Name="btnListeningDevices" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" PreviewMouseLeftButtonUp="btnListeningDevices_MouseUp">
@@ -50,7 +50,7 @@
             </Button>
         </DockPanel>
 
-        
+
         <!--Row 2-->
         <DockPanel  Grid.Row="2" Grid.Column="1">
             <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedListeningDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
@@ -101,36 +101,47 @@
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0, 0, 0, 0">
             <ListView Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
                 <ListView.View>
-                    <GridView>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <!--<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>-->
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel>
                                         <TextBox Text="{Binding Name}" BorderThickness="0" VerticalAlignment="Center"></TextBox>
-                                        <DockPanel VerticalAlignment="Center" Margin="15,0,0,0">
-                                            <TextBlock VerticalAlignment="Center" Text="Hotkey"/>
-                                            <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="Unassigned" Margin="5,0,0,0"/>
-                                        </DockPanel>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel Name="pnlMediaPanel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25,0,0,0">
+                                        <Button VerticalAlignment="Center" BorderThickness="0" Background="Transparent">
+                                            <StackPanel Background="Transparent">
+                                                <Image Source="/Resources/PlayButton.png" Height="20" Width="20"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Margin="3,0,0,0">
+                                            <StackPanel Background="Transparent">
+                                                <Image Source="/Resources/StopButton.png" Height="20" Width="20"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0" Background="Transparent">
+                                            <StackPanel Background="Transparent">
+                                                <Image Source="/Resources/DeleteButton.png" Height="20" Width="20"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                                        <DockPanel Name="pnlMediaPanel" HorizontalAlignment="Right" Margin="25,0,0,0">
-                                            <Button VerticalAlignment="Center" BorderThickness="0">
-                                                <StackPanel>
-                                                    <Image Source="/Resources/PlayButton.png" Height="20" Width="20"/>
-                                                </StackPanel>
-                                            </Button>
-                                            <Button VerticalAlignment="Center" BorderThickness="0" Margin="3,0,0,0">
-                                                <StackPanel>
-                                                    <Image Source="/Resources/StopButton.png" Height="20" Width="20"/>
-                                                </StackPanel>
-                                            </Button>
-                                            <Button VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0">
-                                                <StackPanel>
-                                                    <Image Source="/Resources/DeleteButton.png" Height="20" Width="20"/>
-                                                </StackPanel>
-                                            </Button>
-                                        </DockPanel>
-
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel VerticalAlignment="Center" Margin="15,0,0,0">
+                                        <TextBlock VerticalAlignment="Center" Text="Hotkey"/>
+                                        <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="Unassigned" Margin="5,0,0,0"/>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
