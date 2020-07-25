@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundboardYourFriends"
         mc:Ignorable="d"
-        Title="Soundboard Your Friends" Height="600" Width="550" Closing="Window_Closing" Loaded="Window_Loaded">
+        Title="Soundboard Your Friends" Height="550" Width="600" Closing="Window_Closing" Loaded="Window_Loaded">
 
     <Window.Resources>
         <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
@@ -26,7 +26,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
         
@@ -49,7 +49,6 @@
                 </StackPanel>
             </Button>
         </DockPanel>
-
 
         <!--Row 2-->
         <DockPanel  Grid.Row="2" Grid.Column="1">
@@ -75,7 +74,7 @@
             <ProgressBar BorderThickness="0" Margin="4,10,10,7" Value="60"/>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="2">
-            <TextBox Margin="5,2,2,0" DockPanel.Dock="Right" Width="150" BorderThickness="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding RecordHotkeyDisplay}"></TextBox>
+            <TextBox Margin="5,2,2,0" DockPanel.Dock="Right" Width="120" BorderThickness="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding RecordHotkeyDisplay}"></TextBox>
             <Label DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0,0,0">
                 <TextBlock VerticalAlignment="Center">"Record"</TextBlock>
             </Label>
@@ -100,9 +99,11 @@
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0, 0, 0, 0">
             <ListView Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
+
+                <!--View-->
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
-                        <!--<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>-->
+                        <GridViewColumn Header="Group" DisplayMemberBinding="{Binding GroupName}" />
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -148,6 +149,40 @@
                         </GridViewColumn>
                     </GridView>
                 </ListView.View>
+
+                <!--Grouping-->
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding GroupName}"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+
+                <!--<ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="{x:Type GroupItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Expander IsExpanded="True">
+                                                <Expander.Header>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding GroupName}" FontWeight="Bold" Foreground="Gray" FontSize="22" VerticalAlignment="Bottom" />
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <ItemsPresenter />
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ListView.GroupStyle>-->
             </ListView>
         </DockPanel>
     </Grid>

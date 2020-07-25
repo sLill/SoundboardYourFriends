@@ -8,6 +8,7 @@ namespace SoundboardYourFriends.Model
     public class SoundboardSample : ObservableObject
     {
         #region Member Variables..
+        private string _groupName;
         private string _name;
         #endregion Member Variables..
 
@@ -15,6 +16,18 @@ namespace SoundboardYourFriends.Model
         #region FilePath
         public string FilePath { get; set; }
         #endregion FilePath
+
+        #region GroupName
+        public string GroupName 
+        {
+            get { return _groupName; }
+            set
+            {
+                _groupName = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion GroupName
 
         #region Name
         public string Name 

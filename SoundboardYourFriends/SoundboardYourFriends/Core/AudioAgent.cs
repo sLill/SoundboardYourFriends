@@ -3,26 +3,28 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Text;
-//using SharpDX.DirectSound;
 using System.Linq;
+using NAudio.Wave.SampleProviders;
+using System.IO;
+using SoundboardYourFriends.Settings;
 
 namespace SoundboardYourFriends.Core
 {
     public static class AudioAgent
     {
         #region Member Variables..
-        private static BufferedWaveProvider _bufferedWaveProvider;
-        private static WasapiLoopbackCapture _wasapiLoopbackCapture;
+        private static List<byte> _audioByteBuffer = new List<byte>();
+        private static WaveOutEvent _waveOutEvent;
         #endregion Member Variables..
 
         #region Properties..
-        #region AudioState
-        public static AudioState AudioState { get; set; } = AudioState.Idle;
-        #endregion AudioState
+        #region WasapiLoopbackCapture
+        public static WasapiLoopbackCapture WasapiLoopbackCapture { get; set; }
+        #endregion WasapiLoopbackCapture
         #endregion Properties..
 
         #region EventHandlers/Delegates
-        public static event EventHandler RecordingStopped;
+        public static event EventHandler FileWritten;
         #endregion EventHandlers/Delegates
 
         #region Constructors..
@@ -30,83 +32,118 @@ namespace SoundboardYourFriends.Core
         static AudioAgent() 
         {
             BeginListening();
+
+            _waveOutEvent = new WaveOutEvent();
+            _waveOutEvent.PlaybackStopped += OnPlaybackStopped;
         }
         #endregion AudioAgent
         #endregion Constructors..
 
         #region Methods..
+        #region Event Handlers..
+        #region OnPlaybackStopped
+        private static void OnPlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            _waveOutEvent.PlaybackStopped -= OnPlaybackStopped;
+        }
+        #endregion OnPlaybackStopped
+        #endregion Event Handlers..
+
         #region BeginListening
         private static void BeginListening()
         {
-            MMDeviceEnumerator deviceEnumerator = new MMDeviceEnumerator();
-            foreach (var device in deviceEnumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active))
+            // Copies about once every 1.5 min when set to 7112000 * 4 (Gives ~20 sec audio clip)
+            int audioBufferMax = SettingsManager.ByteSampleSize * 4;
+            WasapiLoopbackCapture = new WasapiLoopbackCapture();
+
+            WasapiLoopbackCapture.DataAvailable += (s, a) =>
             {
+                // Copy a clip-sized chunk of audio to a new byte array upon filling this one up
+                if (_audioByteBuffer.Count + a.BytesRecorded > audioBufferMax)
+                {
+                    List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - SettingsManager.ByteSampleSize, SettingsManager.ByteSampleSize);
+                    _audioByteBuffer.Clear();
+                    _audioByteBuffer.AddRange(retainedBytes);
+                }
 
-            }
-
-            _wasapiLoopbackCapture = new WasapiLoopbackCapture();
-            _bufferedWaveProvider = new BufferedWaveProvider(new WaveFormat()) 
-            { 
-                BufferDuration = new TimeSpan(0, 2, 0), 
-                DiscardOnBufferOverflow = true 
-            };
-
-            // When the capturer receives audio, start writing the buffer into the mentioned file
-            _wasapiLoopbackCapture.DataAvailable += (s, a) =>
-            {
-                _bufferedWaveProvider.AddSamples(a.Buffer, 0, a.BytesRecorded);
+                byte[] capturedBytes = new byte[a.BytesRecorded];
+                Array.Copy(a.Buffer, 0, capturedBytes, 0, a.BytesRecorded);
+                _audioByteBuffer.AddRange(capturedBytes);
 
                 // Note: Highest value here can be used for audio visualization
             };
 
-            _wasapiLoopbackCapture.StartRecording();
+            WasapiLoopbackCapture.StartRecording();
         }
         #endregion BeginListening
+
+        #region ConvertToMixerChannelCount
+        private static ISampleProvider ConvertToMixerChannelCount(ISampleProvider mixer, ISampleProvider input)
+        {
+            return input.WaveFormat.Channels < mixer.WaveFormat.Channels ? new MonoToStereoSampleProvider(input) : input;
+        }
+        #endregion ConvertToMixerChannelCount
+
+        #region ConvertToMixerSampleRate
+        private static ISampleProvider ConvertToMixerSampleRate(ISampleProvider mixer, ISampleProvider input)
+        {
+            return input.WaveFormat.SampleRate != mixer.WaveFormat.SampleRate ? new WdlResamplingSampleProvider(input, mixer.WaveFormat.SampleRate) : input;
+        }
+        #endregion ConvertToMixerSampleRate
 
         #region PlayAudio
         public static void PlayAudio(string filePath)
         {
-            WaveStream waveStream = new WaveFileReader(filePath);
-            WaveChannel32 volumeStream = new WaveChannel32(waveStream);
+            MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
+            AudioFileReader audioFileReader = new AudioFileReader(filePath);
+            VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
 
-            //WaveOutEvent player = new WaveOutEvent();
+            ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
+            mixer.AddMixerInput(convertedSampleProvider);
 
-            //var devices = DirectSound.GetDevices();
-            //var g = DirectSoundCapture.GetDevices();
-            //DirectSoundCapture dsc = new DirectSoundCapture();
-
-            using (DirectSoundOut directSoundOut = new DirectSoundOut(new Guid("af78ec66-3a04-4f77-a633-6b298601d14c")))
+            int vbCableDeviceNumberr = -1;          
+            for (int i = 0; i < WaveOut.DeviceCount; i++)
             {
-                directSoundOut.Init(volumeStream);
-                directSoundOut.Play();
+                var audioDevice = WaveOut.GetCapabilities(i);
+                if (audioDevice.ProductName.Contains("CABLE"))
+                {
+                    vbCableDeviceNumberr = i;
+                }
             }
 
-            //player.Init(volumeStream);
-            //player.Play();
+            _waveOutEvent.DeviceNumber = vbCableDeviceNumberr;
+            
+            _waveOutEvent.Init(mixer);
+            _waveOutEvent.Play();
         }
         #endregion PlayAudio
 
         #region StopListening
         public static void StopListening()
         {
-            _wasapiLoopbackCapture.Dispose();
-            _wasapiLoopbackCapture = null;
+            WasapiLoopbackCapture.Dispose();
+            WasapiLoopbackCapture = null;
+
+            _waveOutEvent.Dispose();
+            _waveOutEvent = null;
         }
         #endregion StopListening
 
         #region WriteAudioBuffer
-        public static void WriteAudioBuffer(string outputFilePath)
+        public static void WriteAudioBuffer()
         {
-            using (WaveFileWriter RecordedAudioWriter = new WaveFileWriter(outputFilePath, _wasapiLoopbackCapture.WaveFormat))
-            {
-                byte[] byteBuffer = new byte[_bufferedWaveProvider.BufferedBytes];
-                _bufferedWaveProvider.Read(byteBuffer, 0, _bufferedWaveProvider.BufferedBytes);
+            string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
+            string fileNameFull = Path.Combine(SettingsManager.SoundboardSampleDirectory, fileName);
 
-                RecordedAudioWriter.Write(byteBuffer, 0, byteBuffer.Length);
-                _bufferedWaveProvider.ClearBuffer();
+            WaveFormat waveFormat = WasapiLoopbackCapture.WaveFormat;
+            using (WaveFileWriter waveFileWriter= new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
+            {
+                var bytesToWrite = SettingsManager.ByteSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - SettingsManager.ByteSampleSize, SettingsManager.ByteSampleSize).ToArray();
+                waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);
             }
 
-            RecordingStopped?.Invoke(outputFilePath, EventArgs.Empty);
+            _audioByteBuffer.Clear();
+            AudioAgent.FileWritten?.Invoke(fileNameFull, EventArgs.Empty);
         }
         #endregion WriteAudioBuffer
         #endregion Methods..

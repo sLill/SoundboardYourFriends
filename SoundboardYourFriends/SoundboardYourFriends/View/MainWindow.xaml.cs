@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using SoundboardYourFriends.Model;
@@ -87,6 +88,10 @@ namespace SoundboardYourFriends.View
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             new ListViewDragDropManager<SoundboardSample>(this.lstSoundboardSamples);
+
+            CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
+            collectionView.GroupDescriptions.Add(groupDescription);
         }
         #endregion Window_Loaded
         #endregion Events..

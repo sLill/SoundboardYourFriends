@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using NAudio.Wave;
 using System.IO;
+using SoundboardYourFriends.Settings;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -25,7 +26,6 @@ namespace SoundboardYourFriends.ViewModel
         private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
         private ObservableCollection<SoundboardSample> _soundboardSampleCollection = new ObservableCollection<SoundboardSample>();
         private SoundboardSample _selectedSoundboardSample;
-        private string _audioSampleDirectory;
         private string _recordHotKeyDisplay = "Unassigned";
 
         private const int RECORD_HOTKEY_ID = 9000;
@@ -113,28 +113,27 @@ namespace SoundboardYourFriends.ViewModel
             GetApplicationConfiguration();
             LoadAudioSamples();
 
-            AudioAgent.RecordingStopped += AudioAgent_OnRecordingStopped;
+            AudioAgent.FileWritten += OnFileWritten;
         }
         #endregion MainWindowViewModel
         #endregion Constructors..
 
         #region Methods..
         #region Events..
-        #region AudioAgent_OnRecordingStopped
-        private void AudioAgent_OnRecordingStopped(object sender, EventArgs e)
+        public void OnFileWritten(object sender, EventArgs e)
         {
-            string outputFilePath = (string)sender;
-            string fileName = Path.GetFileNameWithoutExtension(outputFilePath);
+            string filePath = sender as string;
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             SoundboardSample TestRecording = new SoundboardSample()
             {
                 Name = fileName,
-                FilePath = outputFilePath
+                FilePath = filePath,
+                GroupName = "Ungrouped"
             };
 
             SoundboardSampleCollection.Add(TestRecording);
         }
-        #endregion AudioAgent_OnRecordingStopped
         #endregion Events..
 
         #region Windows..
@@ -163,11 +162,8 @@ namespace SoundboardYourFriends.ViewModel
                             uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(RecordHotkey.Value).ToString("X"), 16);
 
                             if (vkey == keyCode)
-                            {
-                                string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
-                                string outputFilePath = Path.Combine(_audioSampleDirectory, fileName);
-
-                                AudioAgent.WriteAudioBuffer(outputFilePath);
+                            { 
+                                AudioAgent.WriteAudioBuffer();
                             }
 
                             handled = true;
@@ -185,7 +181,6 @@ namespace SoundboardYourFriends.ViewModel
         public void Closing()
         {
             AudioAgent.StopListening();
-            AudioAgent.RecordingStopped -= AudioAgent_OnRecordingStopped;
         }
         #endregion Closing
 
@@ -200,13 +195,22 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadAudioSamples
         private void LoadAudioSamples()
         {
-            _audioSampleDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples");
-            foreach(string audioSamplePath in Directory.GetFiles(_audioSampleDirectory))
+            foreach(string audioSamplePath in Directory.GetFiles(SettingsManager.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
             {
+                string relativePath = Path.GetRelativePath(SettingsManager.SoundboardSampleDirectory, audioSamplePath);
+                string[] directorySplit = relativePath.Split('\\');
+
+                string groupName = "Ungrouped";
+                if (directorySplit.Length > 1)
+                {
+                    groupName = directorySplit[0];
+                }
+
                 _soundboardSampleCollection.Add(new SoundboardSample() 
                 { 
                     Name = Path.GetFileNameWithoutExtension(audioSamplePath), 
-                    FilePath = audioSamplePath 
+                    FilePath = audioSamplePath,
+                    GroupName = groupName
                 });
             }
         }

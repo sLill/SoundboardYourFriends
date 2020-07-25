@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundboardYourFriends", "SoundboardYourFriends\SoundboardYourFriends.csproj", "{894B5DAF-301C-4436-960A-A0C4F3CAF825}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoundboardYourFriends", "SoundboardYourFriends\SoundboardYourFriends.csproj", "{894B5DAF-301C-4436-960A-A0C4F3CAF825}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundboardYourFriends.Settings", "SoundboardYourFriends.Settings\SoundboardYourFriends.Settings.csproj", "{D40850A6-F978-4DDE-99D9-9AA288A27CFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{894B5DAF-301C-4436-960A-A0C4F3CAF825}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{894B5DAF-301C-4436-960A-A0C4F3CAF825}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{894B5DAF-301C-4436-960A-A0C4F3CAF825}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D40850A6-F978-4DDE-99D9-9AA288A27CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D40850A6-F978-4DDE-99D9-9AA288A27CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D40850A6-F978-4DDE-99D9-9AA288A27CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D40850A6-F978-4DDE-99D9-9AA288A27CFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
