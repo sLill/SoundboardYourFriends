@@ -12,6 +12,16 @@ namespace SoundboardYourFriends.Model
         #endregion Member Variables..
 
         #region Properties..
+        #region DeviceId
+        private int _deviceId;
+        public int DeviceId
+        {
+            get { return _deviceId; }
+            set { _deviceId = value; }
+        }
+        #endregion DeviceId
+
+
         #region FriendlyName
         public string FriendlyName
         {
@@ -24,11 +34,5 @@ namespace SoundboardYourFriends.Model
         }
         #endregion FriendlyName
         #endregion Properties..
-
-        #region Constructors..
-        #endregion Constructors..
-
-        #region Methods..
-        #endregion Methods..    
     }
 }

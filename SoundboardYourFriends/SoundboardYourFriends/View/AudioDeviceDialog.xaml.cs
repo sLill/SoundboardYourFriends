@@ -32,7 +32,7 @@ namespace SoundboardYourFriends.View
         public AudioDeviceDialog(AudioDeviceType audioDeviceType)
         {
             InitializeComponent();
-            
+
             _audioDeviceDialogViewModel = new AudioDeviceDialogViewModel(audioDeviceType);
             DataContext = _audioDeviceDialogViewModel;
         }

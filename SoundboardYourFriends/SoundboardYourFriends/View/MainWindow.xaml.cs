@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -72,14 +73,16 @@ namespace SoundboardYourFriends.View
         #region btnPlayButtonGlobal_Click
         private void btnPlayButtonGlobal_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindowViewModel.PlayAudioSample((SoundboardSample)lstSoundboardSamples.SelectedItem, PlaybackType.Global);
+            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
+            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackType.Global);
         }
         #endregion btnPlayButtonGlobal_Click
 
         #region btnPlayButtonLocal_Click
         private void btnPlayButtonLocal_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindowViewModel.PlayAudioSample((SoundboardSample)lstSoundboardSamples.SelectedItem, PlaybackType.Local);
+            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
+            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackType.Local);
         }
         #endregion btnPlayButtonLocal_Click
 
@@ -98,6 +101,13 @@ namespace SoundboardYourFriends.View
             settingsWindow.Show();
         }
         #endregion btnSetting_MouseUp
+
+        #region btnStopButton_Click
+        private void btnStopButton_Click(object sender, RoutedEventArgs e)
+        {
+            _mainWindowViewModel.StopAudioPlayback();
+        }
+        #endregion btnStopButton_Click
 
         #region Window_Closing
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -7,6 +7,8 @@ using System.Linq;
 using NAudio.Wave.SampleProviders;
 using System.IO;
 using SoundboardYourFriends.Settings;
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace SoundboardYourFriends.Core
 {
@@ -14,7 +16,7 @@ namespace SoundboardYourFriends.Core
     {
         #region Member Variables..
         private static List<byte> _audioByteBuffer = new List<byte>();
-        private static WaveOutEvent _waveOutEvent;
+        private static List<WaveOutEvent> _waveOutEventCollection;
         #endregion Member Variables..
 
         #region Properties..
@@ -32,9 +34,6 @@ namespace SoundboardYourFriends.Core
         static AudioAgent() 
         {
             BeginListening();
-
-            _waveOutEvent = new WaveOutEvent();
-            _waveOutEvent.PlaybackStopped += OnPlaybackStopped;
         }
         #endregion AudioAgent
         #endregion Constructors..
@@ -44,7 +43,7 @@ namespace SoundboardYourFriends.Core
         #region OnPlaybackStopped
         private static void OnPlaybackStopped(object sender, StoppedEventArgs e)
         {
-            _waveOutEvent.PlaybackStopped -= OnPlaybackStopped;
+            ((WaveOutEvent)sender).PlaybackStopped -= OnPlaybackStopped;
         }
         #endregion OnPlaybackStopped
         #endregion Event Handlers..
@@ -91,41 +90,98 @@ namespace SoundboardYourFriends.Core
         }
         #endregion ConvertToMixerSampleRate
 
-        #region PlayAudio
-        public static void PlayAudio(string filePath, PlaybackType playbackType)
+        #region GetFileAudioDuration
+        public static TimeSpan GetFileAudioDuration(string filePath)
         {
-            MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
-            AudioFileReader audioFileReader = new AudioFileReader(filePath);
-            VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
+            TimeSpan result = TimeSpan.Zero;
 
-            ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
-            mixer.AddMixerInput(convertedSampleProvider);
-
-            int vbCableDeviceNumberr = -1;          
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
+            using (var shell = ShellObject.FromParsingName(filePath))
             {
-                var audioDevice = WaveOut.GetCapabilities(i);
-                
-                switch (playbackType)
-                {
-                    case PlaybackType.Global:
-                        if (audioDevice.ProductName.Contains("CABLE"))
-                        {
-                            vbCableDeviceNumberr = i;
-                        }
-                        break;
-                    case PlaybackType.Local:
-
-                        break;
-                }
+                IShellProperty mediaDurationProperty = shell.Properties.System.Media.Duration;
+                var mediaDurationPropertyValue = (ulong)mediaDurationProperty.ValueAsObject;
+                result = TimeSpan.FromTicks((long)mediaDurationPropertyValue);
             }
 
-            _waveOutEvent.DeviceNumber = vbCableDeviceNumberr;
-            
-            _waveOutEvent.Init(mixer);
-            //_waveOutEvent.Play();
+            return result;
         }
-        #endregion PlayAudio
+        #endregion GetFileAudioDuration
+
+        #region InitializeOutputDevices
+        public static void InitializeOutputDevices(IEnumerable<int> outputDeviceIds)
+        {
+            _waveOutEventCollection = new List<WaveOutEvent>();
+
+            foreach (var deviceId in outputDeviceIds)
+            {
+                WaveOutEvent waveOutEvent = new WaveOutEvent() { DeviceNumber = deviceId };
+                waveOutEvent.PlaybackStopped += OnPlaybackStopped;
+
+                _waveOutEventCollection.Add(waveOutEvent);
+            }
+        }
+        #endregion InitializeOutputDevices
+
+        #region StartAudioPlayback
+        public static void StartAudioPlayback(string filePath, PlaybackType playbackType, double lowerValuePercent, double upperValuePercent)
+        {
+            //int deviceNumber = -1;          
+            //for (int i = 0; i < WaveOut.DeviceCount; i++)
+            //{
+            //    var audioDevice = WaveOut.GetCapabilities(i);
+
+            //    switch (playbackType)
+            //    {
+            //        case PlaybackType.Global:
+            //            if (audioDevice.ProductName.Contains("CABLE Input"))
+            //            {
+            //                deviceNumber = i;
+            //            }
+            //            break;
+            //        case PlaybackType.Local:
+            //            if (audioDevice.ProductName.Contains("Headphones(3 - Arctis 7 Game)"))
+            //            {
+            //                deviceNumber = i;
+            //            }
+            //            break;
+            //    }
+            //}
+
+            //_waveOutEvent.DeviceNumber = deviceNumber;
+
+            StopAudioPlayback();
+
+            _waveOutEventCollection?.ForEach(waveOutEvent =>
+            {
+                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
+                AudioFileReader audioFileReader = new AudioFileReader(filePath);
+
+                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
+                ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
+
+                OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
+                offsetSampleProvider.SkipOver = audioFileReader.TotalTime * lowerValuePercent;
+                offsetSampleProvider.Take = (audioFileReader.TotalTime *  upperValuePercent) - offsetSampleProvider.SkipOver;
+
+                mixer.AddMixerInput(offsetSampleProvider);
+
+                waveOutEvent.Init(mixer);
+                waveOutEvent.Play();
+            });
+        }
+        #endregion StartAudioPlayback
+
+        #region StopAudioPlayback
+        public static void StopAudioPlayback()
+        {
+            _waveOutEventCollection?.ForEach(waveOutEvent =>
+            {
+                if (waveOutEvent.PlaybackState == PlaybackState.Playing)
+                {
+                    waveOutEvent.Stop();
+                }
+            });
+        }
+        #endregion StopAudioPlayback
 
         #region StopListening
         public static void StopListening()
@@ -133,8 +189,11 @@ namespace SoundboardYourFriends.Core
             WasapiLoopbackCapture.Dispose();
             WasapiLoopbackCapture = null;
 
-            _waveOutEvent.Dispose();
-            _waveOutEvent = null;
+            _waveOutEventCollection?.ForEach(waveOutEvent =>
+            {
+                waveOutEvent.Dispose();
+                waveOutEvent = null;
+            });
         }
         #endregion StopListening
 

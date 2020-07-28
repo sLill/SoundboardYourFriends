@@ -36,7 +36,7 @@
             <ListView Name="lstAudioDevices" DockPanel.Dock="Top" Margin="0,0,0,0" SelectionMode="Multiple" ItemsSource="{Binding AudioDevices}">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
-                        <GridViewColumn DisplayMemberBinding="{Binding FriendlyName}"/>
+                        <GridViewColumn Width="auto" DisplayMemberBinding="{Binding FriendlyName}"/>
                     </GridView>
                 </ListView.View>
             </ListView>

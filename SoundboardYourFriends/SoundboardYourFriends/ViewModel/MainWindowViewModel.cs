@@ -199,6 +199,7 @@ namespace SoundboardYourFriends.ViewModel
             {
                 string relativePath = Path.GetRelativePath(SettingsManager.SoundboardSampleDirectory, audioSamplePath);
                 string[] directorySplit = relativePath.Split('\\');
+                double totalSeconds = AudioAgent.GetFileAudioDuration(audioSamplePath).TotalSeconds;
 
                 string groupName = "Ungrouped";
                 if (directorySplit.Length > 1)
@@ -211,10 +212,10 @@ namespace SoundboardYourFriends.ViewModel
                     Name = Path.GetFileNameWithoutExtension(audioSamplePath), 
                     FilePath = audioSamplePath,
                     GroupName = groupName,
-                    FileTimeMax = 100,
+                    FileTimeMax = totalSeconds,
                     FileTimeMin = 0,
-                    FileTimeUpperValue = 80,
-                    FileTimeLowerValue = 30
+                    FileTimeUpperValue = totalSeconds,
+                    FileTimeLowerValue = 0
                 });
             }
         }
@@ -223,7 +224,10 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            AudioAgent.PlayAudio(soundboardSample.FilePath, playbackType);
+            double lowerValuePercent = soundboardSample.FileTimeLowerValue / soundboardSample.FileTimeMax;
+            double upperValuePercent = soundboardSample.FileTimeUpperValue / soundboardSample.FileTimeMax;
+
+            AudioAgent.StartAudioPlayback(soundboardSample.FilePath, playbackType, lowerValuePercent, upperValuePercent);
         }
         #endregion PlayAudioSample
 
@@ -258,6 +262,7 @@ namespace SoundboardYourFriends.ViewModel
                 audioDeviceDialog.ShowDialog();
 
                 ObservableCollection<AudioDevice> AudioDeviceCollection = audioDeviceDialog.SelectedAudioDevices == null ? null : new ObservableCollection<AudioDevice>(audioDeviceDialog.SelectedAudioDevices);
+                AudioAgent.InitializeOutputDevices(AudioDeviceCollection.Select(audioDevice => audioDevice.DeviceId));
 
                 switch (audioDeviceType)
                 {
@@ -271,6 +276,13 @@ namespace SoundboardYourFriends.ViewModel
             }
         }
         #endregion SetAudioDevice
+
+        #region StopAudioPlayback
+        public void StopAudioPlayback()
+        {
+            AudioAgent.StopAudioPlayback();
+        }
+        #endregion StopAudioPlayback
 
         #region UnregisterRecordHotkey
         public void UnregisterRecordHotkey(IntPtr viewHandle)

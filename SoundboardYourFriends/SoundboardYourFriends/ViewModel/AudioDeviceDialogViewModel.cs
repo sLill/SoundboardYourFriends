@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using NAudio;
+using NAudio.Wave;
 using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Model;
 
@@ -50,22 +51,15 @@ namespace SoundboardYourFriends.ViewModel
         {
             AudioDevices = new ObservableCollection<AudioDevice>();
 
-            var deviceEnumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
-            NAudio.CoreAudioApi.DataFlow dataFlow = NAudio.CoreAudioApi.DataFlow.All;
-
-            //switch (AudioDeviceType)
-            //{
-            //    case AudioDeviceType.Input:
-            //        dataFlow = NAudio.CoreAudioApi.DataFlow.Capture;
-            //        break;
-            //    case AudioDeviceType.Output:
-            //        dataFlow = NAudio.CoreAudioApi.DataFlow.Render;
-            //        break;
-            //}
-
-            foreach (var endpoint in deviceEnumerator.EnumerateAudioEndPoints(dataFlow, NAudio.CoreAudioApi.DeviceState.Active))
+            // var deviceEnumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+            for (int i = 0; i < WaveOut.DeviceCount; i++)
             {
-                AudioDevices.Add(new AudioDevice() { FriendlyName = endpoint.FriendlyName });
+                var audioDevice = WaveOut.GetCapabilities(i);
+                AudioDevices.Add(new AudioDevice() 
+                { 
+                    FriendlyName = audioDevice.ProductName, 
+                    DeviceId = i 
+                });
             }
         }
         #endregion GetWindowsAudioDevices

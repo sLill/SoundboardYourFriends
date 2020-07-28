@@ -129,7 +129,7 @@
                                                 <Image Source="/Resources/PlayButton.png" Height="20" Width="20"/>
                                             </StackPanel>
                                         </Button>
-                                        <Button VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0" Background="Transparent">
+                                        <Button Name="btnStopButton" VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0" Background="Transparent" Click="btnStopButton_Click">
                                             <StackPanel Background="Transparent">
                                                 <Image Source="/Resources/StopButton.png" Height="20" Width="20"/>
                                             </StackPanel>
