@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="SoundboardYourFriends.RangeSlider"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:local="clr-namespace:SoundboardYourFriends"
+             xmlns:Converters="clr-namespace:SoundboardYourFriends.Converters"
+             Name="rangeSlider">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="simpleSlider" TargetType="{x:Type Slider}">
+            <Border SnapsToDevicePixels="true" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Rectangle x:Name="PART_SelectionRange"/>
+
+                    <Track x:Name="PART_Track" Grid.Row="1">
+                        <Track.Thumb>
+                            <Thumb x:Name="Thumb">
+                                <Thumb.Template>
+                                    <ControlTemplate TargetType="Thumb">
+                                        <Rectangle Fill="White" 
+                                                   Stroke="Black"
+                                                   StrokeThickness="0.5" 
+                                                   Width="10"
+                                                   Height="18"
+                                                   SnapsToDevicePixels="false"/>
+                                    </ControlTemplate>
+                                </Thumb.Template>
+                            </Thumb>
+                        </Track.Thumb>
+                    </Track>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+        <Converters:DoubleToTimeStringConverter x:Key="IntegerConverter" />
+    </UserControl.Resources>
+    <Grid VerticalAlignment="Top">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="Black" VerticalAlignment="Center" Height="1" 
+                Margin="5,0,5,0"/>
+
+        <Slider Grid.Column="0" x:Name="LowerSlider"
+                Minimum="{Binding Minimum, ElementName=rangeSlider}"
+                Maximum="{Binding Maximum, ElementName=rangeSlider}"
+                Value="{Binding LowerValue, ElementName=rangeSlider, Mode=TwoWay}"
+                Template="{StaticResource simpleSlider}"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"/>
+
+        <Slider Grid.Column="0" x:Name="UpperSlider"
+                Minimum="{Binding Minimum, ElementName=rangeSlider}"
+                Maximum="{Binding Maximum, ElementName=rangeSlider}"
+                Value="{Binding UpperValue, ElementName=rangeSlider, Mode=TwoWay}"
+                Template="{StaticResource simpleSlider}"
+                Margin="10,0,0,0"
+                VerticalAlignment="Center"/>
+        <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="5,0,0,0" Content="{Binding LowerValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}"/>
+        <Label Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0">-</Label>
+        <Label Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0" Content="{Binding UpperValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}"/>
+    </Grid>
+</UserControl>

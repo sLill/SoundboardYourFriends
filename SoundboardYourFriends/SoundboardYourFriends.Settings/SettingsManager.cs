@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Windows.Input;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace SoundboardYourFriends.Settings
 {
@@ -32,13 +34,18 @@ namespace SoundboardYourFriends.Settings
         #region Constructors..
         static SettingsManager()
         {
-            // Load settings
-            SoundboardSampleDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples");
-            ByteSampleSize = 7112000;
+            ImportSettings();
         }
         #endregion Constructors..
 
         #region Methods..
+        #region ImportSettings
+        private static void ImportSettings()
+        {
+            SoundboardSampleDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples");
+            ByteSampleSize = 7112000;
+        }
+        #endregion ImportSettings
         #endregion Methods..
     }
 }

@@ -5,17 +5,25 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.ViewModel;
-using WPF.JoshSmith.ServiceProviders.UI;
 
 namespace SoundboardYourFriends.View
 {
     public partial class MainWindow : Window
     {
         #region Member Variables..
-        MainWindowViewModel _mainWindowViewModel;
         #endregion Member Variables..
 
         #region Properties..
+
+        #region MainWindowViewModel
+        private MainWindowViewModel _mainWindowViewModel;
+        public MainWindowViewModel MainWindowViewModel
+        {
+            get { return _mainWindowViewModel; }
+            set { _mainWindowViewModel = value; }
+        }
+        #endregion MainWindowViewModel
+
         #endregion Properties..
 
         #region Constructors..
@@ -35,7 +43,7 @@ namespace SoundboardYourFriends.View
         #region lstSoundboardSamples_MouseDoubleClick
         private void lstSoundboardSamples_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            _mainWindowViewModel.PlayAudioSample((SoundboardSample)lstSoundboardSamples.SelectedItem);
+
         }
         #endregion lstSoundboardSamples_MouseDoubleClick
 
@@ -60,6 +68,20 @@ namespace SoundboardYourFriends.View
             _mainWindowViewModel.SetAudioDevice(AudioDeviceType.Output);
         }
         #endregion btnOutputDevices_MouseUp
+
+        #region btnPlayButtonGlobal_Click
+        private void btnPlayButtonGlobal_Click(object sender, RoutedEventArgs e)
+        {
+            _mainWindowViewModel.PlayAudioSample((SoundboardSample)lstSoundboardSamples.SelectedItem, PlaybackType.Global);
+        }
+        #endregion btnPlayButtonGlobal_Click
+
+        #region btnPlayButtonLocal_Click
+        private void btnPlayButtonLocal_Click(object sender, RoutedEventArgs e)
+        {
+            _mainWindowViewModel.PlayAudioSample((SoundboardSample)lstSoundboardSamples.SelectedItem, PlaybackType.Local);
+        }
+        #endregion btnPlayButtonLocal_Click
 
         #region btnRecordButton_MouseUp
         private void btnRecordButton_MouseUp(object sender, MouseButtonEventArgs e)
@@ -87,8 +109,6 @@ namespace SoundboardYourFriends.View
         #region Window_Loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            new ListViewDragDropManager<SoundboardSample>(this.lstSoundboardSamples);
-
             CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
             collectionView.GroupDescriptions.Add(groupDescription);

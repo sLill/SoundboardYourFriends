@@ -56,18 +56,18 @@ namespace SoundboardYourFriends.Core
             int audioBufferMax = SettingsManager.ByteSampleSize * 4;
             WasapiLoopbackCapture = new WasapiLoopbackCapture();
 
-            WasapiLoopbackCapture.DataAvailable += (s, a) =>
+            WasapiLoopbackCapture.DataAvailable += (sender, e) =>
             {
                 // Copy a clip-sized chunk of audio to a new byte array upon filling this one up
-                if (_audioByteBuffer.Count + a.BytesRecorded > audioBufferMax)
+                if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
                 {
                     List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - SettingsManager.ByteSampleSize, SettingsManager.ByteSampleSize);
                     _audioByteBuffer.Clear();
                     _audioByteBuffer.AddRange(retainedBytes);
                 }
 
-                byte[] capturedBytes = new byte[a.BytesRecorded];
-                Array.Copy(a.Buffer, 0, capturedBytes, 0, a.BytesRecorded);
+                byte[] capturedBytes = new byte[e.BytesRecorded];
+                Array.Copy(e.Buffer, 0, capturedBytes, 0, e.BytesRecorded);
                 _audioByteBuffer.AddRange(capturedBytes);
 
                 // Note: Highest value here can be used for audio visualization
@@ -92,7 +92,7 @@ namespace SoundboardYourFriends.Core
         #endregion ConvertToMixerSampleRate
 
         #region PlayAudio
-        public static void PlayAudio(string filePath)
+        public static void PlayAudio(string filePath, PlaybackType playbackType)
         {
             MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
             AudioFileReader audioFileReader = new AudioFileReader(filePath);
@@ -105,16 +105,25 @@ namespace SoundboardYourFriends.Core
             for (int i = 0; i < WaveOut.DeviceCount; i++)
             {
                 var audioDevice = WaveOut.GetCapabilities(i);
-                if (audioDevice.ProductName.Contains("CABLE"))
+                
+                switch (playbackType)
                 {
-                    vbCableDeviceNumberr = i;
+                    case PlaybackType.Global:
+                        if (audioDevice.ProductName.Contains("CABLE"))
+                        {
+                            vbCableDeviceNumberr = i;
+                        }
+                        break;
+                    case PlaybackType.Local:
+
+                        break;
                 }
             }
 
             _waveOutEvent.DeviceNumber = vbCableDeviceNumberr;
             
             _waveOutEvent.Init(mixer);
-            _waveOutEvent.Play();
+            //_waveOutEvent.Play();
         }
         #endregion PlayAudio
 

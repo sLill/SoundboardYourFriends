@@ -210,23 +210,27 @@ namespace SoundboardYourFriends.ViewModel
                 { 
                     Name = Path.GetFileNameWithoutExtension(audioSamplePath), 
                     FilePath = audioSamplePath,
-                    GroupName = groupName
+                    GroupName = groupName,
+                    FileTimeMax = 100,
+                    FileTimeMin = 0,
+                    FileTimeUpperValue = 80,
+                    FileTimeLowerValue = 30
                 });
             }
         }
         #endregion LoadAudioSamples
 
         #region PlayAudioSample
-        public void PlayAudioSample(SoundboardSample soundboardSample)
+        public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            AudioAgent.PlayAudio(soundboardSample.FilePath);
+            AudioAgent.PlayAudio(soundboardSample.FilePath, playbackType);
         }
         #endregion PlayAudioSample
 
         #region RegisterRecordHotKey
         public void RegisterRecordHotKey(IntPtr viewHandle, Key key)
         {
-            RecordHotkey = key;
+            RecordHotkey = Key.Up;
 
             _hwndSource = HwndSource.FromHwnd(viewHandle);
             _hwndSource.AddHook(HwndHook);

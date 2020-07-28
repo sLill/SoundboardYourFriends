@@ -124,8 +124,17 @@
   <data name="PlayButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PlayButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="PlayButtonGray" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PlayButtonGray.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="RecordButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RecordButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SaveButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SaveButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SaveButtonGray" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SaveButtonGray.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="SettingsGear" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SettingsGear.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

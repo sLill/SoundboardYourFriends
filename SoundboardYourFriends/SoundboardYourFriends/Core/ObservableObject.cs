@@ -8,18 +8,15 @@ namespace SoundboardYourFriends.Core
 {
     public abstract class ObservableObject : INotifyPropertyChanged
     {
-        #region Events..
+        #region Event Handlers..
         public event PropertyChangedEventHandler PropertyChanged;
-        #endregion Events..
+        #endregion Event Handlers..
 
         #region Methods..
         #region RaisePropertyChanged
         protected void RaisePropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion RaisePropertyChanged 
         #endregion Methods..

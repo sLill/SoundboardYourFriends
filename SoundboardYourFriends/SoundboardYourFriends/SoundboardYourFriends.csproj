@@ -9,7 +9,10 @@
   <ItemGroup>
     <None Remove="Resources\DeleteButton.png" />
     <None Remove="Resources\PlayButton.png" />
+    <None Remove="Resources\PlayButtonGray.png" />
     <None Remove="Resources\RecordButton.png" />
+    <None Remove="Resources\SaveButton.png" />
+    <None Remove="Resources\SaveButtonGray.png" />
     <None Remove="Resources\SettingsGear.png" />
     <None Remove="Resources\StopButton.png" />
   </ItemGroup>
@@ -19,6 +22,15 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\PlayButton.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\PlayButtonGray.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\SaveButton.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\SaveButtonGray.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\SettingsGear.png" />
@@ -49,11 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Converters\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ListViewDragDropManager" Version="1.2.0" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="System.Management" Version="4.7.0" />
   </ItemGroup>
