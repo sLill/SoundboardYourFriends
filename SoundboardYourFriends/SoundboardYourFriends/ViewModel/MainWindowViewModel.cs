@@ -110,7 +110,6 @@ namespace SoundboardYourFriends.ViewModel
         #region MainWindowViewModel
         public MainWindowViewModel()
         {
-            GetApplicationConfiguration();
             LoadAudioSamples();
 
             AudioAgent.FileWritten += OnFileWritten;
@@ -125,11 +124,16 @@ namespace SoundboardYourFriends.ViewModel
             string filePath = sender as string;
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
+            double totalSeconds = AudioAgent.GetFileAudioDuration(filePath).TotalSeconds;
             SoundboardSample TestRecording = new SoundboardSample()
             {
                 Name = fileName,
                 FilePath = filePath,
-                GroupName = "Ungrouped"
+                GroupName = "Ungrouped",
+                FileTimeMax = totalSeconds,
+                FileTimeMin = 0,
+                FileTimeUpperValue = totalSeconds,
+                FileTimeLowerValue = 0
             };
 
             SoundboardSampleCollection.Add(TestRecording);
@@ -163,7 +167,7 @@ namespace SoundboardYourFriends.ViewModel
 
                             if (vkey == keyCode)
                             { 
-                                AudioAgent.WriteAudioBuffer();
+                                AudioAgent.WriteAudioBufferToFile();
                             }
 
                             handled = true;
@@ -184,13 +188,22 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion Closing
 
-        #region GetApplicationConfiguration
-        private void GetApplicationConfiguration()
+        #region DeleteSample
+        public void DeleteSample(SoundboardSample soundboardSample)
+        {
+            File.Delete(soundboardSample.FilePath);
+            SoundboardSampleCollection.Remove(soundboardSample);
+        }
+        #endregion DeleteSample
+
+        #region InitializeControlsFromConfig
+        public void InitializeControlsFromConfig(Window applicationWindow)
         {
             SelectedListeningDevicesCollection.Add(new AudioDevice() { FriendlyName = "No device(s) selected" });
             SelectedOutputDevicesCollection.Add(new AudioDevice() { FriendlyName = "No device(s) selected" });
+            RegisterRecordHotKey(new WindowInteropHelper(applicationWindow).Handle, Key.Up);
         }
-        #endregion GetApplicationConfiguration
+        #endregion InitializeControlsFromConfig
 
         #region LoadAudioSamples
         private void LoadAudioSamples()
@@ -224,17 +237,14 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            double lowerValuePercent = soundboardSample.FileTimeLowerValue / soundboardSample.FileTimeMax;
-            double upperValuePercent = soundboardSample.FileTimeUpperValue / soundboardSample.FileTimeMax;
-
-            AudioAgent.StartAudioPlayback(soundboardSample.FilePath, playbackType, lowerValuePercent, upperValuePercent);
+            AudioAgent.StartAudioPlayback(soundboardSample.FilePath, playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
         }
         #endregion PlayAudioSample
 
         #region RegisterRecordHotKey
         public void RegisterRecordHotKey(IntPtr viewHandle, Key key)
         {
-            RecordHotkey = Key.Up;
+            RecordHotkey = key;
 
             _hwndSource = HwndSource.FromHwnd(viewHandle);
             _hwndSource.AddHook(HwndHook);
@@ -254,6 +264,29 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion RegisterRecordHotKey
 
+        #region SaveSample
+        public void SaveSample(SoundboardSample soundboardSample)
+        {
+            // File length
+            if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
+            {
+                AudioAgent.TrimFile(soundboardSample.FilePath, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+
+                soundboardSample.FileTimeMin = 0;
+                soundboardSample.FileTimeMax = AudioAgent.GetFileAudioDuration(soundboardSample.FilePath).Seconds;
+            }
+
+            // File name
+            if (Path.GetFileNameWithoutExtension(soundboardSample.FilePath) != soundboardSample.Name)
+            {
+                string newFilePath = Path.Combine(SettingsManager.SoundboardSampleDirectory, soundboardSample.GroupName, $"{soundboardSample.Name}.wav");
+                File.Move(soundboardSample.FilePath, newFilePath);
+
+                soundboardSample.FilePath = newFilePath;
+            }
+        }
+        #endregion SaveSample
+
         #region SetAudioDevice
         public void SetAudioDevice(AudioDeviceType audioDeviceType)
         {
@@ -261,7 +294,10 @@ namespace SoundboardYourFriends.ViewModel
             {
                 audioDeviceDialog.ShowDialog();
 
-                ObservableCollection<AudioDevice> AudioDeviceCollection = audioDeviceDialog.SelectedAudioDevices == null ? null : new ObservableCollection<AudioDevice>(audioDeviceDialog.SelectedAudioDevices);
+                ObservableCollection<AudioDevice> AudioDeviceCollection = audioDeviceDialog.SelectedAudioDevices == null 
+                    ? new ObservableCollection<AudioDevice>() { new AudioDevice() { FriendlyName = "No device(s) selected" } } 
+                    : new ObservableCollection<AudioDevice>(audioDeviceDialog.SelectedAudioDevices);
+
                 AudioAgent.InitializeOutputDevices(AudioDeviceCollection.Select(audioDevice => audioDevice.DeviceId));
 
                 switch (audioDeviceType)

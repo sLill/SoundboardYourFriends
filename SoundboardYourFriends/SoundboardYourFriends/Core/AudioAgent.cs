@@ -122,32 +122,8 @@ namespace SoundboardYourFriends.Core
         #endregion InitializeOutputDevices
 
         #region StartAudioPlayback
-        public static void StartAudioPlayback(string filePath, PlaybackType playbackType, double lowerValuePercent, double upperValuePercent)
+        public static void StartAudioPlayback(string filePath, PlaybackType playbackType, double beginTime, double endTime)
         {
-            //int deviceNumber = -1;          
-            //for (int i = 0; i < WaveOut.DeviceCount; i++)
-            //{
-            //    var audioDevice = WaveOut.GetCapabilities(i);
-
-            //    switch (playbackType)
-            //    {
-            //        case PlaybackType.Global:
-            //            if (audioDevice.ProductName.Contains("CABLE Input"))
-            //            {
-            //                deviceNumber = i;
-            //            }
-            //            break;
-            //        case PlaybackType.Local:
-            //            if (audioDevice.ProductName.Contains("Headphones(3 - Arctis 7 Game)"))
-            //            {
-            //                deviceNumber = i;
-            //            }
-            //            break;
-            //    }
-            //}
-
-            //_waveOutEvent.DeviceNumber = deviceNumber;
-
             StopAudioPlayback();
 
             _waveOutEventCollection?.ForEach(waveOutEvent =>
@@ -159,8 +135,8 @@ namespace SoundboardYourFriends.Core
                 ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
 
                 OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
-                offsetSampleProvider.SkipOver = audioFileReader.TotalTime * lowerValuePercent;
-                offsetSampleProvider.Take = (audioFileReader.TotalTime *  upperValuePercent) - offsetSampleProvider.SkipOver;
+                offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
+                offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
 
                 mixer.AddMixerInput(offsetSampleProvider);
 
@@ -197,8 +173,34 @@ namespace SoundboardYourFriends.Core
         }
         #endregion StopListening
 
-        #region WriteAudioBuffer
-        public static void WriteAudioBuffer()
+        public static void TrimFile (string filePath, double beginTime, double endTime)
+        {
+            byte[] audioInputBuffer;
+            using (var waveFileReader = new WaveFileReader(filePath))
+            {
+                double beginTimeAsPercent = beginTime / GetFileAudioDuration(filePath).Seconds;
+                double endTimeAsPercent = endTime / GetFileAudioDuration(filePath).Seconds;
+
+                var fileInfo = new FileInfo(filePath);
+                int beginByteIndex = (int)(fileInfo.Length * beginTimeAsPercent);
+                int endByteIndex = (int)(fileInfo.Length * endTimeAsPercent);
+
+                // Round to the nearest block
+                beginByteIndex = (int)Math.Round((double)beginByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign;
+                endByteIndex = (int)Math.Round((double)endByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign;
+
+                audioInputBuffer = new byte[endByteIndex - beginByteIndex];
+                waveFileReader.Read(audioInputBuffer, beginByteIndex, audioInputBuffer.Length);
+            }
+
+            using (var waveFileWriter = new WaveFileWriter(filePath, WasapiLoopbackCapture.WaveFormat))
+            {
+                waveFileWriter.Write(audioInputBuffer, 0, audioInputBuffer.Length);
+            }
+        }
+
+        #region WriteAudioBufferToFile
+        public static void WriteAudioBufferToFile()
         {
             string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
             string fileNameFull = Path.Combine(SettingsManager.SoundboardSampleDirectory, fileName);
@@ -213,7 +215,7 @@ namespace SoundboardYourFriends.Core
             _audioByteBuffer.Clear();
             AudioAgent.FileWritten?.Invoke(fileNameFull, EventArgs.Empty);
         }
-        #endregion WriteAudioBuffer
+        #endregion WriteAudioBufferToFile
         #endregion Methods..
     }
 }

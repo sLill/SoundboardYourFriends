@@ -21,7 +21,6 @@ namespace SoundboardYourFriends.Model
         }
         #endregion DeviceId
 
-
         #region FriendlyName
         public string FriendlyName
         {

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundboardYourFriends"
+        xmlns:Converters="clr-namespace:SoundboardYourFriends.Converters"
         mc:Ignorable="d"
         Title="Soundboard Your Friends" Height="550" Width="900" Closing="Window_Closing" Loaded="Window_Loaded">
 
@@ -56,6 +57,20 @@
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn DisplayMemberBinding="{Binding FriendlyName}"/>
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel Name="pnlInputAudioScope" Margin="10,0,0,0">
+                                        <CheckBox Margin="-5,0,0,0" Width="55">
+                                            <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Local"/>
+                                        </CheckBox>
+                                        <CheckBox Margin="-5,0,0,0" Width="55">
+                                            <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Global"/>
+                                        </CheckBox>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -91,13 +106,27 @@
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn DisplayMemberBinding="{Binding FriendlyName}"/>
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel Name="pnlOutputAudioScope" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0">
+                                        <CheckBox Margin="-5,0,0,0" Width="55">
+                                            <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Local"/>
+                                        </CheckBox>
+                                        <CheckBox Margin="-5,0,0,0" Width="55">
+                                            <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Global"/>
+                                        </CheckBox>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
         </DockPanel>
 
         <!--Row 5-->
-        <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0, 0, 0, 0">
+        <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,10,0,0">
             <ListView Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
 
                 <!--View-->
@@ -144,7 +173,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Margin="5,0,0,0" VerticalAlignment="Center">
-                                        <local:RangeSlider Width="150" Maximum="{Binding FileTimeMax}" Minimum="{Binding FileTimeMin}" UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}"></local:RangeSlider>
+                                        <local:RangeSlider Width="200" Maximum="{Binding FileTimeMax}" Minimum="{Binding FileTimeMin}" UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}"></local:RangeSlider>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -167,12 +196,12 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Name="pnlMediaPanel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25,0,0,0">
-                                        <Button VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Margin="3,0,0,0">
+                                        <Button Name="btnSave" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Margin="3,0,0,0" Click="btnSave_Click">
                                             <StackPanel Background="Transparent">
                                                 <Image Source="/Resources/SaveButtonGray.png" Height="20" Width="20"/>
                                             </StackPanel>
                                         </Button>
-                                        <Button VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0" Background="Transparent">
+                                        <Button Name="btnDelete" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0" Background="Transparent" Click="btnDelete_Click">
                                             <StackPanel Background="Transparent">
                                                 <Image Source="/Resources/DeleteButton.png" Height="20" Width="20"/>
                                             </StackPanel>

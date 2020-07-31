@@ -94,6 +94,17 @@ namespace SoundboardYourFriends.View
         }
         #endregion btnRecordButton_MouseUp
 
+        #region btnSave_Click
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
+            if (MessageBox.Show(this, "Confirm Save", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _mainWindowViewModel.SaveSample(soundboardSample);
+            };
+        }
+        #endregion btnSave_Click
+
         #region btnSetting_MouseUp
         private void btnSettings_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -122,9 +133,20 @@ namespace SoundboardYourFriends.View
             CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
             collectionView.GroupDescriptions.Add(groupDescription);
+
+            _mainWindowViewModel.InitializeControlsFromConfig(this);
         }
         #endregion Window_Loaded
-        #endregion Events..
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
+
+            if (MessageBox.Show(this, "Confirm Delete", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _mainWindowViewModel.DeleteSample(soundboardSample);
+            };
+        }
 
         #region OnClosed
         protected override void OnClosed(EventArgs e)
@@ -133,6 +155,7 @@ namespace SoundboardYourFriends.View
             base.OnClosed(e);
         }
         #endregion OnClosed
+        #endregion Events..
 
         #endregion Methods..
     }

@@ -36,6 +36,7 @@
                 </Grid>
             </Border>
         </ControlTemplate>
+        
         <Converters:DoubleToTimeStringConverter x:Key="IntegerConverter" />
     </UserControl.Resources>
     <Grid VerticalAlignment="Top">
