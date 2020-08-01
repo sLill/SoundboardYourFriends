@@ -186,7 +186,7 @@ namespace SoundboardYourFriends.Core
 
                 // Round to the nearest block
                 beginByteIndex = (int)Math.Round((double)beginByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign;
-                endByteIndex = (int)Math.Round((double)endByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign;
+                endByteIndex = (int)Math.Round((double)endByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign - 8;
 
                 audioInputBuffer = new byte[endByteIndex - beginByteIndex];
                 waveFileReader.Read(audioInputBuffer, beginByteIndex, audioInputBuffer.Length);
