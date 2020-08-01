@@ -1,8 +1,8 @@
-﻿<UserControl x:Class="SoundboardYourFriends.RangeSlider"
+﻿<UserControl x:Class="SoundboardYourFriends.View.UserControls.RangeSlider"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:local="clr-namespace:SoundboardYourFriends"
+             xmlns:local="clr-namespace:SoundboardYourFriends.View.UserControls"
              xmlns:Converters="clr-namespace:SoundboardYourFriends.Converters"
              Name="rangeSlider">
     <UserControl.Resources>

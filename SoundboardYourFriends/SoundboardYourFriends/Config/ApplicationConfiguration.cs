@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Windows.Input;
 using System.IO;
-using System.Runtime.InteropServices;
 
-namespace SoundboardYourFriends.Settings
+namespace SoundboardYourFriends
 {
-    public static class SettingsManager
+    public static class ApplicationConfiguration
     {
         #region Member Variables..
         #endregion Member Variables..
@@ -32,10 +30,12 @@ namespace SoundboardYourFriends.Settings
         #endregion Properties..
 
         #region Constructors..
-        static SettingsManager()
+        #region ApplicationConfiguration
+        static ApplicationConfiguration()
         {
             ImportSettings();
         }
+        #endregion ApplicationConfiguration
         #endregion Constructors..
 
         #region Methods..

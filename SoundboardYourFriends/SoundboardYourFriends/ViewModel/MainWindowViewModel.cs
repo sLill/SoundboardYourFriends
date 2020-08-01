@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using NAudio.Wave;
 using System.IO;
-using SoundboardYourFriends.Settings;
+using SoundboardYourFriends.View.Windows;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -208,9 +208,9 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadAudioSamples
         private void LoadAudioSamples()
         {
-            foreach(string audioSamplePath in Directory.GetFiles(SettingsManager.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
+            foreach(string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
             {
-                string relativePath = Path.GetRelativePath(SettingsManager.SoundboardSampleDirectory, audioSamplePath);
+                string relativePath = Path.GetRelativePath(ApplicationConfiguration.SoundboardSampleDirectory, audioSamplePath);
                 string[] directorySplit = relativePath.Split('\\');
                 double totalSeconds = AudioAgent.GetFileAudioDuration(audioSamplePath).TotalSeconds;
 
@@ -279,7 +279,7 @@ namespace SoundboardYourFriends.ViewModel
             // File name
             if (Path.GetFileNameWithoutExtension(soundboardSample.FilePath) != soundboardSample.Name)
             {
-                string newFilePath = Path.Combine(SettingsManager.SoundboardSampleDirectory, soundboardSample.GroupName, $"{soundboardSample.Name}.wav");
+                string newFilePath = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, soundboardSample.GroupName, $"{soundboardSample.Name}.wav");
                 File.Move(soundboardSample.FilePath, newFilePath);
 
                 soundboardSample.FilePath = newFilePath;

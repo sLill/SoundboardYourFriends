@@ -1,10 +1,11 @@
-﻿<Window x:Class="SoundboardYourFriends.View.MainWindow"
+﻿<Window x:Class="SoundboardYourFriends.View.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SoundboardYourFriends"
-        xmlns:Converters="clr-namespace:SoundboardYourFriends.Converters"
+        xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
+        xmlns:converters="clr-namespace:SoundboardYourFriends.Converters"
+        xmlns:userControls="clr-namespace:SoundboardYourFriends.View.UserControls"
         mc:Ignorable="d"
         Title="Soundboard Your Friends" Height="550" Width="900" Closing="Window_Closing" Loaded="Window_Loaded">
 
@@ -173,7 +174,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Margin="5,0,0,0" VerticalAlignment="Center">
-                                        <local:RangeSlider Width="200" Maximum="{Binding FileTimeMax}" Minimum="{Binding FileTimeMin}" UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}"></local:RangeSlider>
+                                        <userControls:RangeSlider Width="200" Maximum="{Binding FileTimeMax}" Minimum="{Binding FileTimeMin}" UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}"></userControls:RangeSlider>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

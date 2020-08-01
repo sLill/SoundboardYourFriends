@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace SoundboardYourFriends.View
+namespace SoundboardYourFriends.View.Windows
 {
     public partial class AudioDeviceDialog : Window, IDisposable
     {

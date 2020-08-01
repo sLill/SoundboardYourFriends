@@ -4,6 +4,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <!--<PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -64,10 +66,6 @@
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SoundboardYourFriends.Settings\SoundboardYourFriends.Settings.csproj" />
   </ItemGroup>
 
 </Project>

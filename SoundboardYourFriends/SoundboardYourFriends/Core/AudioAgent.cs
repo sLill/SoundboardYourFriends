@@ -6,7 +6,6 @@ using System.Text;
 using System.Linq;
 using NAudio.Wave.SampleProviders;
 using System.IO;
-using SoundboardYourFriends.Settings;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
@@ -52,7 +51,7 @@ namespace SoundboardYourFriends.Core
         private static void BeginListening()
         {
             // Copies about once every 1.5 min when set to 7112000 * 4 (Gives ~20 sec audio clip)
-            int audioBufferMax = SettingsManager.ByteSampleSize * 4;
+            int audioBufferMax = ApplicationConfiguration.ByteSampleSize * 4;
             WasapiLoopbackCapture = new WasapiLoopbackCapture();
 
             WasapiLoopbackCapture.DataAvailable += (sender, e) =>
@@ -60,7 +59,7 @@ namespace SoundboardYourFriends.Core
                 // Copy a clip-sized chunk of audio to a new byte array upon filling this one up
                 if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
                 {
-                    List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - SettingsManager.ByteSampleSize, SettingsManager.ByteSampleSize);
+                    List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize);
                     _audioByteBuffer.Clear();
                     _audioByteBuffer.AddRange(retainedBytes);
                 }
@@ -203,12 +202,12 @@ namespace SoundboardYourFriends.Core
         public static void WriteAudioBufferToFile()
         {
             string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
-            string fileNameFull = Path.Combine(SettingsManager.SoundboardSampleDirectory, fileName);
+            string fileNameFull = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, fileName);
 
             WaveFormat waveFormat = WasapiLoopbackCapture.WaveFormat;
             using (WaveFileWriter waveFileWriter= new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
             {
-                var bytesToWrite = SettingsManager.ByteSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - SettingsManager.ByteSampleSize, SettingsManager.ByteSampleSize).ToArray();
+                var bytesToWrite = ApplicationConfiguration.ByteSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize).ToArray();
                 waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);
             }
 

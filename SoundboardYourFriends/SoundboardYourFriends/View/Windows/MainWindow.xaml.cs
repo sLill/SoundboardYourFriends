@@ -7,7 +7,7 @@ using System.Windows.Interop;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.ViewModel;
 
-namespace SoundboardYourFriends.View
+namespace SoundboardYourFriends.View.Windows
 {
     public partial class MainWindow : Window
     {
