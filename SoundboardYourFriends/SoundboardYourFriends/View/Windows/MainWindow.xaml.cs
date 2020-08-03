@@ -139,6 +139,7 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion Window_Loaded
 
+        #region btnDelete_Click
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
@@ -148,6 +149,7 @@ namespace SoundboardYourFriends.View.Windows
                 _mainWindowViewModel.DeleteSample(soundboardSample);
             };
         }
+        #endregion btnDelete_Click
 
         #region OnClosed
         protected override void OnClosed(EventArgs e)

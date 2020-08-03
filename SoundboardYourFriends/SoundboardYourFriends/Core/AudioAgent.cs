@@ -67,13 +67,36 @@ namespace SoundboardYourFriends.Core
                 byte[] capturedBytes = new byte[e.BytesRecorded];
                 Array.Copy(e.Buffer, 0, capturedBytes, 0, e.BytesRecorded);
                 _audioByteBuffer.AddRange(capturedBytes);
-
-                // Note: Highest value here can be used for audio visualization
             };
 
             WasapiLoopbackCapture.StartRecording();
         }
         #endregion BeginListening
+
+        #region BeginPlayback
+        public static void BeginPlayback(string filePath, PlaybackType playbackType, double beginTime, double endTime)
+        {
+            StopAudioPlayback();
+
+            _waveOutEventCollection?.ForEach(waveOutEvent =>
+            {
+                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
+                AudioFileReader audioFileReader = new AudioFileReader(filePath);
+
+                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
+                ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
+
+                OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
+                offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
+                offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
+
+                mixer.AddMixerInput(offsetSampleProvider);
+
+                waveOutEvent.Init(mixer);
+                waveOutEvent.Play();
+            });
+        }
+        #endregion BeginPlayback
 
         #region ConvertToMixerChannelCount
         private static ISampleProvider ConvertToMixerChannelCount(ISampleProvider mixer, ISampleProvider input)
@@ -119,31 +142,6 @@ namespace SoundboardYourFriends.Core
             }
         }
         #endregion InitializeOutputDevices
-
-        #region StartAudioPlayback
-        public static void StartAudioPlayback(string filePath, PlaybackType playbackType, double beginTime, double endTime)
-        {
-            StopAudioPlayback();
-
-            _waveOutEventCollection?.ForEach(waveOutEvent =>
-            {
-                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
-                AudioFileReader audioFileReader = new AudioFileReader(filePath);
-
-                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
-                ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
-
-                OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
-                offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
-                offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
-
-                mixer.AddMixerInput(offsetSampleProvider);
-
-                waveOutEvent.Init(mixer);
-                waveOutEvent.Play();
-            });
-        }
-        #endregion StartAudioPlayback
 
         #region StopAudioPlayback
         public static void StopAudioPlayback()

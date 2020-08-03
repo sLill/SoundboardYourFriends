@@ -16,6 +16,7 @@ using System.IO;
 using SoundboardYourFriends.View.Windows;
 using NAudio.CoreAudioApi;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -27,31 +28,31 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Member Variables..
 
         #region Properties..
-        #region SelectedListeningDevicesCollection
-        private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
-        public ObservableCollection<AudioDevice> SelectedListeningDevicesCollection
+        #region CapturedAudioPeak
+        private int _capturedAudioPeak;
+        public int CapturedAudioPeak
         {
-            get { return _selectedListeningDevicesCollection; }
-            set
-            {
-                _selectedListeningDevicesCollection = value;
+            get { return _capturedAudioPeak; }
+            set 
+            { 
+                _capturedAudioPeak = value;
                 RaisePropertyChanged();
             }
         }
-        #endregion SelectedListeningDevicesCollection
+        #endregion CapturedAudioPeak
 
-        #region SelectedOutputDevicesCollection
-        private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
-        public ObservableCollection<AudioDevice> SelectedOutputDevicesCollection
+        #region OutputAudioPeak
+        private int _outputAudioPeak;
+        public int OutputAudioPeak
         {
-            get { return _selectedOutputDevicesCollection; }
-            set
-            {
-                _selectedOutputDevicesCollection = value;
+            get { return _outputAudioPeak; }
+            set 
+            { 
+                _outputAudioPeak = value;
                 RaisePropertyChanged();
             }
         }
-        #endregion SelectedOutputDevicesCollection
+        #endregion OutputAudioPeak
 
         #region RecordHotkey
         private Key? _recordHotKey;
@@ -79,6 +80,32 @@ namespace SoundboardYourFriends.ViewModel
             }
         }
         #endregion RecordHotkeyDisplay
+
+        #region SelectedListeningDevicesCollection
+        private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
+        public ObservableCollection<AudioDevice> SelectedListeningDevicesCollection
+        {
+            get { return _selectedListeningDevicesCollection; }
+            set
+            {
+                _selectedListeningDevicesCollection = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion SelectedListeningDevicesCollection
+
+        #region SelectedOutputDevicesCollection
+        private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
+        public ObservableCollection<AudioDevice> SelectedOutputDevicesCollection
+        {
+            get { return _selectedOutputDevicesCollection; }
+            set
+            {
+                _selectedOutputDevicesCollection = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion SelectedOutputDevicesCollection
 
         #region SelectedSoundboardSample
         private SoundboardSample _selectedSoundboardSample;
@@ -111,13 +138,28 @@ namespace SoundboardYourFriends.ViewModel
         #region MainWindowViewModel
         public MainWindowViewModel()
         {
-            AudioAgent.FileWritten += OnFileWritten;
+            SetEvents();
         }
         #endregion MainWindowViewModel
         #endregion Constructors..
 
         #region Methods..
         #region Events..
+        #region OnAudioMeterTimerElapsed
+        private void OnAudioMeterTimerElapsed(object sender, EventArgs e)
+        {
+            
+            using (var deviceEnumerator = new MMDeviceEnumerator())
+            {
+                MMDevice defaultRenderDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
+
+                CapturedAudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
+                OutputAudioPeak = (int)(defaultRenderDevice.AudioMeterInformation.MasterPeakValue * 100);
+            }
+        }
+        #endregion OnAudioMeterTimerElapsed
+
+        #region OnFileWritten
         public void OnFileWritten(object sender, EventArgs e)
         {
             string filePath = sender as string;
@@ -137,6 +179,7 @@ namespace SoundboardYourFriends.ViewModel
 
             SoundboardSampleCollection.Add(TestRecording);
         }
+        #endregion OnFileWritten
         #endregion Events..
 
         #region Windows..
@@ -324,7 +367,7 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            AudioAgent.StartAudioPlayback(soundboardSample.FilePath, playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+            AudioAgent.BeginPlayback(soundboardSample.FilePath, playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
         }
         #endregion PlayAudioSample
 
@@ -399,6 +442,17 @@ namespace SoundboardYourFriends.ViewModel
             }
         }
         #endregion SetAudioDevice
+
+        private void SetEvents()
+        {
+            AudioAgent.FileWritten += OnFileWritten;
+
+            // Audio Meter Polling Rate
+            var audioMeterUpdateTimer = new System.Timers.Timer(100);
+            audioMeterUpdateTimer.Start();
+
+            audioMeterUpdateTimer.Elapsed += OnAudioMeterTimerElapsed;
+        }
 
         #region StopAudioPlayback
         public void StopAudioPlayback()
