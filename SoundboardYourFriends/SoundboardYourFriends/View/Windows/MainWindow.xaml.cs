@@ -134,7 +134,8 @@ namespace SoundboardYourFriends.View.Windows
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
             collectionView.GroupDescriptions.Add(groupDescription);
 
-            _mainWindowViewModel.InitializeControlsFromConfig(this);
+            _mainWindowViewModel.LoadConfig(this);
+            _mainWindowViewModel.LoadAudioSamples();
         }
         #endregion Window_Loaded
 

@@ -39,7 +39,6 @@ namespace SoundboardYourFriends.ViewModel
         public AudioDeviceDialogViewModel(AudioDeviceType audioDeviceType) 
         {
             AudioDeviceType = audioDeviceType;
-
             GetWindowsAudioDevices();
         }
         #endregion AudioDeviceDialogViewModel
@@ -58,7 +57,8 @@ namespace SoundboardYourFriends.ViewModel
                 AudioDevices.Add(new AudioDevice() 
                 { 
                     FriendlyName = audioDevice.ProductName, 
-                    DeviceId = i 
+                    DeviceId = i,
+                    NameGuid = audioDevice.NameGuid
                 });
             }
         }

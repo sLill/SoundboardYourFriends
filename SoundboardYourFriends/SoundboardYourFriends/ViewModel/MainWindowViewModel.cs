@@ -14,6 +14,8 @@ using System.Linq;
 using NAudio.Wave;
 using System.IO;
 using SoundboardYourFriends.View.Windows;
+using NAudio.CoreAudioApi;
+using System.Text.RegularExpressions;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -21,18 +23,12 @@ namespace SoundboardYourFriends.ViewModel
     {
         #region Member Variables..
         private HwndSource _hwndSource;
-        private Key? _recordHotKey;
-        private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
-        private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
-        private ObservableCollection<SoundboardSample> _soundboardSampleCollection = new ObservableCollection<SoundboardSample>();
-        private SoundboardSample _selectedSoundboardSample;
-        private string _recordHotKeyDisplay = "Unassigned";
-
         private const int RECORD_HOTKEY_ID = 9000;
         #endregion Member Variables..
 
         #region Properties..
         #region SelectedListeningDevicesCollection
+        private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
         public ObservableCollection<AudioDevice> SelectedListeningDevicesCollection
         {
             get { return _selectedListeningDevicesCollection; }
@@ -45,6 +41,7 @@ namespace SoundboardYourFriends.ViewModel
         #endregion SelectedListeningDevicesCollection
 
         #region SelectedOutputDevicesCollection
+        private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
         public ObservableCollection<AudioDevice> SelectedOutputDevicesCollection
         {
             get { return _selectedOutputDevicesCollection; }
@@ -57,6 +54,7 @@ namespace SoundboardYourFriends.ViewModel
         #endregion SelectedOutputDevicesCollection
 
         #region RecordHotkey
+        private Key? _recordHotKey;
         public Key? RecordHotkey
         {
             get { return _recordHotKey; }
@@ -70,6 +68,7 @@ namespace SoundboardYourFriends.ViewModel
         #endregion RecordHotkey
 
         #region RecordHotkeyDisplay
+        private string _recordHotKeyDisplay = "Unassigned";
         public string RecordHotkeyDisplay
         {
             get { return $"CTRL + {_recordHotKeyDisplay}"; }
@@ -82,6 +81,7 @@ namespace SoundboardYourFriends.ViewModel
         #endregion RecordHotkeyDisplay
 
         #region SelectedSoundboardSample
+        private SoundboardSample _selectedSoundboardSample;
         public SoundboardSample SelectedSoundboardSample
         { 
             get { return _selectedSoundboardSample; }
@@ -94,6 +94,7 @@ namespace SoundboardYourFriends.ViewModel
         #endregion SelectedSoundboardSample
 
         #region SoundboardSampleCollection
+        private ObservableCollection<SoundboardSample> _soundboardSampleCollection = new ObservableCollection<SoundboardSample>();
         public ObservableCollection<SoundboardSample> SoundboardSampleCollection 
         { 
             get { return _soundboardSampleCollection; }
@@ -110,8 +111,6 @@ namespace SoundboardYourFriends.ViewModel
         #region MainWindowViewModel
         public MainWindowViewModel()
         {
-            LoadAudioSamples();
-
             AudioAgent.FileWritten += OnFileWritten;
         }
         #endregion MainWindowViewModel
@@ -196,19 +195,98 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion DeleteSample
 
-        #region InitializeControlsFromConfig
-        public void InitializeControlsFromConfig(Window applicationWindow)
+        #region LoadAudioDevices
+        private void LoadAudioDevices()
         {
-            SelectedListeningDevicesCollection.Add(new AudioDevice() { FriendlyName = "No device(s) selected" });
-            SelectedOutputDevicesCollection.Add(new AudioDevice() { FriendlyName = "No device(s) selected" });
-            RegisterRecordHotKey(new WindowInteropHelper(applicationWindow).Handle, Key.Up);
+            // Listening Devices
+            if (ApplicationConfiguration.DefaultListeningDeviceIds.Any())
+            {
+                var audioDeviceCollection = new List<AudioDevice>();
+                for (int i = 0; i < WaveIn.DeviceCount; i++)
+                {
+                    var deviceProperties = WaveIn.GetCapabilities(i);
+                    audioDeviceCollection.Add(new AudioDevice()
+                    {
+                        FriendlyName = deviceProperties.ProductName,
+                        DeviceId = i,
+                        NameGuid = deviceProperties.NameGuid
+                    });
+                }
+
+                ApplicationConfiguration.DefaultListeningDeviceIds.ForEach(deviceId =>
+                {
+                    var matchedDevice = audioDeviceCollection.FirstOrDefault(x => x.NameGuid == deviceId);
+                    if (matchedDevice != null)
+                    {
+                        SelectedListeningDevicesCollection.Add(matchedDevice);
+                    }
+                });
+            }
+            else
+            {
+                int deviceId = 0;
+                using (var deviceEnumerator = new MMDeviceEnumerator())
+                {
+                    // Use the windows default listening device if one has not been setup
+                    var systemDefaultListeningDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
+                    SelectedListeningDevicesCollection.Add(new AudioDevice()
+                    {
+                        FriendlyName = systemDefaultListeningDevice.FriendlyName,
+                        DeviceId = deviceId
+                    });
+
+                    deviceId++;
+                }
+            }
+
+            // Output Devices
+            if (ApplicationConfiguration.DefaultOutputDeviceIds.Any())
+            {
+                var audioDeviceCollection = new List<AudioDevice>();
+                for (int i = 0; i < WaveOut.DeviceCount; i++)
+                {
+                    var deviceProperties = WaveOut.GetCapabilities(i);
+                    audioDeviceCollection.Add(new AudioDevice()
+                    {
+                        FriendlyName = deviceProperties.ProductName,
+                        DeviceId = i,
+                        NameGuid = deviceProperties.NameGuid
+                    });
+                }
+
+                ApplicationConfiguration.DefaultOutputDeviceIds.ForEach(deviceId =>
+                {
+                    var matchedDevice = audioDeviceCollection.FirstOrDefault(x => x.NameGuid == deviceId);
+                    if (matchedDevice != null)
+                    {
+                        SelectedOutputDevicesCollection.Add(matchedDevice);
+                    }
+                });
+            }
+            else
+            {
+                int deviceId = 0;
+                using (var deviceEnumerator = new MMDeviceEnumerator())
+                { 
+                    // Use the windows default output device if one has not been setup
+                    var systemDefaultOutputDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
+                    SelectedOutputDevicesCollection.Add(new AudioDevice()
+                    {
+                        FriendlyName = systemDefaultOutputDevice.FriendlyName,
+                        DeviceId = deviceId
+                    });
+
+                    deviceId++;
+                }
+            }
+
         }
-        #endregion InitializeControlsFromConfig
+        #endregion LoadAudioDevices
 
         #region LoadAudioSamples
-        private void LoadAudioSamples()
+        public void LoadAudioSamples()
         {
-            foreach(string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
+            foreach (string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
             {
                 string relativePath = Path.GetRelativePath(ApplicationConfiguration.SoundboardSampleDirectory, audioSamplePath);
                 string[] directorySplit = relativePath.Split('\\');
@@ -220,9 +298,9 @@ namespace SoundboardYourFriends.ViewModel
                     groupName = directorySplit[0];
                 }
 
-                _soundboardSampleCollection.Add(new SoundboardSample() 
-                { 
-                    Name = Path.GetFileNameWithoutExtension(audioSamplePath), 
+                _soundboardSampleCollection.Add(new SoundboardSample()
+                {
+                    Name = Path.GetFileNameWithoutExtension(audioSamplePath),
                     FilePath = audioSamplePath,
                     GroupName = groupName,
                     FileTimeMax = totalSeconds,
@@ -233,6 +311,15 @@ namespace SoundboardYourFriends.ViewModel
             }
         }
         #endregion LoadAudioSamples
+
+        #region LoadConfig
+        public void LoadConfig(Window applicationWindow)
+        {
+            LoadAudioDevices();
+
+            RegisterRecordHotKey(new WindowInteropHelper(applicationWindow).Handle, Key.Up);
+        }
+        #endregion LoadConfig
 
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)

@@ -8,7 +8,6 @@ namespace SoundboardYourFriends.Model
     public class AudioDevice : ObservableObject
     {
         #region Member Variables..
-        private string _friendlyName;
         #endregion Member Variables..
 
         #region Properties..
@@ -22,6 +21,7 @@ namespace SoundboardYourFriends.Model
         #endregion DeviceId
 
         #region FriendlyName
+        private string _friendlyName;
         public string FriendlyName
         {
             get { return _friendlyName; } 
@@ -32,6 +32,19 @@ namespace SoundboardYourFriends.Model
             }
         }
         #endregion FriendlyName
+
+        #region NameGuid
+        private Guid _nameGuid;
+        public Guid NameGuid
+        {
+            get { return _nameGuid; }
+            set
+            {
+                _nameGuid = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion NameGuid
         #endregion Properties..
     }
 }

@@ -172,7 +172,8 @@ namespace SoundboardYourFriends.Core
         }
         #endregion StopListening
 
-        public static void TrimFile (string filePath, double beginTime, double endTime)
+        #region TrimFile
+        public static void TrimFile(string filePath, double beginTime, double endTime)
         {
             byte[] audioInputBuffer;
             using (var waveFileReader = new WaveFileReader(filePath))
@@ -197,6 +198,7 @@ namespace SoundboardYourFriends.Core
                 waveFileWriter.Write(audioInputBuffer, 0, audioInputBuffer.Length);
             }
         }
+        #endregion TrimFile
 
         #region WriteAudioBufferToFile
         public static void WriteAudioBufferToFile()

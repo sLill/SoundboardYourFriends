@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SoundboardYourFriends
@@ -18,6 +19,24 @@ namespace SoundboardYourFriends
         }
         #endregion ByteSampleSize
 
+        #region DefaultListeningDeviceIds
+        private static List<Guid> _defaultListeningDeviceIds;
+        public static List<Guid> DefaultListeningDeviceIds
+        {
+            get { return _defaultListeningDeviceIds; }
+            set { _defaultListeningDeviceIds = value; }
+        }
+        #endregion DefaultListeningDeviceIds
+
+        #region DefaultOutputDeviceIds
+        private static List<Guid> _defaultOutputDeviceIds;
+        public static List<Guid> DefaultOutputDeviceIds
+        {
+            get { return _defaultOutputDeviceIds; }
+            set { _defaultOutputDeviceIds = value; }
+        }
+        #endregion DefaultOutputDeviceIds
+
         #region SoundboardSampleDirectory
         private static string _soundboardSampleDirectory;
         public static string SoundboardSampleDirectory
@@ -26,7 +45,6 @@ namespace SoundboardYourFriends
             set { _soundboardSampleDirectory = value; }
         }
         #endregion SoundboardSampleDirectory
-
         #endregion Properties..
 
         #region Constructors..
@@ -42,6 +60,8 @@ namespace SoundboardYourFriends
         #region ImportSettings
         private static void ImportSettings()
         {
+            DefaultListeningDeviceIds = new List<Guid>();
+            DefaultOutputDeviceIds = new List<Guid>();
             SoundboardSampleDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples");
             ByteSampleSize = 7112000;
         }
