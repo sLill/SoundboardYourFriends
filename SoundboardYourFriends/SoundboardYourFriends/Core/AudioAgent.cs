@@ -8,6 +8,8 @@ using NAudio.Wave.SampleProviders;
 using System.IO;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using SharpDX.DirectSound;
+using SoundboardYourFriends.Model;
 
 namespace SoundboardYourFriends.Core
 {
@@ -15,7 +17,6 @@ namespace SoundboardYourFriends.Core
     {
         #region Member Variables..
         private static List<byte> _audioByteBuffer = new List<byte>();
-        private static List<DirectSoundOut> _directSoundOutEventCollection;
         #endregion Member Variables..
 
         #region Properties..
@@ -39,20 +40,14 @@ namespace SoundboardYourFriends.Core
 
         #region Methods..
         #region Event Handlers..
-        #region OnPlaybackStopped
-        private static void OnPlaybackStopped(object sender, StoppedEventArgs e)
-        {
-            ((WaveOutEvent)sender).PlaybackStopped -= OnPlaybackStopped;
-        }
-        #endregion OnPlaybackStopped
         #endregion Event Handlers..
 
         #region BeginAudioPlayback
-        public static void BeginAudioPlayback(string filePath, PlaybackType playbackType, double beginTime, double endTime)
+        public static void BeginAudioPlayback(string filePath, IEnumerable<AudioDevice> audioDeviceCollection, PlaybackType playbackType, double beginTime, double endTime)
         {
-            StopAudioPlayback();
+            StopAudioPlayback(audioDeviceCollection);
 
-            _directSoundOutEventCollection?.ForEach(directSoundOut =>
+            audioDeviceCollection.ToList().ForEach(audioDevice =>
             {
                 MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
                 AudioFileReader audioFileReader = new AudioFileReader(filePath);
@@ -66,8 +61,8 @@ namespace SoundboardYourFriends.Core
 
                 mixer.AddMixerInput(offsetSampleProvider);
 
-                directSoundOut.Init(mixer);
-                directSoundOut.Play();
+                audioDevice.DirectSoundOutInstance.Init(mixer);
+                audioDevice.DirectSoundOutInstance.Play();
             });
         }
         #endregion BeginAudioPlayback
@@ -128,29 +123,32 @@ namespace SoundboardYourFriends.Core
         }
         #endregion GetFileAudioDuration
 
-        #region InitializeOutputDevices
-        public static void InitializeOutputDevices(IEnumerable<Guid> outputDeviceIds)
+        #region GetWindowsAudioDevices
+        public static IEnumerable<AudioDevice> GetWindowsAudioDevices()
         {
-            _directSoundOutEventCollection = new List<DirectSoundOut>();
-
-            foreach (var deviceId in outputDeviceIds)
+            var audioDevices = new List<AudioDevice>();
+            DirectSound.GetDevices().ForEach(audioDevice =>
             {
-                DirectSoundOut waveOutEvent = new DirectSoundOut(deviceId);
-                waveOutEvent.PlaybackStopped += OnPlaybackStopped;
+                audioDevices.Add(new AudioDevice()
+                {
+                    FriendlyName = audioDevice.Description,
+                    DeviceId = audioDevice.DriverGuid,
+                    DirectSoundOutInstance = new DirectSoundOut(audioDevice.DriverGuid)
+                });
+            });
 
-                _directSoundOutEventCollection.Add(waveOutEvent);
-            }
+            return audioDevices;
         }
-        #endregion InitializeOutputDevices
+        #endregion GetWindowsAudioDevices
 
         #region StopAudioPlayback
-        public static void StopAudioPlayback()
+        public static void StopAudioPlayback(IEnumerable<AudioDevice> audioDeviceCollection)
         {
-            _directSoundOutEventCollection?.ForEach(waveOutEvent =>
+            audioDeviceCollection.ToList().ForEach(audioDevice =>
             {
-                if (waveOutEvent.PlaybackState == PlaybackState.Playing)
+                if (audioDevice.DirectSoundOutInstance.PlaybackState == PlaybackState.Playing)
                 {
-                    waveOutEvent.Stop();
+                    audioDevice.DirectSoundOutInstance.Stop();
                 }
             });
         }
@@ -161,12 +159,6 @@ namespace SoundboardYourFriends.Core
         {
             WasapiLoopbackCapture.Dispose();
             WasapiLoopbackCapture = null;
-
-            _directSoundOutEventCollection?.ForEach(waveOutEvent =>
-            {
-                waveOutEvent.Dispose();
-                waveOutEvent = null;
-            });
         }
         #endregion StopListening
 

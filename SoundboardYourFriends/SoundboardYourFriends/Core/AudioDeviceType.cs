@@ -1,5 +1,5 @@
 ﻿public enum AudioDeviceType
 {
-    Input,
-    Output
+    Capture,
+    Render
 }

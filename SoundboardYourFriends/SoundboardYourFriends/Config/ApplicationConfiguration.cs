@@ -19,14 +19,14 @@ namespace SoundboardYourFriends
         }
         #endregion ByteSampleSize
 
-        #region DefaultListeningDeviceIds
-        private static List<Guid> _defaultListeningDeviceIds;
-        public static List<Guid> DefaultListeningDeviceIds
+        #region DefaultCaptureDeviceIds
+        private static List<Guid> _defaultCaptureDeviceIds;
+        public static List<Guid> DefaultCaptureDeviceIds
         {
-            get { return _defaultListeningDeviceIds; }
-            set { _defaultListeningDeviceIds = value; }
+            get { return _defaultCaptureDeviceIds; }
+            set { _defaultCaptureDeviceIds = value; }
         }
-        #endregion DefaultListeningDeviceIds
+        #endregion DefaultCaptureDeviceIds
 
         #region DefaultOutputDeviceIds
         private static List<Guid> _defaultOutputDeviceIds;
@@ -60,7 +60,7 @@ namespace SoundboardYourFriends
         #region ImportSettings
         private static void ImportSettings()
         {
-            DefaultListeningDeviceIds = new List<Guid>();
+            DefaultCaptureDeviceIds = new List<Guid>();
             DefaultOutputDeviceIds = new List<Guid>();
             SoundboardSampleDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples");
             ByteSampleSize = 7112000;

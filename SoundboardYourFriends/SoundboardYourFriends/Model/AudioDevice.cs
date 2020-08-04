@@ -1,11 +1,13 @@
-﻿using SoundboardYourFriends.Core;
+﻿using NAudio.Wave;
+using SharpDX.DirectSound;
+using SoundboardYourFriends.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SoundboardYourFriends.Model
 {
-    public class AudioDevice : ObservableObject
+    public class AudioDevice : ObservableObject, IDisposable
     {
         #region Member Variables..
         #endregion Member Variables..
@@ -23,6 +25,10 @@ namespace SoundboardYourFriends.Model
             }
         }
         #endregion AudioPeak
+
+        #region DirectSoundOutInstance
+        public DirectSoundOut DirectSoundOutInstance { get; set; }
+        #endregion DirectSoundOutInstance
 
         #region DeviceId
         private Guid _deviceId;
@@ -59,5 +65,15 @@ namespace SoundboardYourFriends.Model
         }
         #endregion NameGuid
         #endregion Properties..
+
+        #region Methods..
+        #region Dispose
+        public void Dispose()
+        {
+            DirectSoundOutInstance?.Dispose();
+        }
+        #endregion Dispose
+        #endregion Methods..
+
     }
 }

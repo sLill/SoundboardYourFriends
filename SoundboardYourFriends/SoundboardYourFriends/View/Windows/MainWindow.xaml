@@ -126,7 +126,7 @@
         </DockPanel>
 
         <!--Row 5-->
-        <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,10,0,0">
+        <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
             <ListView Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
 
                 <!--View-->

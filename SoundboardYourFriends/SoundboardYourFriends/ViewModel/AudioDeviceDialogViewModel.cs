@@ -6,6 +6,7 @@ using NAudio;
 using NAudio.Wave;
 using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Model;
+using SharpDX.DirectSound;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -34,39 +35,16 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Properties..
 
         #region Constructors..
-
         #region AudioDeviceDialogViewModel
         public AudioDeviceDialogViewModel(AudioDeviceType audioDeviceType)
         {
             AudioDeviceType = audioDeviceType;
-            GetWindowsAudioDevices();
+            AudioDevices = new ObservableCollection<AudioDevice>(AudioAgent.GetWindowsAudioDevices());
         }
         #endregion AudioDeviceDialogViewModel
         #endregion Constructors..
 
         #region Methods..
-        #region GetWindowsAudioDevices
-        private void GetWindowsAudioDevices()
-        {
-            AudioDevices = new ObservableCollection<AudioDevice>();
-
-            using (var deviceEnumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator())
-            {
-                foreach (var audioDevice in deviceEnumerator.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.All, NAudio.CoreAudioApi.DeviceState.Active))
-                {
-                    List<object> properties = new List<object>();
-                    for (int i = 0; i < audioDevice.Properties.Count; i++)
-                    {
-                        try
-                        {
-                            properties.Add(audioDevice.Properties[i].Value);
-                        }
-                        catch { }
-                    }
-                }
-            }
-        }
-        #endregion GetWindowsAudioDevices
         #endregion Methods..
     }
 }

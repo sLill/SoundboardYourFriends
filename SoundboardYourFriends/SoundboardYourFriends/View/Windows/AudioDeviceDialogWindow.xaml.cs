@@ -40,10 +40,12 @@ namespace SoundboardYourFriends.View.Windows
         #endregion Button_PreviewMouseLeftButtonDown
         #endregion Events..
 
+        #region Dispose
         public void Dispose()
         {
-            
+
         }
+        #endregion Dispose
         #endregion Methods..
     }
 }

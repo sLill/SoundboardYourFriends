@@ -1,22 +1,19 @@
-﻿using System;
+﻿using NAudio.CoreAudioApi;
+using NAudio.Wave;
+using SoundboardYourFriends.Core;
+using SoundboardYourFriends.Model;
+using SoundboardYourFriends.View.Windows;
+using SharpDX.DirectSound;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using SoundboardYourFriends.View;
-using SoundboardYourFriends.Core;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
-using SoundboardYourFriends.Model;
-using System.Collections.ObjectModel;
-using System.Linq;
-using NAudio.Wave;
-using System.IO;
-using SoundboardYourFriends.View.Windows;
-using NAudio.CoreAudioApi;
-using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -55,18 +52,18 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion RecordHotkeyDisplay
 
-        #region SelectedListeningDevicesCollection
-        private ObservableCollection<AudioDevice> _selectedListeningDevicesCollection = new ObservableCollection<AudioDevice>();
-        public ObservableCollection<AudioDevice> SelectedListeningDevicesCollection
+        #region SelectedCaptureDevicesCollection
+        private ObservableCollection<AudioDevice> _selectedCaptureDevicesCollection = new ObservableCollection<AudioDevice>();
+        public ObservableCollection<AudioDevice> SelectedCaptureDevicesCollection
         {
-            get { return _selectedListeningDevicesCollection; }
+            get { return _selectedCaptureDevicesCollection; }
             set
             {
-                _selectedListeningDevicesCollection = value;
+                _selectedCaptureDevicesCollection = value;
                 RaisePropertyChanged();
             }
         }
-        #endregion SelectedListeningDevicesCollection
+        #endregion SelectedCaptureDevicesCollection
 
         #region SelectedOutputDevicesCollection
         private ObservableCollection<AudioDevice> _selectedOutputDevicesCollection = new ObservableCollection<AudioDevice>();
@@ -126,9 +123,9 @@ namespace SoundboardYourFriends.ViewModel
             {
                 MMDevice defaultRenderDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
 
-                if (SelectedListeningDevicesCollection.Any())
+                if (SelectedCaptureDevicesCollection.Any())
                 {
-                    SelectedListeningDevicesCollection[0].AudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
+                    SelectedCaptureDevicesCollection[0].AudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
                 }
                 //OutputAudioPeak = (int)(defaultRenderDevice.AudioMeterInformation.MasterPeakValue * 100);
             }
@@ -217,88 +214,29 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadAudioDevices
         private void LoadAudioDevices()
         {
-            // Listening Devices
-            //if (ApplicationConfiguration.DefaultListeningDeviceIds.Any())
-            //{
-            //    var audioDeviceCollection = new List<AudioDevice>();
-            //    for (int i = 0; i < WaveIn.DeviceCount; i++)
-            //    {
-            //        var deviceProperties = WaveIn.GetCapabilities(i);
-            //        audioDeviceCollection.Add(new AudioDevice()
-            //        {
-            //            FriendlyName = deviceProperties.ProductName,
-            //            DeviceId = i,
-            //            NameGuid = deviceProperties.NameGuid
-            //        });
-            //    }
+            var ActiveAudioDevices = AudioAgent.GetWindowsAudioDevices().ToList();
 
-            //    ApplicationConfiguration.DefaultListeningDeviceIds.ForEach(deviceId =>
-            //    {
-            //        var matchedDevice = audioDeviceCollection.FirstOrDefault(x => x.NameGuid == deviceId);
-            //        if (matchedDevice != null)
-            //        {
-            //            SelectedListeningDevicesCollection.Add(matchedDevice);
-            //        }
-            //    });
-            //}
-            //else
-            //{
-            //    int deviceId = 0;
-            //    using (var deviceEnumerator = new MMDeviceEnumerator())
-            //    {
-            //        // Use the windows default listening device if one has not been setup
-            //        var systemDefaultListeningDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
-            //        SelectedListeningDevicesCollection.Add(new AudioDevice()
-            //        {
-            //            FriendlyName = systemDefaultListeningDevice.FriendlyName,
-            //            DeviceId = deviceId
-            //        });
+            // Capture Devices
+            if (ApplicationConfiguration.DefaultCaptureDeviceIds.Any())
+            {
+                var activeCaptureDevices = from activeDevice in ActiveAudioDevices
+                                           join audioDeviceId in ApplicationConfiguration.DefaultCaptureDeviceIds
+                                              on activeDevice.DeviceId equals audioDeviceId
+                                           select activeDevice;
 
-            //        deviceId++;
-            //    }
-            //}
+                SelectedCaptureDevicesCollection = new ObservableCollection<AudioDevice>(activeCaptureDevices);
+            }
 
-            //// Output Devices
-            //if (ApplicationConfiguration.DefaultOutputDeviceIds.Any())
-            //{
-            //    var audioDeviceCollection = new List<AudioDevice>();
-            //    for (int i = 0; i < WaveOut.DeviceCount; i++)
-            //    {
-            //        var deviceProperties = WaveOut.GetCapabilities(i);
-            //        audioDeviceCollection.Add(new AudioDevice()
-            //        {
-            //            FriendlyName = deviceProperties.ProductName,
-            //            DeviceId = i,
-            //            NameGuid = deviceProperties.NameGuid
-            //        });
-            //    }
+            // Output Devices
+            if (ApplicationConfiguration.DefaultOutputDeviceIds.Any())
+            {
+                var activeOutputDevices = from activeDevice in ActiveAudioDevices
+                                          join audioDeviceId in ApplicationConfiguration.DefaultOutputDeviceIds
+                                             on activeDevice.DeviceId equals audioDeviceId
+                                          select activeDevice;
 
-            //    ApplicationConfiguration.DefaultOutputDeviceIds.ForEach(deviceId =>
-            //    {
-            //        var matchedDevice = audioDeviceCollection.FirstOrDefault(x => x.NameGuid == deviceId);
-            //        if (matchedDevice != null)
-            //        {
-            //            SelectedOutputDevicesCollection.Add(matchedDevice);
-            //        }
-            //    });
-            //}
-            //else
-            //{
-            //    int deviceId = 0;
-            //    using (var deviceEnumerator = new MMDeviceEnumerator())
-            //    { 
-            //        // Use the windows default output device if one has not been setup
-            //        var systemDefaultOutputDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
-            //        SelectedOutputDevicesCollection.Add(new AudioDevice()
-            //        {
-            //            FriendlyName = systemDefaultOutputDevice.FriendlyName,
-            //            DeviceId = deviceId
-            //        });
-
-            //        deviceId++;
-            //    }
-            //}
-
+                SelectedOutputDevicesCollection = new ObservableCollection<AudioDevice>(activeOutputDevices);
+            }
         }
         #endregion LoadAudioDevices
 
@@ -343,7 +281,7 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+            AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, SelectedOutputDevicesCollection,  playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
         }
         #endregion PlayAudioSample
 
@@ -398,23 +336,16 @@ namespace SoundboardYourFriends.ViewModel
         {
             using (AudioDeviceDialog audioDeviceDialog = new AudioDeviceDialog(audioDeviceType))
             {
-                audioDeviceDialog.ShowDialog();
-
-                ObservableCollection<AudioDevice> AudioDeviceCollection = audioDeviceDialog.SelectedAudioDevices == null 
-                    ? new ObservableCollection<AudioDevice>() { new AudioDevice() { FriendlyName = "No device(s) selected" } } 
-                    : new ObservableCollection<AudioDevice>(audioDeviceDialog.SelectedAudioDevices);
-
-                AudioAgent.InitializeOutputDevices(AudioDeviceCollection.Select(audioDevice => audioDevice.DeviceId));
-
-                switch (audioDeviceType)
-                {
-                    case AudioDeviceType.Input:
-                        SelectedListeningDevicesCollection = AudioDeviceCollection;
-                        break;
-                    case AudioDeviceType.Output:
-                        SelectedOutputDevicesCollection = AudioDeviceCollection;
-                        break;
-                }
+                if (audioDeviceDialog.ShowDialog().Value)
+                    switch (audioDeviceType)
+                    {
+                        case AudioDeviceType.Capture:
+                            SelectedCaptureDevicesCollection = new ObservableCollection<AudioDevice>(audioDeviceDialog.SelectedAudioDevices);
+                            break;
+                        case AudioDeviceType.Render:
+                            SelectedOutputDevicesCollection = new ObservableCollection<AudioDevice>(audioDeviceDialog.SelectedAudioDevices);
+                            break;
+                    }
             }
         }
         #endregion SetAudioDevice
@@ -433,7 +364,7 @@ namespace SoundboardYourFriends.ViewModel
         #region StopAudioPlayback
         public void StopAudioPlayback()
         {
-            AudioAgent.StopAudioPlayback();
+            AudioAgent.StopAudioPlayback(SelectedOutputDevicesCollection);
         }
         #endregion StopAudioPlayback
 
