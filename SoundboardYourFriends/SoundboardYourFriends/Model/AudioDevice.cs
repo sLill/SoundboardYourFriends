@@ -51,19 +51,6 @@ namespace SoundboardYourFriends.Model
             }
         }
         #endregion FriendlyName
-
-        #region NameGuid
-        private Guid _nameGuid;
-        public Guid NameGuid
-        {
-            get { return _nameGuid; }
-            set
-            {
-                _nameGuid = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion NameGuid
         #endregion Properties..
 
         #region Methods..

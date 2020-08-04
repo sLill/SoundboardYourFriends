@@ -72,14 +72,14 @@ namespace SoundboardYourFriends.View.Windows
         #region btnListeningDevices_MouseUp
         private void btnListeningDevices_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            _mainWindowViewModel.SetAudioDevice(AudioDeviceType.Capture);
+            _mainWindowViewModel.SetAudioDevices(AudioDeviceType.Capture);
         }
         #endregion btnListeningDevices_MouseUp
 
         #region btnOutputDevices_MouseUp
         private void btnOutputDevices_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            _mainWindowViewModel.SetAudioDevice(AudioDeviceType.Render);
+            _mainWindowViewModel.SetAudioDevices(AudioDeviceType.Render);
         }
         #endregion btnOutputDevices_MouseUp
 

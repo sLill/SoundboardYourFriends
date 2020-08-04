@@ -331,8 +331,8 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion SaveSample
 
-        #region SetAudioDevice
-        public void SetAudioDevice(AudioDeviceType audioDeviceType)
+        #region SetAudioDevices
+        public void SetAudioDevices(AudioDeviceType audioDeviceType)
         {
             using (AudioDeviceDialog audioDeviceDialog = new AudioDeviceDialog(audioDeviceType))
             {
@@ -348,7 +348,7 @@ namespace SoundboardYourFriends.ViewModel
                     }
             }
         }
-        #endregion SetAudioDevice
+        #endregion SetAudioDevices
 
         private void SetEvents()
         {

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
+using System.Windows;
 
 namespace SoundboardYourFriends
 {
-    public static class ApplicationConfiguration
+    public static class ApplicationConfiguration 
     {
         #region Member Variables..
         #endregion Member Variables..
@@ -51,21 +54,73 @@ namespace SoundboardYourFriends
         #region ApplicationConfiguration
         static ApplicationConfiguration()
         {
-            ImportSettings();
+            ImportUserSettings();
+
+            // Save settings on application closing
+            Application.Current.Exit += (sender, e) => 
+            {
+                SaveUserSettings(); 
+            };
         }
         #endregion ApplicationConfiguration
         #endregion Constructors..
 
         #region Methods..
-        #region ImportSettings
-        private static void ImportSettings()
+        #region GetSoundboardSampleDirectory
+        private static string GetSoundboardSampleDirectory()
         {
+            string soundboardSampleDirectory = string.IsNullOrEmpty(Properties.Settings.Default.SoundboardSampleDirectory)
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples")
+                : Properties.Settings.Default.SoundboardSampleDirectory;
+
+            return soundboardSampleDirectory;
+        }
+        #endregion GetSoundboardSampleDirectory
+
+        #region ImportUserSettings
+        private static void ImportUserSettings()
+        {
+            // Audio Capture DeviceIds
             DefaultCaptureDeviceIds = new List<Guid>();
+            Properties.Settings.Default.CaptureDeviceIds?.Cast<string>().ToList().ForEach(captureDeviceIdString => 
+            {
+                DefaultCaptureDeviceIds.Add(Guid.Parse(captureDeviceIdString));
+            });
+
+            // Audio Output DeviceIds
             DefaultOutputDeviceIds = new List<Guid>();
-            SoundboardSampleDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples");
+            Properties.Settings.Default.OutputDeviceIds?.Cast<string>().ToList().ForEach(outputDeviceIdString =>
+            {
+                DefaultOutputDeviceIds.Add(Guid.Parse(outputDeviceIdString));
+            });
+
+            // Soundboard Sample Directory
+            SoundboardSampleDirectory = GetSoundboardSampleDirectory();
             ByteSampleSize = 7112000;
         }
-        #endregion ImportSettings
+        #endregion ImportUserSettings
+
+        #region SaveUserSettings
+        public static void SaveUserSettings()
+        {
+            // Audio Capture DeviceIds
+            Properties.Settings.Default.CaptureDeviceIds = new StringCollection();
+            DefaultCaptureDeviceIds.ForEach(captureDeviceId =>
+            {
+                Properties.Settings.Default.CaptureDeviceIds.Add(captureDeviceId.ToString());
+            });
+
+            // Audio Output DeviceIds
+            Properties.Settings.Default.OutputDeviceIds = new StringCollection();
+            DefaultOutputDeviceIds.ForEach(outputDeviceId => 
+            {
+                Properties.Settings.Default.OutputDeviceIds.Add(outputDeviceId.ToString());
+            });
+
+            Properties.Settings.Default.SoundboardSampleDirectory = SoundboardSampleDirectory;
+            Properties.Settings.Default.Save();
+        }
+        #endregion SaveUserSettings
         #endregion Methods..
     }
 }

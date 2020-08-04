@@ -35,6 +35,7 @@ namespace SoundboardYourFriends.View.Windows
         #region Button_PreviewMouseLeftButtonDown
         private void btnOK_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            this.DialogResult = true;
             this.Close();
         }
         #endregion Button_PreviewMouseLeftButtonDown

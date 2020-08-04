@@ -54,7 +54,7 @@
 
         <!--Row 2-->
         <DockPanel  Grid.Row="2" Grid.Column="1">
-            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedListeningDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
+            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn>
@@ -62,12 +62,6 @@
                                 <DataTemplate>
                                     <DockPanel Name="pnlInputAudioScope" Margin="10,0,0,0">
                                         <TextBlock Text="{Binding FriendlyName}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
-                                        <!--<CheckBox Margin="0,0,0,0" Width="55">
-                                            <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Local"/>
-                                        </CheckBox>
-                                        <CheckBox Margin="-5,0,0,0" Width="55">
-                                            <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Global"/>
-                                        </CheckBox>-->
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -110,12 +104,6 @@
                                 <DataTemplate>
                                     <DockPanel Name="pnlOutputAudioScope" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0">
                                         <TextBlock Text="{Binding FriendlyName}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
-                                        <!--<CheckBox Margin="-5,0,0,0" Width="55">
-                                            <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Local"/>
-                                        </CheckBox>
-                                        <CheckBox Margin="-5,0,0,0" Width="55">
-                                            <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Global"/>
-                                        </CheckBox>-->
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
