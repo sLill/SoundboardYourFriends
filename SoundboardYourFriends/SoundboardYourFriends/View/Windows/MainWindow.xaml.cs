@@ -51,10 +51,23 @@ namespace SoundboardYourFriends.View.Windows
         #region OnKeyPressed
         public void OnKeyPressed(object sender, KeyEventArgs e)
         {
+            _mainWindowViewModel.UnregisterRecordHotkey(new WindowInteropHelper(this).Handle);
             _mainWindowViewModel.RegisterRecordHotKey(new WindowInteropHelper(this).Handle, e.Key);
             this.KeyDown -= OnKeyPressed;
         }
         #endregion OnKeyPressed
+
+        #region btnDelete_Click
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
+
+            if (MessageBox.Show(this, "Confirm Delete", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _mainWindowViewModel.DeleteSample(soundboardSample);
+            };
+        }
+        #endregion btnDelete_Click
 
         #region btnListeningDevices_MouseUp
         private void btnListeningDevices_MouseUp(object sender, MouseButtonEventArgs e)
@@ -86,14 +99,6 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion btnPlayButtonLocal_Click
 
-        #region btnRecordButton_MouseUp
-        private void btnRecordButton_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            this.KeyDown += OnKeyPressed;
-            _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
-        }
-        #endregion btnRecordButton_MouseUp
-
         #region btnSave_Click
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -120,6 +125,14 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion btnStopButton_Click
 
+        #region btnRecord_PreviewMouseButtonDown
+        private void btnRecord_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.KeyDown += OnKeyPressed;
+            _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
+        }
+        #endregion btnRecord_PreviewMouseButtonDown
+
         #region Window_Closing
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -139,18 +152,6 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion Window_Loaded
 
-        #region btnDelete_Click
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
-        {
-            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
-
-            if (MessageBox.Show(this, "Confirm Delete", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                _mainWindowViewModel.DeleteSample(soundboardSample);
-            };
-        }
-        #endregion btnDelete_Click
-
         #region OnClosed
         protected override void OnClosed(EventArgs e)
         {
@@ -158,7 +159,9 @@ namespace SoundboardYourFriends.View.Windows
             base.OnClosed(e);
         }
         #endregion OnClosed
+
         #endregion Events..
+
         #endregion Methods..
     }
 }
