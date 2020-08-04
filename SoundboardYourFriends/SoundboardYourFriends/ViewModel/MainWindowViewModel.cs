@@ -218,86 +218,86 @@ namespace SoundboardYourFriends.ViewModel
         private void LoadAudioDevices()
         {
             // Listening Devices
-            if (ApplicationConfiguration.DefaultListeningDeviceIds.Any())
-            {
-                var audioDeviceCollection = new List<AudioDevice>();
-                for (int i = 0; i < WaveIn.DeviceCount; i++)
-                {
-                    var deviceProperties = WaveIn.GetCapabilities(i);
-                    audioDeviceCollection.Add(new AudioDevice()
-                    {
-                        FriendlyName = deviceProperties.ProductName,
-                        DeviceId = i,
-                        NameGuid = deviceProperties.NameGuid
-                    });
-                }
+            //if (ApplicationConfiguration.DefaultListeningDeviceIds.Any())
+            //{
+            //    var audioDeviceCollection = new List<AudioDevice>();
+            //    for (int i = 0; i < WaveIn.DeviceCount; i++)
+            //    {
+            //        var deviceProperties = WaveIn.GetCapabilities(i);
+            //        audioDeviceCollection.Add(new AudioDevice()
+            //        {
+            //            FriendlyName = deviceProperties.ProductName,
+            //            DeviceId = i,
+            //            NameGuid = deviceProperties.NameGuid
+            //        });
+            //    }
 
-                ApplicationConfiguration.DefaultListeningDeviceIds.ForEach(deviceId =>
-                {
-                    var matchedDevice = audioDeviceCollection.FirstOrDefault(x => x.NameGuid == deviceId);
-                    if (matchedDevice != null)
-                    {
-                        SelectedListeningDevicesCollection.Add(matchedDevice);
-                    }
-                });
-            }
-            else
-            {
-                int deviceId = 0;
-                using (var deviceEnumerator = new MMDeviceEnumerator())
-                {
-                    // Use the windows default listening device if one has not been setup
-                    var systemDefaultListeningDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
-                    SelectedListeningDevicesCollection.Add(new AudioDevice()
-                    {
-                        FriendlyName = systemDefaultListeningDevice.FriendlyName,
-                        DeviceId = deviceId
-                    });
+            //    ApplicationConfiguration.DefaultListeningDeviceIds.ForEach(deviceId =>
+            //    {
+            //        var matchedDevice = audioDeviceCollection.FirstOrDefault(x => x.NameGuid == deviceId);
+            //        if (matchedDevice != null)
+            //        {
+            //            SelectedListeningDevicesCollection.Add(matchedDevice);
+            //        }
+            //    });
+            //}
+            //else
+            //{
+            //    int deviceId = 0;
+            //    using (var deviceEnumerator = new MMDeviceEnumerator())
+            //    {
+            //        // Use the windows default listening device if one has not been setup
+            //        var systemDefaultListeningDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
+            //        SelectedListeningDevicesCollection.Add(new AudioDevice()
+            //        {
+            //            FriendlyName = systemDefaultListeningDevice.FriendlyName,
+            //            DeviceId = deviceId
+            //        });
 
-                    deviceId++;
-                }
-            }
+            //        deviceId++;
+            //    }
+            //}
 
-            // Output Devices
-            if (ApplicationConfiguration.DefaultOutputDeviceIds.Any())
-            {
-                var audioDeviceCollection = new List<AudioDevice>();
-                for (int i = 0; i < WaveOut.DeviceCount; i++)
-                {
-                    var deviceProperties = WaveOut.GetCapabilities(i);
-                    audioDeviceCollection.Add(new AudioDevice()
-                    {
-                        FriendlyName = deviceProperties.ProductName,
-                        DeviceId = i,
-                        NameGuid = deviceProperties.NameGuid
-                    });
-                }
+            //// Output Devices
+            //if (ApplicationConfiguration.DefaultOutputDeviceIds.Any())
+            //{
+            //    var audioDeviceCollection = new List<AudioDevice>();
+            //    for (int i = 0; i < WaveOut.DeviceCount; i++)
+            //    {
+            //        var deviceProperties = WaveOut.GetCapabilities(i);
+            //        audioDeviceCollection.Add(new AudioDevice()
+            //        {
+            //            FriendlyName = deviceProperties.ProductName,
+            //            DeviceId = i,
+            //            NameGuid = deviceProperties.NameGuid
+            //        });
+            //    }
 
-                ApplicationConfiguration.DefaultOutputDeviceIds.ForEach(deviceId =>
-                {
-                    var matchedDevice = audioDeviceCollection.FirstOrDefault(x => x.NameGuid == deviceId);
-                    if (matchedDevice != null)
-                    {
-                        SelectedOutputDevicesCollection.Add(matchedDevice);
-                    }
-                });
-            }
-            else
-            {
-                int deviceId = 0;
-                using (var deviceEnumerator = new MMDeviceEnumerator())
-                { 
-                    // Use the windows default output device if one has not been setup
-                    var systemDefaultOutputDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
-                    SelectedOutputDevicesCollection.Add(new AudioDevice()
-                    {
-                        FriendlyName = systemDefaultOutputDevice.FriendlyName,
-                        DeviceId = deviceId
-                    });
+            //    ApplicationConfiguration.DefaultOutputDeviceIds.ForEach(deviceId =>
+            //    {
+            //        var matchedDevice = audioDeviceCollection.FirstOrDefault(x => x.NameGuid == deviceId);
+            //        if (matchedDevice != null)
+            //        {
+            //            SelectedOutputDevicesCollection.Add(matchedDevice);
+            //        }
+            //    });
+            //}
+            //else
+            //{
+            //    int deviceId = 0;
+            //    using (var deviceEnumerator = new MMDeviceEnumerator())
+            //    { 
+            //        // Use the windows default output device if one has not been setup
+            //        var systemDefaultOutputDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
+            //        SelectedOutputDevicesCollection.Add(new AudioDevice()
+            //        {
+            //            FriendlyName = systemDefaultOutputDevice.FriendlyName,
+            //            DeviceId = deviceId
+            //        });
 
-                    deviceId++;
-                }
-            }
+            //        deviceId++;
+            //    }
+            //}
 
         }
         #endregion LoadAudioDevices
@@ -343,7 +343,7 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            AudioAgent.BeginPlayback(soundboardSample.FilePath, playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+            AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
         }
         #endregion PlayAudioSample
 

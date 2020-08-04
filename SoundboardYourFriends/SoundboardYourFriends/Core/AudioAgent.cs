@@ -15,7 +15,7 @@ namespace SoundboardYourFriends.Core
     {
         #region Member Variables..
         private static List<byte> _audioByteBuffer = new List<byte>();
-        private static List<WaveOutEvent> _waveOutEventCollection;
+        private static List<DirectSoundOut> _directSoundOutEventCollection;
         #endregion Member Variables..
 
         #region Properties..
@@ -32,7 +32,7 @@ namespace SoundboardYourFriends.Core
         #region AudioAgent
         static AudioAgent() 
         {
-            BeginListening();
+            BeginCapturing();
         }
         #endregion AudioAgent
         #endregion Constructors..
@@ -47,8 +47,33 @@ namespace SoundboardYourFriends.Core
         #endregion OnPlaybackStopped
         #endregion Event Handlers..
 
-        #region BeginListening
-        private static void BeginListening()
+        #region BeginAudioPlayback
+        public static void BeginAudioPlayback(string filePath, PlaybackType playbackType, double beginTime, double endTime)
+        {
+            StopAudioPlayback();
+
+            _directSoundOutEventCollection?.ForEach(directSoundOut =>
+            {
+                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
+                AudioFileReader audioFileReader = new AudioFileReader(filePath);
+
+                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
+                ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
+
+                OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
+                offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
+                offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
+
+                mixer.AddMixerInput(offsetSampleProvider);
+
+                directSoundOut.Init(mixer);
+                directSoundOut.Play();
+            });
+        }
+        #endregion BeginAudioPlayback
+
+        #region BeginCapturing
+        private static void BeginCapturing()
         {
             // Copies about once every 1.5 min when set to 7112000 * 4 (Gives ~20 sec audio clip)
             int audioBufferMax = ApplicationConfiguration.ByteSampleSize * 4;
@@ -71,32 +96,7 @@ namespace SoundboardYourFriends.Core
 
             WasapiLoopbackCapture.StartRecording();
         }
-        #endregion BeginListening
-
-        #region BeginPlayback
-        public static void BeginPlayback(string filePath, PlaybackType playbackType, double beginTime, double endTime)
-        {
-            StopAudioPlayback();
-
-            _waveOutEventCollection?.ForEach(waveOutEvent =>
-            {
-                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
-                AudioFileReader audioFileReader = new AudioFileReader(filePath);
-
-                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
-                ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
-
-                OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
-                offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
-                offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
-
-                mixer.AddMixerInput(offsetSampleProvider);
-
-                waveOutEvent.Init(mixer);
-                waveOutEvent.Play();
-            });
-        }
-        #endregion BeginPlayback
+        #endregion BeginCapturing
 
         #region ConvertToMixerChannelCount
         private static ISampleProvider ConvertToMixerChannelCount(ISampleProvider mixer, ISampleProvider input)
@@ -129,16 +129,16 @@ namespace SoundboardYourFriends.Core
         #endregion GetFileAudioDuration
 
         #region InitializeOutputDevices
-        public static void InitializeOutputDevices(IEnumerable<int> outputDeviceIds)
+        public static void InitializeOutputDevices(IEnumerable<Guid> outputDeviceIds)
         {
-            _waveOutEventCollection = new List<WaveOutEvent>();
+            _directSoundOutEventCollection = new List<DirectSoundOut>();
 
             foreach (var deviceId in outputDeviceIds)
             {
-                WaveOutEvent waveOutEvent = new WaveOutEvent() { DeviceNumber = deviceId };
+                DirectSoundOut waveOutEvent = new DirectSoundOut(deviceId);
                 waveOutEvent.PlaybackStopped += OnPlaybackStopped;
 
-                _waveOutEventCollection.Add(waveOutEvent);
+                _directSoundOutEventCollection.Add(waveOutEvent);
             }
         }
         #endregion InitializeOutputDevices
@@ -146,7 +146,7 @@ namespace SoundboardYourFriends.Core
         #region StopAudioPlayback
         public static void StopAudioPlayback()
         {
-            _waveOutEventCollection?.ForEach(waveOutEvent =>
+            _directSoundOutEventCollection?.ForEach(waveOutEvent =>
             {
                 if (waveOutEvent.PlaybackState == PlaybackState.Playing)
                 {
@@ -162,7 +162,7 @@ namespace SoundboardYourFriends.Core
             WasapiLoopbackCapture.Dispose();
             WasapiLoopbackCapture = null;
 
-            _waveOutEventCollection?.ForEach(waveOutEvent =>
+            _directSoundOutEventCollection?.ForEach(waveOutEvent =>
             {
                 waveOutEvent.Dispose();
                 waveOutEvent = null;

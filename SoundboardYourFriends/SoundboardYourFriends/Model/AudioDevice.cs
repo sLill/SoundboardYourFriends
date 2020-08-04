@@ -25,8 +25,8 @@ namespace SoundboardYourFriends.Model
         #endregion AudioPeak
 
         #region DeviceId
-        private int _deviceId;
-        public int DeviceId
+        private Guid _deviceId;
+        public Guid DeviceId
         {
             get { return _deviceId; }
             set { _deviceId = value; }

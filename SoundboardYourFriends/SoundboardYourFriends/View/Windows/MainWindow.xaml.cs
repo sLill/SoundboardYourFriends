@@ -99,6 +99,14 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion btnPlayButtonLocal_Click
 
+        #region btnRecord_PreviewMouseButtonDown
+        private void btnRecord_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.KeyDown += OnKeyPressed;
+            _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
+        }
+        #endregion btnRecord_PreviewMouseButtonDown
+
         #region btnSave_Click
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -124,14 +132,6 @@ namespace SoundboardYourFriends.View.Windows
             _mainWindowViewModel.StopAudioPlayback();
         }
         #endregion btnStopButton_Click
-
-        #region btnRecord_PreviewMouseButtonDown
-        private void btnRecord_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.KeyDown += OnKeyPressed;
-            _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
-        }
-        #endregion btnRecord_PreviewMouseButtonDown
 
         #region Window_Closing
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

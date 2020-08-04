@@ -17,9 +17,9 @@ namespace SoundboardYourFriends.ViewModel
 
         #region Properties..
         #region AudioDevices
-        public ObservableCollection<AudioDevice> AudioDevices 
-        { 
-            get { return _audioDevices; } 
+        public ObservableCollection<AudioDevice> AudioDevices
+        {
+            get { return _audioDevices; }
             private set
             {
                 _audioDevices = value;
@@ -36,7 +36,7 @@ namespace SoundboardYourFriends.ViewModel
         #region Constructors..
 
         #region AudioDeviceDialogViewModel
-        public AudioDeviceDialogViewModel(AudioDeviceType audioDeviceType) 
+        public AudioDeviceDialogViewModel(AudioDeviceType audioDeviceType)
         {
             AudioDeviceType = audioDeviceType;
             GetWindowsAudioDevices();
@@ -50,16 +50,20 @@ namespace SoundboardYourFriends.ViewModel
         {
             AudioDevices = new ObservableCollection<AudioDevice>();
 
-            // var deviceEnumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
+            using (var deviceEnumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator())
             {
-                var audioDevice = WaveOut.GetCapabilities(i);
-                AudioDevices.Add(new AudioDevice() 
-                { 
-                    FriendlyName = audioDevice.ProductName, 
-                    DeviceId = i,
-                    NameGuid = audioDevice.NameGuid
-                });
+                foreach (var audioDevice in deviceEnumerator.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.All, NAudio.CoreAudioApi.DeviceState.Active))
+                {
+                    List<object> properties = new List<object>();
+                    for (int i = 0; i < audioDevice.Properties.Count; i++)
+                    {
+                        try
+                        {
+                            properties.Add(audioDevice.Properties[i].Value);
+                        }
+                        catch { }
+                    }
+                }
             }
         }
         #endregion GetWindowsAudioDevices
