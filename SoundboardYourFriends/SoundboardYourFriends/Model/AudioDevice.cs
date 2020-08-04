@@ -11,6 +11,19 @@ namespace SoundboardYourFriends.Model
         #endregion Member Variables..
 
         #region Properties..
+        #region AudioPeak
+        private int _AudioPeak;
+        public int AudioPeak
+        {
+            get { return _AudioPeak; }
+            set
+            {
+                _AudioPeak = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion AudioPeak
+
         #region DeviceId
         private int _deviceId;
         public int DeviceId

@@ -13,6 +13,7 @@
         <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
+        <converters:VolumeToOpacityConverter x:Key="VolumeToOpacityConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -42,7 +43,6 @@
             <Label HorizontalAlignment="Left" VerticalAlignment="Top">
                 <TextBlock TextDecorations="Underline">Capturing Devices</TextBlock>
             </Label>
-            <ProgressBar BorderThickness="0" Margin="9,10,10,7" Value="{Binding CapturedAudioPeak}"/>
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="2">
             <Button Name="btnSettings" Height="24" Width="24" BorderThickness="0" HorizontalAlignment="Right" Margin="0,0,0,0" PreviewMouseLeftButtonUp="btnSettings_MouseUp">
@@ -57,17 +57,17 @@
             <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedListeningDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
-                        <GridViewColumn DisplayMemberBinding="{Binding FriendlyName}"/>
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Name="pnlInputAudioScope" Margin="10,0,0,0">
-                                        <CheckBox Margin="-5,0,0,0" Width="55">
+                                        <TextBlock Text="{Binding FriendlyName}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
+                                        <!--<CheckBox Margin="0,0,0,0" Width="55">
                                             <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Local"/>
                                         </CheckBox>
                                         <CheckBox Margin="-5,0,0,0" Width="55">
                                             <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Global"/>
-                                        </CheckBox>
+                                        </CheckBox>-->
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -87,7 +87,6 @@
             <Label HorizontalAlignment="Left" VerticalAlignment="Top">
                 <TextBlock TextDecorations="Underline">Output Devices</TextBlock>
             </Label>
-            <ProgressBar BorderThickness="0" Margin="4,10,10,7" Value="{ Binding OutputAudioPeak }"/>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="2">
             <TextBox Margin="5,2,2,0" DockPanel.Dock="Right" Width="120" BorderThickness="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding RecordHotkeyDisplay}"></TextBox>
@@ -106,17 +105,17 @@
             <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
-                        <GridViewColumn DisplayMemberBinding="{Binding FriendlyName}"/>
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Name="pnlOutputAudioScope" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0">
-                                        <CheckBox Margin="-5,0,0,0" Width="55">
+                                        <TextBlock Text="{Binding FriendlyName}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
+                                        <!--<CheckBox Margin="-5,0,0,0" Width="55">
                                             <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Local"/>
                                         </CheckBox>
                                         <CheckBox Margin="-5,0,0,0" Width="55">
                                             <TextBlock Margin="-2,2,0,0" FontSize="10" Text="Global"/>
-                                        </CheckBox>
+                                        </CheckBox>-->
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

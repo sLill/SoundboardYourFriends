@@ -28,32 +28,6 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Member Variables..
 
         #region Properties..
-        #region CapturedAudioPeak
-        private int _capturedAudioPeak;
-        public int CapturedAudioPeak
-        {
-            get { return _capturedAudioPeak; }
-            set 
-            { 
-                _capturedAudioPeak = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion CapturedAudioPeak
-
-        #region OutputAudioPeak
-        private int _outputAudioPeak;
-        public int OutputAudioPeak
-        {
-            get { return _outputAudioPeak; }
-            set 
-            { 
-                _outputAudioPeak = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion OutputAudioPeak
-
         #region RecordHotkey
         private Key? _recordHotKey;
         public Key? RecordHotkey
@@ -148,13 +122,15 @@ namespace SoundboardYourFriends.ViewModel
         #region OnAudioMeterTimerElapsed
         private void OnAudioMeterTimerElapsed(object sender, EventArgs e)
         {
-            
             using (var deviceEnumerator = new MMDeviceEnumerator())
             {
                 MMDevice defaultRenderDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
 
-                CapturedAudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
-                OutputAudioPeak = (int)(defaultRenderDevice.AudioMeterInformation.MasterPeakValue * 100);
+                if (SelectedListeningDevicesCollection.Any())
+                {
+                    SelectedListeningDevicesCollection[0].AudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
+                }
+                //OutputAudioPeak = (int)(defaultRenderDevice.AudioMeterInformation.MasterPeakValue * 100);
             }
         }
         #endregion OnAudioMeterTimerElapsed
