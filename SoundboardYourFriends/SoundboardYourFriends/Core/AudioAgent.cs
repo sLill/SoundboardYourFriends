@@ -45,8 +45,6 @@ namespace SoundboardYourFriends.Core
         #region BeginAudioPlayback
         public static void BeginAudioPlayback(string filePath, List<AudioDevice> audioDeviceCollection, PlaybackType playbackType, double beginTime, double endTime)
         {
-            StopAudioPlayback(audioDeviceCollection);
-
             audioDeviceCollection.ForEach(audioDevice =>
             {
                 MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
@@ -149,12 +147,6 @@ namespace SoundboardYourFriends.Core
                 if (audioDevice.DirectSoundOutInstance.PlaybackState == PlaybackState.Playing)
                 {
                     audioDevice.DirectSoundOutInstance.Stop();
-                    audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) => 
-                    {
-                        audioDevice.DirectSoundOutInstance.Dispose();
-                        audioDevice.DirectSoundOutInstance = new DirectSoundOut(audioDevice.DeviceId);
-                    }; 
-
                 }
             });
         }
