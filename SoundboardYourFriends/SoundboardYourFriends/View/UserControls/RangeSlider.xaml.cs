@@ -10,26 +10,23 @@ namespace SoundboardYourFriends.View.UserControls
     /// <summary>
     /// Interaction logic for RangeSlider.xaml
     /// </summary>
-    public partial class RangeSlider : UserControl, INotifyPropertyChanged
+    public partial class RangeSlider : UserControl
     {
         #region Member Variables..
-        private Timer _playbackTimer;
         #endregion Member Variables..
 
         #region Properties..
 
-        #region PlaybackCursor
-        private int _PlaybackCursor;
-        public int PlaybackCursor
+        #region PlaybackCursorValue
+        public double PlaybackCursorValue
         {
-            get { return _PlaybackCursor; }
-            set 
-            {
-                _PlaybackCursor = value;
-                RaisePropertyChanged();
-            }
+            get { return (double)GetValue(PlaybackCursorValueProperty); }
+            set { SetValue(PlaybackCursorValueProperty, value); }
         }
-        #endregion PlaybackCursor
+
+        public static DependencyProperty PlaybackCursorValueProperty = DependencyProperty.Register("PlaybackCursorValue", typeof(double), typeof(RangeSlider), 
+            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        #endregion PlaybackCursorValue
 
         #region Minimum
         public double Minimum
@@ -74,8 +71,8 @@ namespace SoundboardYourFriends.View.UserControls
         #endregion Maximum
         #endregion Properties..
 
-        #region Event Handlers..
-        public event PropertyChangedEventHandler PropertyChanged;
+        #region Event Handlers/Delegates..
+        public delegate void OnPlaybackTimerElapsed();
         #endregion Event Handlers..
 
         #region Constructors..
@@ -100,20 +97,10 @@ namespace SoundboardYourFriends.View.UserControls
         #region Slider_Loaded
         private void Slider_Loaded(object sender, RoutedEventArgs e)
         {
-            _playbackTimer = new Timer(100);
-            _playbackTimer.Elapsed += OnTimerElapsed;
-
             LowerSlider.ValueChanged += LowerSlider_ValueChanged;
             UpperSlider.ValueChanged += UpperSlider_ValueChanged;
         }
         #endregion Slider_Loaded
-
-        #region OnTimerElapsed
-        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            PlaybackCursor++;
-        }
-        #endregion OnTimerElapsed
 
         #region UpperSlider_ValueChanged
         private void UpperSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -122,13 +109,6 @@ namespace SoundboardYourFriends.View.UserControls
         }
         #endregion UpperSlider_ValueChanged
         #endregion Events..
-
-        #region RaisePropertyChanged
-        protected void RaisePropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion RaisePropertyChanged
         #endregion Methods..
     }
 }

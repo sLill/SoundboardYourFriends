@@ -92,6 +92,19 @@ namespace SoundboardYourFriends.Model
             } 
         }
         #endregion Name
+
+        #region PlaybackCursorValue
+        private double _playbackCursorValue = 0;
+        public double PlaybackCursorValue
+        {
+            get { return _playbackCursorValue; }
+            set
+            {
+                _playbackCursorValue = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion FileTiPlaybackCursorValuemeMin
         #endregion Properties..
 
         #region Constructors..

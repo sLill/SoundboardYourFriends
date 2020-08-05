@@ -14,6 +14,8 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Management;
+using System.Threading;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -285,7 +287,26 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, SelectedOutputDevicesCollection.ToList(),  playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+            if (SelectedOutputDevicesCollection.Any())
+            {
+                // Move the playback cursor
+                var playbackTimer = new System.Timers.Timer(1000);
+                playbackTimer.Elapsed += (sender, e) => 
+                { 
+                    soundboardSample.PlaybackCursorValue = soundboardSample.PlaybackCursorValue + 1; 
+                };
+
+                SelectedOutputDevicesCollection[0].DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
+                {
+                    playbackTimer.Stop();
+
+                    // Reset the playback cursor position
+                    soundboardSample.PlaybackCursorValue = soundboardSample.FileTimeLowerValue;
+                };
+
+                playbackTimer.Start();
+                AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, SelectedOutputDevicesCollection.ToList(), playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+            }
         }
         #endregion PlayAudioSample
 

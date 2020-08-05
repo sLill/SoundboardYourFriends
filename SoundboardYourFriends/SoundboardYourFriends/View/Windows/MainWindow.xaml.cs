@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using SoundboardYourFriends.Model;
+using SoundboardYourFriends.View.UserControls;
 using SoundboardYourFriends.ViewModel;
 
 namespace SoundboardYourFriends.View.Windows
@@ -69,6 +71,22 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion btnDelete_Click
 
+        #region btnPlayButtonGlobal_Clicked
+        private void btnPlayButtonGlobal_Click(object sender, EventArgs e)
+        {
+            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
+            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackType.Global);
+        }
+        #endregion btnPlayButtonGlobal_Clicked
+
+        #region btnPlayButtonLocal_Clicked
+        private void btnPlayButtonLocal_Click(object sender, EventArgs e)
+        {
+            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
+            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackType.Local);
+        }
+        #endregion btnPlayButtonLocal_Clicked
+
         #region btnListeningDevices_MouseUp
         private void btnListeningDevices_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -82,22 +100,6 @@ namespace SoundboardYourFriends.View.Windows
             _mainWindowViewModel.SetAudioDevices(AudioDeviceType.Render);
         }
         #endregion btnOutputDevices_MouseUp
-
-        #region btnPlayButtonGlobal_Click
-        private void btnPlayButtonGlobal_Click(object sender, RoutedEventArgs e)
-        {
-            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
-            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackType.Global);
-        }
-        #endregion btnPlayButtonGlobal_Click
-
-        #region btnPlayButtonLocal_Click
-        private void btnPlayButtonLocal_Click(object sender, RoutedEventArgs e)
-        {
-            var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
-            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackType.Local);
-        }
-        #endregion btnPlayButtonLocal_Click
 
         #region btnRecord_PreviewMouseButtonDown
         private void btnRecord_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
@@ -126,12 +128,12 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion btnSetting_MouseUp
 
-        #region btnStopButton_Click
-        private void btnStopButton_Click(object sender, RoutedEventArgs e)
+        #region btnStopButton_Clicked
+        private void btnStopButton_Click(object sender, EventArgs e)
         {
             _mainWindowViewModel.StopAudioPlayback();
         }
-        #endregion btnStopButton_Click
+        #endregion btnStopButton_Clicked
 
         #region Window_Closing
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -159,7 +161,6 @@ namespace SoundboardYourFriends.View.Windows
             base.OnClosed(e);
         }
         #endregion OnClosed
-
         #endregion Events..
         #endregion Methods..
     }
