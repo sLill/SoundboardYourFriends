@@ -43,11 +43,11 @@ namespace SoundboardYourFriends.Core
         #endregion Event Handlers..
 
         #region BeginAudioPlayback
-        public static void BeginAudioPlayback(string filePath, IEnumerable<AudioDevice> audioDeviceCollection, PlaybackType playbackType, double beginTime, double endTime)
+        public static void BeginAudioPlayback(string filePath, List<AudioDevice> audioDeviceCollection, PlaybackType playbackType, double beginTime, double endTime)
         {
             StopAudioPlayback(audioDeviceCollection);
 
-            audioDeviceCollection.ToList().ForEach(audioDevice =>
+            audioDeviceCollection.ForEach(audioDevice =>
             {
                 MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
                 AudioFileReader audioFileReader = new AudioFileReader(filePath);
@@ -142,13 +142,14 @@ namespace SoundboardYourFriends.Core
         #endregion GetWindowsAudioDevices
 
         #region StopAudioPlayback
-        public static void StopAudioPlayback(IEnumerable<AudioDevice> audioDeviceCollection)
+        public static void StopAudioPlayback(List<AudioDevice> audioDeviceCollection)
         {
-            audioDeviceCollection.ToList().ForEach(audioDevice =>
+            audioDeviceCollection.ForEach(audioDevice =>
             {
                 if (audioDevice.DirectSoundOutInstance.PlaybackState == PlaybackState.Playing)
                 {
                     audioDevice.DirectSoundOutInstance.Stop();
+                    audioDevice.DirectSoundOutInstance = new DirectSoundOut(audioDevice.DeviceId);
                 }
             });
         }

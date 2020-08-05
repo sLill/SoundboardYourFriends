@@ -285,7 +285,7 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, SelectedOutputDevicesCollection,  playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+            AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, SelectedOutputDevicesCollection.ToList(),  playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
         }
         #endregion PlayAudioSample
 
@@ -368,7 +368,7 @@ namespace SoundboardYourFriends.ViewModel
         #region StopAudioPlayback
         public void StopAudioPlayback()
         {
-            AudioAgent.StopAudioPlayback(SelectedOutputDevicesCollection);
+            AudioAgent.StopAudioPlayback(SelectedOutputDevicesCollection.ToList());
         }
         #endregion StopAudioPlayback
 
