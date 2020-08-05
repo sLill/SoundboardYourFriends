@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Management;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -292,8 +293,8 @@ namespace SoundboardYourFriends.ViewModel
                 // Move the playback cursor
                 var playbackTimer = new System.Timers.Timer(1000);
                 playbackTimer.Elapsed += (sender, e) => 
-                { 
-                    soundboardSample.PlaybackCursorValue = soundboardSample.PlaybackCursorValue + 1; 
+                {
+                    Application.Current.MainWindow.Dispatcher.Invoke(new Action(() => soundboardSample.PlaybackCursor = soundboardSample.PlaybackCursor + 1.0 ));
                 };
 
                 SelectedOutputDevicesCollection[0].DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
@@ -301,7 +302,7 @@ namespace SoundboardYourFriends.ViewModel
                     playbackTimer.Stop();
 
                     // Reset the playback cursor position
-                    soundboardSample.PlaybackCursorValue = soundboardSample.FileTimeLowerValue;
+                    soundboardSample.PlaybackCursor = soundboardSample.FileTimeLowerValue;
                 };
 
                 playbackTimer.Start();

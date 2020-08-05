@@ -69,6 +69,7 @@
                 </Grid>
             </Border>
         </ControlTemplate>
+        
         <Converters:DoubleToTimeStringConverter x:Key="IntegerConverter" />
     </UserControl.Resources>
     <Grid VerticalAlignment="Top">
@@ -104,8 +105,8 @@
                 VerticalAlignment="Center"/>
 
         <Slider Grid.Column="0" x:Name="PlaybackCursorSlider"
-                Minimum="{Binding Minimum, ElementName=rangeSlider}"
-                Maximum="{Binding Maximum, ElementName=rangeSlider}"
+                Minimum="{Binding LowerValue, ElementName=rangeSlider}"
+                Maximum="{Binding UpperValue, ElementName=rangeSlider}"
                 Value="{Binding PlaybackCursorValue, ElementName=rangeSlider, Mode=TwoWay}"
                 Template="{StaticResource playbackCursorSlider}"
                 Margin="10,0,10,0"
