@@ -149,7 +149,12 @@ namespace SoundboardYourFriends.Core
                 if (audioDevice.DirectSoundOutInstance.PlaybackState == PlaybackState.Playing)
                 {
                     audioDevice.DirectSoundOutInstance.Stop();
-                    audioDevice.DirectSoundOutInstance = new DirectSoundOut(audioDevice.DeviceId);
+                    audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) => 
+                    {
+                        audioDevice.DirectSoundOutInstance.Dispose();
+                        audioDevice.DirectSoundOutInstance = new DirectSoundOut(audioDevice.DeviceId);
+                    }; 
+
                 }
             });
         }
@@ -172,16 +177,17 @@ namespace SoundboardYourFriends.Core
                 double beginTimeAsPercent = beginTime / GetFileAudioDuration(filePath).Seconds;
                 double endTimeAsPercent = endTime / GetFileAudioDuration(filePath).Seconds;
 
-                var fileInfo = new FileInfo(filePath);
-                int beginByteIndex = (int)(fileInfo.Length * beginTimeAsPercent);
-                int endByteIndex = (int)(fileInfo.Length * endTimeAsPercent);
+                int beginByteIndex = (int)(waveFileReader.Length * beginTimeAsPercent);
+                int endByteIndex = (int)(waveFileReader.Length * endTimeAsPercent);
 
                 // Round to the nearest block
                 beginByteIndex = (int)Math.Round((double)beginByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign;
                 endByteIndex = (int)Math.Round((double)endByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign - 8;
 
                 audioInputBuffer = new byte[endByteIndex - beginByteIndex];
-                waveFileReader.Read(audioInputBuffer, beginByteIndex, audioInputBuffer.Length);
+
+                waveFileReader.Seek(beginByteIndex, SeekOrigin.Begin);
+                waveFileReader.Read(audioInputBuffer, 0, audioInputBuffer.Length);
             }
 
             using (var waveFileWriter = new WaveFileWriter(filePath, WasapiLoopbackCapture.WaveFormat))
