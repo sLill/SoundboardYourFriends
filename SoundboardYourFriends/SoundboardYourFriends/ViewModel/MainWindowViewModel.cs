@@ -60,6 +60,8 @@ namespace SoundboardYourFriends.ViewModel
             set
             {
                 _selectedCaptureDevicesCollection = value;
+                ApplicationConfiguration.DefaultCaptureDeviceIds = value.Select(x => x.DeviceId);
+
                 RaisePropertyChanged();
             }
         }
@@ -73,6 +75,8 @@ namespace SoundboardYourFriends.ViewModel
             set
             {
                 _selectedOutputDevicesCollection = value;
+                ApplicationConfiguration.DefaultOutputDeviceIds = value.Select(x => x.DeviceId);
+
                 RaisePropertyChanged();
             }
         }

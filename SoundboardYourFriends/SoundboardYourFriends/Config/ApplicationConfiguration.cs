@@ -23,8 +23,8 @@ namespace SoundboardYourFriends
         #endregion ByteSampleSize
 
         #region DefaultCaptureDeviceIds
-        private static List<Guid> _defaultCaptureDeviceIds;
-        public static List<Guid> DefaultCaptureDeviceIds
+        private static IEnumerable<Guid> _defaultCaptureDeviceIds;
+        public static IEnumerable<Guid> DefaultCaptureDeviceIds
         {
             get { return _defaultCaptureDeviceIds; }
             set { _defaultCaptureDeviceIds = value; }
@@ -32,8 +32,8 @@ namespace SoundboardYourFriends
         #endregion DefaultCaptureDeviceIds
 
         #region DefaultOutputDeviceIds
-        private static List<Guid> _defaultOutputDeviceIds;
-        public static List<Guid> DefaultOutputDeviceIds
+        private static IEnumerable<Guid> _defaultOutputDeviceIds;
+        public static IEnumerable<Guid> DefaultOutputDeviceIds
         {
             get { return _defaultOutputDeviceIds; }
             set { _defaultOutputDeviceIds = value; }
@@ -84,14 +84,14 @@ namespace SoundboardYourFriends
             DefaultCaptureDeviceIds = new List<Guid>();
             Properties.Settings.Default.CaptureDeviceIds?.Cast<string>().ToList().ForEach(captureDeviceIdString => 
             {
-                DefaultCaptureDeviceIds.Add(Guid.Parse(captureDeviceIdString));
+                ((List<Guid>)DefaultCaptureDeviceIds).Add(Guid.Parse(captureDeviceIdString));
             });
 
             // Audio Output DeviceIds
             DefaultOutputDeviceIds = new List<Guid>();
             Properties.Settings.Default.OutputDeviceIds?.Cast<string>().ToList().ForEach(outputDeviceIdString =>
             {
-                DefaultOutputDeviceIds.Add(Guid.Parse(outputDeviceIdString));
+                ((List<Guid>)DefaultOutputDeviceIds).Add(Guid.Parse(outputDeviceIdString));
             });
 
             // Soundboard Sample Directory
@@ -105,14 +105,14 @@ namespace SoundboardYourFriends
         {
             // Audio Capture DeviceIds
             Properties.Settings.Default.CaptureDeviceIds = new StringCollection();
-            DefaultCaptureDeviceIds.ForEach(captureDeviceId =>
+            DefaultCaptureDeviceIds.ToList().ForEach(captureDeviceId =>
             {
                 Properties.Settings.Default.CaptureDeviceIds.Add(captureDeviceId.ToString());
             });
 
             // Audio Output DeviceIds
             Properties.Settings.Default.OutputDeviceIds = new StringCollection();
-            DefaultOutputDeviceIds.ForEach(outputDeviceId => 
+            DefaultOutputDeviceIds.ToList().ForEach(outputDeviceId => 
             {
                 Properties.Settings.Default.OutputDeviceIds.Add(outputDeviceId.ToString());
             });
