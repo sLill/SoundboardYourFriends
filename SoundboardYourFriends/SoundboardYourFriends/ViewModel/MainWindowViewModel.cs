@@ -291,10 +291,11 @@ namespace SoundboardYourFriends.ViewModel
             if (SelectedOutputDevicesCollection.Any())
             {
                 // Move the playback cursor
-                var playbackTimer = new System.Timers.Timer(1000);
+                int playbackTimerInterval = 200;
+                var playbackTimer = new System.Timers.Timer(playbackTimerInterval);
                 playbackTimer.Elapsed += (sender, e) => 
                 {
-                    soundboardSample.PlaybackCursorValue++;
+                    soundboardSample.PlaybackCursorValue = soundboardSample.PlaybackCursorValue + (playbackTimerInterval / 1000.0);
                 };
 
                 SelectedOutputDevicesCollection[0].DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
