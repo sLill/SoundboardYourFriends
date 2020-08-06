@@ -93,14 +93,14 @@ namespace SoundboardYourFriends.Model
         }
         #endregion Name
 
-        #region PlaybackCursor
-        private double _playbackCursor = 0;
-        public double PlaybackCursor
+        #region PlaybackCursorValue
+        private double _playbackCursorValue = 0;
+        public double PlaybackCursorValue
         {
-            get { return _playbackCursor; }
+            get { return _playbackCursorValue; }
             set
             {
-                _playbackCursor = value;
+                _playbackCursorValue = value;
                 RaisePropertyChanged();
             }
         }

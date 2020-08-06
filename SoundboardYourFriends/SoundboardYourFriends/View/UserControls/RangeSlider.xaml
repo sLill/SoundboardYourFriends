@@ -55,10 +55,10 @@
                             <Thumb x:Name="Thumb">
                                 <Thumb.Template>
                                     <ControlTemplate TargetType="Thumb">
-                                        <Rectangle Fill="Blue" 
+                                        <Rectangle Fill="CornflowerBlue" 
                                                    Stroke="Transparent"
                                                    StrokeThickness="0.5" 
-                                                   Width="3"
+                                                   Width="2.5"
                                                    Height="14"
                                                    SnapsToDevicePixels="false"/>
                                     </ControlTemplate>
@@ -88,6 +88,15 @@
         <Border Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="Black" VerticalAlignment="Center" Height="1" 
                 Margin="5,0,5,0"/>
 
+        <Slider Grid.Column="0" x:Name="PlaybackCursorSlider"
+                Minimum="{Binding LowerValue, ElementName=rangeSlider}"
+                Maximum="{Binding UpperValue, ElementName=rangeSlider}"
+                Value="{Binding PlaybackCursorValue, ElementName=rangeSlider, Mode=TwoWay}"
+                Template="{StaticResource playbackCursorSlider}"
+                Margin="7,0,7,0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"/>
+
         <Slider Grid.Column="0" x:Name="LowerSlider"
                 Minimum="{Binding Minimum, ElementName=rangeSlider}"
                 Maximum="{Binding Maximum, ElementName=rangeSlider}"
@@ -103,15 +112,6 @@
                 Template="{StaticResource simpleSlider}"
                 Margin="10,0,0,0"
                 VerticalAlignment="Center"/>
-
-        <Slider Grid.Column="0" x:Name="PlaybackCursorSlider"
-                Minimum="{Binding LowerValue, ElementName=rangeSlider}"
-                Maximum="{Binding UpperValue, ElementName=rangeSlider}"
-                Value="{Binding PlaybackCursorValue, ElementName=rangeSlider, Mode=TwoWay}"
-                Template="{StaticResource playbackCursorSlider}"
-                Margin="10,0,10,0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"/>
         <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="5,0,0,0" Content="{Binding LowerValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}"/>
         <Label Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0">-</Label>
         <Label Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0" Content="{Binding UpperValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}"/>

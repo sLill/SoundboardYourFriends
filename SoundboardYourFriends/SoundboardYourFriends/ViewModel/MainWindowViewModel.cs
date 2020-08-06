@@ -294,7 +294,7 @@ namespace SoundboardYourFriends.ViewModel
                 var playbackTimer = new System.Timers.Timer(1000);
                 playbackTimer.Elapsed += (sender, e) => 
                 {
-                    Application.Current.MainWindow.Dispatcher.Invoke(new Action(() => soundboardSample.PlaybackCursor = soundboardSample.PlaybackCursor + 1.0 ));
+                    soundboardSample.PlaybackCursorValue++;
                 };
 
                 SelectedOutputDevicesCollection[0].DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
@@ -302,7 +302,7 @@ namespace SoundboardYourFriends.ViewModel
                     playbackTimer.Stop();
 
                     // Reset the playback cursor position
-                    soundboardSample.PlaybackCursor = soundboardSample.FileTimeLowerValue;
+                    soundboardSample.PlaybackCursorValue = soundboardSample.FileTimeLowerValue;
                 };
 
                 playbackTimer.Start();

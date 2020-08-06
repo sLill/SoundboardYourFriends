@@ -91,6 +91,7 @@ namespace SoundboardYourFriends.View.UserControls
         private void LowerSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             UpperSlider.Value = Math.Max(UpperSlider.Value, LowerSlider.Value);
+            PlaybackCursorSlider.Value = Math.Max(PlaybackCursorSlider.Value, LowerSlider.Value);
         }
         #endregion LowerSlider_ValueChanged
 
@@ -106,6 +107,7 @@ namespace SoundboardYourFriends.View.UserControls
         private void UpperSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             LowerSlider.Value = Math.Min(UpperSlider.Value, LowerSlider.Value);
+            PlaybackCursorSlider.Value = Math.Min(UpperSlider.Value, PlaybackCursorSlider.Value);
         }
         #endregion UpperSlider_ValueChanged
         #endregion Events..
