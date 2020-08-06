@@ -162,8 +162,8 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel VerticalAlignment="Center" Margin="15,0,0,0">
-                                        <TextBlock VerticalAlignment="Center" Text="Hotkey"/>
-                                        <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="Unassigned" Margin="5,0,0,0"/>
+                                        <TextBlock VerticalAlignment="Center" Text="Shorcut"/>
+                                        <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="Unassigned" Margin="5,0,0,0" PreviewMouseLeftButtonUp="txtPlaybackHotkey_PreviewMouseLeftButtonUp"/>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

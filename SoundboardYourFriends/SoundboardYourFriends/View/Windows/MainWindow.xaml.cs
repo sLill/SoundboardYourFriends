@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,7 @@ namespace SoundboardYourFriends.View.Windows
     public partial class MainWindow : Window
     {
         #region Member Variables..
+        List<SoundboardSample> _soundboardSamplesInFocus = new List<SoundboardSample>();
         #endregion Member Variables..
 
         #region Properties..
@@ -50,14 +52,28 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion lstSoundboardSamples_MouseDoubleClick
 
-        #region OnKeyPressed
-        public void OnKeyPressed(object sender, KeyEventArgs e)
+        #region OnRegisterRecordKeyPressed
+        public void OnRegisterRecordKeyPressed(object sender, KeyEventArgs e)
         {
-            _mainWindowViewModel.UnregisterRecordHotkey(new WindowInteropHelper(this).Handle);
-            _mainWindowViewModel.RegisterRecordHotKey(new WindowInteropHelper(this).Handle, e.Key);
-            this.KeyDown -= OnKeyPressed;
+            _mainWindowViewModel.UnregisterRecordHotKey();
+            _mainWindowViewModel.RegisterRecordHotKey(e.Key);
+
+            this.KeyDown -= OnRegisterRecordKeyPressed;
         }
-        #endregion OnKeyPressed
+        #endregion OnRegisterRecordKeyPressed
+
+        #region OnRegisterSoundboardSampleKeyPressed
+        public void OnRegisterSoundboardSampleKeyPressed(object sender, KeyEventArgs e)
+        {
+            _soundboardSamplesInFocus.ForEach(soundboardSample =>
+            {
+                _mainWindowViewModel.UnregisterSoundboardSampleHotKey(soundboardSample.HotkeyId);
+                _mainWindowViewModel.RegisterSoundboardSampleHotKey(e.Key, soundboardSample.HotkeyId);
+            });
+
+            this.KeyDown -= OnRegisterSoundboardSampleKeyPressed;
+        }
+        #endregion OnRegisterSoundboardSampleKeyPressed
 
         #region btnDelete_Click
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -104,7 +120,9 @@ namespace SoundboardYourFriends.View.Windows
         #region btnRecord_PreviewMouseButtonDown
         private void btnRecord_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.KeyDown += OnKeyPressed;
+            this.KeyDown -= OnRegisterRecordKeyPressed;
+            this.KeyDown += OnRegisterRecordKeyPressed;
+
             _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
         }
         #endregion btnRecord_PreviewMouseButtonDown
@@ -135,6 +153,22 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion btnStopButton_Clicked
 
+        #region txtPlaybackHotkey_PreviewMouseLeftButtonUp
+        private void txtPlaybackHotkey_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var hotkeyTextbox = sender as TextBox;
+            var soundboardSample = (SoundboardSample)hotkeyTextbox.DataContext;
+
+            _soundboardSamplesInFocus.Add(soundboardSample);
+
+            this.KeyDown -= OnRegisterSoundboardSampleKeyPressed;
+            this.KeyDown += OnRegisterSoundboardSampleKeyPressed;
+
+            hotkeyTextbox.Text = "Press any key..";
+
+        }
+        #endregion txtPlaybackHotkey_PreviewMouseLeftButtonUp
+
         #region Window_Closing
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -149,19 +183,25 @@ namespace SoundboardYourFriends.View.Windows
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
             collectionView.GroupDescriptions.Add(groupDescription);
 
-            _mainWindowViewModel.LoadConfig(this);
+            var windowInteropHelper = new WindowInteropHelper(this);
+            IntPtr windowHandle = windowInteropHelper.Handle;
+            _mainWindowViewModel.WindowHandle = windowHandle;
+            
             _mainWindowViewModel.LoadAudioSamples();
+            _mainWindowViewModel.LoadConfig();
         }
         #endregion Window_Loaded
 
         #region OnClosed
         protected override void OnClosed(EventArgs e)
         {
-            _mainWindowViewModel.UnregisterRecordHotkey(new WindowInteropHelper(this).Handle);
+            _mainWindowViewModel.UnregisterHotKeysAndHooks();
             base.OnClosed(e);
         }
         #endregion OnClosed
+
         #endregion Events..
+
         #endregion Methods..
     }
 }

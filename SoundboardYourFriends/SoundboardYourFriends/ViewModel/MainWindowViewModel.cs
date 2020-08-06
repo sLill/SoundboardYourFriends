@@ -3,28 +3,22 @@ using NAudio.Wave;
 using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.View.Windows;
-using SharpDX.DirectSound;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Management;
-using System.Threading;
-using System.Windows.Threading;
+using SoundboardYourFriends.Core.Windows;
 
 namespace SoundboardYourFriends.ViewModel
 {
     public class MainWindowViewModel : ObservableObject
     {
         #region Member Variables..
-        private HwndSource _hwndSource;
-        private const int RECORD_HOTKEY_ID = 9000;
+        private static HwndSource _hwndSource;
+        private const int _recordHotkeyId = 90000;
         #endregion Member Variables..
 
         #region Properties..
@@ -110,6 +104,15 @@ namespace SoundboardYourFriends.ViewModel
             } 
         }
         #endregion SoundboardSampleCollection
+
+        #region WindowHandle
+        private IntPtr _windowHandle;
+        public IntPtr WindowHandle
+        {
+            get { return _windowHandle; }
+            set { _windowHandle = value; }
+        }
+        #endregion WindowHandle
         #endregion Properties..
 
         #region Constructors..
@@ -151,7 +154,8 @@ namespace SoundboardYourFriends.ViewModel
                 FileTimeMax = totalSeconds,
                 FileTimeMin = 0,
                 FileTimeUpperValue = totalSeconds,
-                FileTimeLowerValue = 0
+                FileTimeLowerValue = 0,
+                HotkeyId = SoundboardSampleCollection.Count
             };
 
             SoundboardSampleCollection.Add(NewSoundboardSample);
@@ -159,16 +163,22 @@ namespace SoundboardYourFriends.ViewModel
         #endregion OnFileWritten
         #endregion Events..
 
-        #region Windows..
-        #region RegisterHotKey
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vlc);
-        #endregion RegisterHotKey
+        #region Closing
+        public void Closing()
+        {
+            AudioAgent.StopListening();
+            UnregisterHotKeysAndHooks();
+        }
+        #endregion Closing
 
-        #region UnregisterHotKey
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
-        #endregion UnregisterHotKey
+        #region DeleteSample
+        public void DeleteSample(SoundboardSample soundboardSample)
+        {
+            File.Delete(soundboardSample.FilePath);
+            SoundboardSampleCollection.Remove(soundboardSample);
+        }
+        #endregion DeleteSample
+
 
         #region HwndHook
         public IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -180,12 +190,12 @@ namespace SoundboardYourFriends.ViewModel
 
                     switch (wParam.ToInt32())
                     {
-                        case RECORD_HOTKEY_ID:
+                        case _recordHotkeyId:
                             int vkey = (((int)lParam >> 16) & 0xFFFF);
                             uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(RecordHotkey.Value).ToString("X"), 16);
 
                             if (vkey == keyCode)
-                            { 
+                            {
                                 AudioAgent.WriteAudioBufferToFile();
                             }
 
@@ -198,22 +208,6 @@ namespace SoundboardYourFriends.ViewModel
             return IntPtr.Zero;
         }
         #endregion HwndHook
-        #endregion Windows..
-
-        #region Closing
-        public void Closing()
-        {
-            AudioAgent.StopListening();
-        }
-        #endregion Closing
-
-        #region DeleteSample
-        public void DeleteSample(SoundboardSample soundboardSample)
-        {
-            File.Delete(soundboardSample.FilePath);
-            SoundboardSampleCollection.Remove(soundboardSample);
-        }
-        #endregion DeleteSample
 
         #region LoadAudioDevices
         private void LoadAudioDevices()
@@ -265,18 +259,18 @@ namespace SoundboardYourFriends.ViewModel
                     FileTimeMax = totalSeconds,
                     FileTimeMin = 0,
                     FileTimeUpperValue = totalSeconds,
-                    FileTimeLowerValue = 0
+                    FileTimeLowerValue = 0,
+                    HotkeyId = _soundboardSampleCollection.Count
                 });
             }
         }
         #endregion LoadAudioSamples
 
         #region LoadConfig
-        public void LoadConfig(Window applicationWindow)
+        public void LoadConfig()
         {
             LoadAudioDevices();
-
-            RegisterRecordHotKey(new WindowInteropHelper(applicationWindow).Handle, Key.Up);
+            RegisterHotKeysAndHooks();
         }
         #endregion LoadConfig
 
@@ -307,26 +301,32 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion PlayAudioSample
 
-        #region RegisterRecordHotKey
-        public void RegisterRecordHotKey(IntPtr viewHandle, Key key)
+        #region RegisterHotKeysAndHooks
+        public void RegisterHotKeysAndHooks()
         {
-            RecordHotkey = key;
-
-            _hwndSource = HwndSource.FromHwnd(viewHandle);
-            _hwndSource.AddHook(HwndHook);
-
-            // Modifiers
-            //const uint MOD_NONE = 0x0000; // (none)
-            //const uint MOD_ALT = 0x0001; // ALT
-            const uint MOD_CONTROL = 0x0002; // CTRL
-            //const uint MOD_SHIFT = 0x0004; // SHIFT
-            //const uint MOD_WIN = 0x0008; // WINDOWS
-
-            uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(key).ToString("X"), 16);
-            if (!RegisterHotKey(viewHandle, RECORD_HOTKEY_ID, MOD_CONTROL, keyCode))
+            RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
+            SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
+                RegisterSoundboardSampleHotKey(soundboardSample.Hotkey, soundboardSample.HotkeyId);
+            });
+
+            // Hooks
+            _hwndSource = HwndSource.FromHwnd(WindowHandle);
+            _hwndSource.AddHook(HwndHook);
+        }
+        #endregion RegisterHotKeysAndHooks
+
+        #region RegisterSoundboardSampleHotKey
+        public void RegisterSoundboardSampleHotKey(Key key, int keyId)
+        {
+            WindowsApi.RegisterHotKey(WindowHandle, key, keyId, ApplicationConfiguration.GlobalKeyModifer);
+        }
+        #endregion RegisterSoundboardSampleHotKey
+
+        #region RegisterRecordHotKey
+        public void RegisterRecordHotKey(Key key)
+        {
+            WindowsApi.RegisterHotKey(WindowHandle, key, _recordHotkeyId, ApplicationConfiguration.GlobalKeyModifer);
         }
         #endregion RegisterRecordHotKey
 
@@ -350,6 +350,8 @@ namespace SoundboardYourFriends.ViewModel
 
                 soundboardSample.FilePath = newFilePath;
             }
+
+            soundboardSample.SaveMetadataProperties();
         }
         #endregion SaveSample
 
@@ -390,13 +392,34 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion StopAudioPlayback
 
-        #region UnregisterRecordHotkey
-        public void UnregisterRecordHotkey(IntPtr viewHandle)
+        #region UnregisterRecordHotKey
+        public void UnregisterRecordHotKey()
         {
-            _hwndSource?.RemoveHook(HwndHook);
-            UnregisterHotKey(viewHandle, RECORD_HOTKEY_ID);
+            WindowsApi.UnregisterHotkey(WindowHandle, _recordHotkeyId);
         }
-        #endregion UnregisterRecordHotkey
+        #endregion UnregisterRecordHotKey
+
+        #region UnregisterSoundboardSampleHotKey
+        public void UnregisterSoundboardSampleHotKey(int keyId)
+        {
+            WindowsApi.UnregisterHotkey(WindowHandle, keyId);
+        }
+        #endregion UnregisterSoundboardSampleHotKey
+
+        #region UnregisterHotKeysAndHooks
+        public void UnregisterHotKeysAndHooks()
+        {
+            UnregisterRecordHotKey();
+            SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
+            {
+                UnregisterSoundboardSampleHotKey(soundboardSample.HotkeyId);
+            });
+
+            // Hooks
+            _hwndSource?.RemoveHook(HwndHook);
+            _hwndSource.Dispose();
+        }
+        #endregion UnregisterHotKeysAndHooks
         #endregion Methods..
     }
 }

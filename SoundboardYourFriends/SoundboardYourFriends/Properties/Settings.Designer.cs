@@ -56,18 +56,28 @@ namespace SoundboardYourFriends.Properties {
                 this["SoundboardSampleDirectory"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.IDictionary SoundboardSampleHotkeys
-        {
-            get
-            {
-                return ((global::System.Collections.IDictionary)(this["SoundboardSampleHotkeys"]));
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RecordHotKey {
+            get {
+                return ((string)(this["RecordHotKey"]));
             }
-            set
-            {
-                this["SoundboardSampleHotkeys"] = value;
+            set {
+                this["RecordHotKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GlobalKeyModifier {
+            get {
+                return ((string)(this["GlobalKeyModifier"]));
+            }
+            set {
+                this["GlobalKeyModifier"] = value;
             }
         }
     }

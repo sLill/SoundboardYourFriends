@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SoundboardYourFriends
 {
@@ -41,6 +42,24 @@ namespace SoundboardYourFriends
         }
         #endregion DefaultOutputDeviceIds
 
+        #region GlobalKeyModifer
+        private static KeyModifier _globalKeyModifier = KeyModifier.MOD_NONE;
+        public static KeyModifier GlobalKeyModifer
+        {
+            get { return _globalKeyModifier; }
+            set { _globalKeyModifier = value; }
+        }
+        #endregion GlobalKeyModifer
+
+        #region RecordHotkey
+        private static Key _recordHotkey = Key.None;
+        public static Key RecordHotkey
+        {
+            get { return _recordHotkey; }
+            set { _recordHotkey = value; }
+        }
+        #endregion RecordHotkey
+
         #region SoundboardSampleDirectory
         private static string _soundboardSampleDirectory;
         public static string SoundboardSampleDirectory
@@ -49,16 +68,6 @@ namespace SoundboardYourFriends
             set { _soundboardSampleDirectory = value; }
         }
         #endregion SoundboardSampleDirectory
-
-        #region SoundboardSampleHotkeys
-        private static Dictionary<string, string> _soundboardSampleHotkeys;
-        public static Dictionary<string, string> SoundboardSampleHotkeys
-        {
-            get { return _soundboardSampleHotkeys; }
-            set { _soundboardSampleHotkeys = value; }
-        }
-        #endregion SoundboardSampleHotkeys
-
         #endregion Properties..
 
         #region Constructors..
@@ -88,13 +97,6 @@ namespace SoundboardYourFriends
         }
         #endregion GetSoundboardSampleDirectory
 
-        #region GetSoundboardSampleHotkeys
-        private static Dictionary<string, string> GetSoundboardSampleHotkeys()
-        {
-            return null;
-        }
-        #endregion GetSoundboardSampleHotkeys
-
         #region ImportUserSettings
         private static void ImportUserSettings()
         {
@@ -115,8 +117,15 @@ namespace SoundboardYourFriends
             // Soundboard Sample Directory
             SoundboardSampleDirectory = GetSoundboardSampleDirectory();
 
-            // Soundboard Sample Hotkeys 
-            SoundboardSampleHotkeys = GetSoundboardSampleHotkeys();
+            // Record Hotkey
+            Enum.TryParse(typeof(Key), Properties.Settings.Default.RecordHotKey, out object hotkey);
+            hotkey = hotkey ?? Key.None;
+            RecordHotkey = (Key)hotkey;
+
+            // Global Key Modifier
+            Enum.TryParse(typeof(KeyModifier), Properties.Settings.Default.GlobalKeyModifier, out object keyModifer);
+            keyModifer = keyModifer ?? KeyModifier.MOD_NONE;
+            GlobalKeyModifer = (KeyModifier)keyModifer;
 
             ByteSampleSize = 7112000;
         }
@@ -142,8 +151,8 @@ namespace SoundboardYourFriends
             // Soundboard Sample Directory
             Properties.Settings.Default.SoundboardSampleDirectory = SoundboardSampleDirectory;
 
-            // Soundboard Sample Hotkeys
-            Properties.Settings.Default.SoundboardSampleHotkeys = SoundboardSampleHotkeys;
+            // Record Hotkey
+            Properties.Settings.Default.RecordHotKey = RecordHotkey.ToString();
 
             Properties.Settings.Default.Save();
         }
