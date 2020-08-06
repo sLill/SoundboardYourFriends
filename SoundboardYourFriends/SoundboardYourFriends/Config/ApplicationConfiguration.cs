@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Windows;
 
 namespace SoundboardYourFriends
@@ -48,6 +49,16 @@ namespace SoundboardYourFriends
             set { _soundboardSampleDirectory = value; }
         }
         #endregion SoundboardSampleDirectory
+
+        #region SoundboardSampleHotkeys
+        private static Dictionary<string, string> _soundboardSampleHotkeys;
+        public static Dictionary<string, string> SoundboardSampleHotkeys
+        {
+            get { return _soundboardSampleHotkeys; }
+            set { _soundboardSampleHotkeys = value; }
+        }
+        #endregion SoundboardSampleHotkeys
+
         #endregion Properties..
 
         #region Constructors..
@@ -77,6 +88,13 @@ namespace SoundboardYourFriends
         }
         #endregion GetSoundboardSampleDirectory
 
+        #region GetSoundboardSampleHotkeys
+        private static Dictionary<string, string> GetSoundboardSampleHotkeys()
+        {
+            return null;
+        }
+        #endregion GetSoundboardSampleHotkeys
+
         #region ImportUserSettings
         private static void ImportUserSettings()
         {
@@ -96,6 +114,10 @@ namespace SoundboardYourFriends
 
             // Soundboard Sample Directory
             SoundboardSampleDirectory = GetSoundboardSampleDirectory();
+
+            // Soundboard Sample Hotkeys 
+            SoundboardSampleHotkeys = GetSoundboardSampleHotkeys();
+
             ByteSampleSize = 7112000;
         }
         #endregion ImportUserSettings
@@ -117,7 +139,12 @@ namespace SoundboardYourFriends
                 Properties.Settings.Default.OutputDeviceIds.Add(outputDeviceId.ToString());
             });
 
+            // Soundboard Sample Directory
             Properties.Settings.Default.SoundboardSampleDirectory = SoundboardSampleDirectory;
+
+            // Soundboard Sample Hotkeys
+            Properties.Settings.Default.SoundboardSampleHotkeys = SoundboardSampleHotkeys;
+
             Properties.Settings.Default.Save();
         }
         #endregion SaveUserSettings

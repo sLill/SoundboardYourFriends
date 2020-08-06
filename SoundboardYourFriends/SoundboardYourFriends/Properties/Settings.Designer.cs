@@ -56,5 +56,19 @@ namespace SoundboardYourFriends.Properties {
                 this["SoundboardSampleDirectory"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.IDictionary SoundboardSampleHotkeys
+        {
+            get
+            {
+                return ((global::System.Collections.IDictionary)(this["SoundboardSampleHotkeys"]));
+            }
+            set
+            {
+                this["SoundboardSampleHotkeys"] = value;
+            }
+        }
     }
 }

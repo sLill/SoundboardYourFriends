@@ -2,6 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using DSOFile;
+using System.Reflection.Metadata;
+using System.Linq;
+using System.IO;
 
 namespace SoundboardYourFriends.Model
 {
@@ -67,6 +71,15 @@ namespace SoundboardYourFriends.Model
         }
         #endregion FileTimeLowerValue
 
+        #region FileUniqueId
+        private Guid _fileUniqueId;
+        public Guid FileUniqueId
+        {
+            get { return _fileUniqueId; }
+            set { _fileUniqueId = value; }
+        }
+        #endregion FileUniqueId
+
         #region GroupName
         private string _groupName;
         public string GroupName 
@@ -109,11 +122,42 @@ namespace SoundboardYourFriends.Model
 
         #region Constructors..
         #region SoundboardSample
-        public SoundboardSample() { }
+        public SoundboardSample(string filePath) 
+        {
+            this.FilePath = filePath;
+            this.Name = Path.GetFileNameWithoutExtension(filePath);
+
+            InitializeFileMetaData();
+        }
         #endregion SoundboardSample
         #endregion Constructors..
 
         #region Methods..
+        #region InitializeFileMetaData
+        private void InitializeFileMetaData()
+        {
+            string FileUniqueIdentifierPropertyKey = "SoundboardSample_FileUniqueIdentifier";
+
+            // Pull custom metadata properties from the file. Generate them if this is a new file and none are found
+            OleDocumentProperties documentProperties = new OleDocumentProperties();
+            documentProperties.Open(this.FilePath, false, dsoFileOpenOptions.dsoOptionDefault);
+
+            var FileCustomProperties = documentProperties.CustomProperties.Cast<CustomProperty>()
+                .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x.get_Value());
+
+            if (!FileCustomProperties.Any())
+            {
+                FileUniqueId = Guid.NewGuid();
+                documentProperties.CustomProperties.Add(FileUniqueIdentifierPropertyKey, FileUniqueId.ToString());
+
+                documentProperties.Save();
+            }
+            else
+            {
+                FileUniqueId = Guid.Parse((string)FileCustomProperties[FileUniqueIdentifierPropertyKey]);
+            }
+        }
+        #endregion InitializeFileMetaData
         #endregion Methods..
     }
 }

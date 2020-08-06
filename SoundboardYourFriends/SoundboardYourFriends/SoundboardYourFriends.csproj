@@ -8,6 +8,10 @@
     <PublishTrimmed>true</PublishTrimmed>-->
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Resources\DeleteButton.png" />
     <None Remove="Resources\PlayButton.png" />
@@ -17,6 +21,17 @@
     <None Remove="Resources\SaveButtonGray.png" />
     <None Remove="Resources\SettingsGear.png" />
     <None Remove="Resources\StopButton.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <COMReference Include="DSOFile.dll">
+      <Guid>58968145-cf00-4341-995f-2ee093f6aba3</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>false</Isolated>
+    </COMReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +83,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="SharpDX.DirectSound" Version="4.2.0" />
     <PackageReference Include="System.Management" Version="4.7.0" />
@@ -78,6 +94,9 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Resources\dsofile_x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

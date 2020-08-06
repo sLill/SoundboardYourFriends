@@ -143,13 +143,10 @@ namespace SoundboardYourFriends.ViewModel
         public void OnFileWritten(object sender, EventArgs e)
         {
             string filePath = sender as string;
-            string fileName = Path.GetFileNameWithoutExtension(filePath);
-
             double totalSeconds = AudioAgent.GetFileAudioDuration(filePath).TotalSeconds;
-            SoundboardSample TestRecording = new SoundboardSample()
+
+            SoundboardSample NewSoundboardSample = new SoundboardSample(filePath)
             {
-                Name = fileName,
-                FilePath = filePath,
                 GroupName = "Ungrouped",
                 FileTimeMax = totalSeconds,
                 FileTimeMin = 0,
@@ -157,7 +154,7 @@ namespace SoundboardYourFriends.ViewModel
                 FileTimeLowerValue = 0
             };
 
-            SoundboardSampleCollection.Add(TestRecording);
+            SoundboardSampleCollection.Add(NewSoundboardSample);
         }
         #endregion OnFileWritten
         #endregion Events..
@@ -262,10 +259,8 @@ namespace SoundboardYourFriends.ViewModel
                     groupName = directorySplit[0];
                 }
 
-                _soundboardSampleCollection.Add(new SoundboardSample()
+                _soundboardSampleCollection.Add(new SoundboardSample(audioSamplePath)
                 {
-                    Name = Path.GetFileNameWithoutExtension(audioSamplePath),
-                    FilePath = audioSamplePath,
                     GroupName = groupName,
                     FileTimeMax = totalSeconds,
                     FileTimeMin = 0,
