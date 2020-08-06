@@ -151,7 +151,7 @@
                                                 <Image Source="/Resources/StopButton.png" Height="20" Width="20"/>
                                             </StackPanel>
                                         </Button>
-                                        <userControls:RangeSlider x:Name="mediaPlaybackSlider" VerticalAlignment="Center" Margin="5,0,0,0" Width="200" Maximum="{Binding FileTimeMax}" Minimum="{Binding FileTimeMin}" UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}" PlaybackCursorValue="{Binding PlaybackCursorValue, Mode=TwoWay}"></userControls:RangeSlider>
+                                        <userControls:RangeSlider x:Name="mediaPlaybackSlider" VerticalAlignment="Center" Margin="5,0,0,0" Width="200" Maximum="{Binding FileTimeMax}" Minimum="{Binding FileTimeMin}" UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}" PlaybackCursorValue="{Binding PlaybackCursorValue}"></userControls:RangeSlider>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

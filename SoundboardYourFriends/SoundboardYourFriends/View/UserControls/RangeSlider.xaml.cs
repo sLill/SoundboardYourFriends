@@ -16,7 +16,6 @@ namespace SoundboardYourFriends.View.UserControls
         #endregion Member Variables..
 
         #region Properties..
-
         #region PlaybackCursorValue
         public double PlaybackCursorValue
         {

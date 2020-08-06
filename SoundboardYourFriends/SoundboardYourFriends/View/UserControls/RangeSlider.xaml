@@ -91,7 +91,7 @@
         <Slider Grid.Column="0" x:Name="PlaybackCursorSlider"
                 Minimum="{Binding Minimum, ElementName=rangeSlider}"
                 Maximum="{Binding Maximum, ElementName=rangeSlider}"
-                Value="{Binding PlaybackCursorValue, ElementName=rangeSlider, Mode=TwoWay}"
+                Value="{Binding PlaybackCursorValue, ElementName=rangeSlider}"
                 Template="{StaticResource playbackCursorSlider}"
                 Margin="7,0,7,0"
                 VerticalAlignment="Center"/>
