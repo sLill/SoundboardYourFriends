@@ -14,6 +14,7 @@
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
         <converters:VolumeToOpacityConverter x:Key="VolumeToOpacityConverter"/>
+        <converters:KeyToStringConverter x:Key="KeyToStringConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -115,7 +116,7 @@
 
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
-            <ListView Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
+            <ListView Margin="0,5,0,0" Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
 
                 <!--View-->
                 <ListView.View>
@@ -161,9 +162,9 @@
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <DockPanel VerticalAlignment="Center" Margin="15,0,0,0">
+                                    <DockPanel VerticalAlignment="Center" Width="150" Margin="15,0,0,0">
                                         <TextBlock VerticalAlignment="Center" Text="Shorcut"/>
-                                        <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="Unassigned" Margin="5,0,0,0" PreviewMouseLeftButtonUp="txtPlaybackHotkey_PreviewMouseLeftButtonUp"/>
+                                        <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="{Binding Hotkey, Converter={StaticResource KeyToStringConverter}}" Margin="5,0,0,0" PreviewMouseLeftButtonUp="txtPlaybackHotkey_PreviewMouseLeftButtonUp"/>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

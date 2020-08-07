@@ -27,10 +27,14 @@ namespace SoundboardYourFriends.Core.Windows
         #region RegisterHotKey
         public static void RegisterHotKey(IntPtr viewHandle, Key key, int keyId, KeyModifier modifier)
         {
-            uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(key).ToString("X"), 16);
-            if (!RegisterHotKey(viewHandle, keyId, (uint)modifier, keyCode))
+            if (key != Key.None)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(key).ToString("X"), 16);
+                if (!RegisterHotKey(viewHandle, keyId, (uint)modifier, keyCode))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+
+                }
             }
         }
         #endregion RegisterHotKey

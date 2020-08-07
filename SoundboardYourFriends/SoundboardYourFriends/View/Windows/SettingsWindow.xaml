@@ -4,8 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
+        xmlns:windows="clr-namespace:SoundboardYourFriends.Core.Windows"
         mc:Ignorable="d"
         Title="SettingsWindow" Height="300" Width="500">
+
+    <Window.Resources>
+        <ObjectDataProvider x:Key="KeyModifierEnum" MethodName="GetValues"
+                            ObjectType="{x:Type windows:KeyModifier}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="windows:KeyModifier"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="8"/>
@@ -56,7 +66,10 @@
                 <TextBlock VerticalAlignment="Center" Text="Record Hotkey Modifier"/>
             </Label>
         </DockPanel>
-        
+        <DockPanel Grid.Row="3" Grid.Column="2">
+            <ComboBox Margin="5" FontSize="11" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
+        </DockPanel>
+
         <!--Row 4-->
         <DockPanel Grid.Row="4" Grid.Column="1">
             <Label HorizontalAlignment="Right" VerticalAlignment="Center">

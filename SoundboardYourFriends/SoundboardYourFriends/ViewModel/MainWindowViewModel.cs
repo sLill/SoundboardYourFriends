@@ -179,7 +179,6 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion DeleteSample
 
-
         #region HwndHook
         public IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
@@ -192,14 +191,18 @@ namespace SoundboardYourFriends.ViewModel
                     {
                         case _recordHotkeyId:
                             int vkey = (((int)lParam >> 16) & 0xFFFF);
-                            uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(RecordHotkey.Value).ToString("X"), 16);
 
-                            if (vkey == keyCode)
+                            if (RecordHotkey != Key.None)
                             {
-                                AudioAgent.WriteAudioBufferToFile();
-                            }
+                                uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(RecordHotkey.Value).ToString("X"), 16);
 
-                            handled = true;
+                                if (vkey == keyCode)
+                                {
+                                    AudioAgent.WriteAudioBufferToFile();
+                                }
+
+                                handled = true;
+                            }
                             break;
                     }
                     break;
@@ -312,7 +315,7 @@ namespace SoundboardYourFriends.ViewModel
 
             // Hooks
             _hwndSource = HwndSource.FromHwnd(WindowHandle);
-            _hwndSource.AddHook(HwndHook);
+            _hwndSource.AddHook(HwndHook);          
         }
         #endregion RegisterHotKeysAndHooks
 
@@ -326,6 +329,7 @@ namespace SoundboardYourFriends.ViewModel
         #region RegisterRecordHotKey
         public void RegisterRecordHotKey(Key key)
         {
+            RecordHotkey = key;
             WindowsApi.RegisterHotKey(WindowHandle, key, _recordHotkeyId, ApplicationConfiguration.GlobalKeyModifer);
         }
         #endregion RegisterRecordHotKey
@@ -417,7 +421,7 @@ namespace SoundboardYourFriends.ViewModel
 
             // Hooks
             _hwndSource?.RemoveHook(HwndHook);
-            _hwndSource.Dispose();
+            _hwndSource?.Dispose();
         }
         #endregion UnregisterHotKeysAndHooks
         #endregion Methods..
