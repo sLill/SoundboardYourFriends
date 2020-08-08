@@ -3,6 +3,7 @@ using SoundboardYourFriends.Core.Windows;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -40,7 +41,6 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Properties..
 
         #region Constructors..
-
         #region SettingsViewModel
         public SettingsViewModel() 
         {

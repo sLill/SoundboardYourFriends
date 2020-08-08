@@ -169,6 +169,8 @@ namespace SoundboardYourFriends.ViewModel
         {
             AudioAgent.StopListening();
             UnregisterHotKeysAndHooks();
+
+            ApplicationConfiguration.RecordHotkey = RecordHotkey.Value;
         }
         #endregion Closing
 
@@ -324,6 +326,7 @@ namespace SoundboardYourFriends.ViewModel
         #region RegisterHotKeysAndHooks
         public void RegisterHotKeysAndHooks()
         {
+            RecordHotkey = ApplicationConfiguration.RecordHotkey;
             RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
             SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
             {
