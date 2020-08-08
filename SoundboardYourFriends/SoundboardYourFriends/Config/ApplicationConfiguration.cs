@@ -44,7 +44,7 @@ namespace SoundboardYourFriends
         #endregion DefaultOutputDeviceIds
 
         #region GlobalKeyModifer
-        private static KeyModifier _globalKeyModifier = KeyModifier.MOD_NONE;
+        private static KeyModifier _globalKeyModifier = KeyModifier.None;
         public static KeyModifier GlobalKeyModifer
         {
             get { return _globalKeyModifier; }
@@ -125,7 +125,7 @@ namespace SoundboardYourFriends
 
             // Global Key Modifier
             Enum.TryParse(typeof(KeyModifier), Properties.Settings.Default.GlobalKeyModifier, out object keyModifer);
-            keyModifer = keyModifer ?? KeyModifier.MOD_NONE;
+            keyModifer = keyModifer ?? KeyModifier.None;
             GlobalKeyModifer = (KeyModifier)keyModifer;
 
             ByteSampleSize = 7112000;
@@ -154,6 +154,9 @@ namespace SoundboardYourFriends
 
             // Record Hotkey
             Properties.Settings.Default.RecordHotKey = RecordHotkey.ToString();
+
+            // Global modifier
+            Properties.Settings.Default.GlobalKeyModifier = GlobalKeyModifer.ToString();
 
             Properties.Settings.Default.Save();
         }

@@ -40,6 +40,9 @@ namespace SoundboardYourFriends.View.Windows
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             _settingsViewModel.Save();
+            this.DialogResult = true;
+
+            this.Close();
         }
         #endregion btnSave_Click
         #endregion Event Handlers..

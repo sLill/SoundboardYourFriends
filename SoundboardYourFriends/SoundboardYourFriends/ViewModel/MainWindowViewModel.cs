@@ -40,7 +40,7 @@ namespace SoundboardYourFriends.ViewModel
         private string _recordHotKeyDisplay = "Unassigned";
         public string RecordHotkeyDisplay
         {
-            get { return $"CTRL + {_recordHotKeyDisplay}"; }
+            get { return $"{ApplicationConfiguration.GlobalKeyModifer} + {_recordHotKeyDisplay}"; }
             set
             {
                 _recordHotKeyDisplay = value;

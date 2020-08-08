@@ -67,7 +67,7 @@
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="2">
-            <ComboBox Margin="5" FontSize="11" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
+            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="4" FontSize="11" SelectedValue="{Binding GlobalKeyModifier}" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
         </DockPanel>
 
         <!--Row 4-->

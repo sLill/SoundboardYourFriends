@@ -142,7 +142,10 @@ namespace SoundboardYourFriends.View.Windows
         private void btnSettings_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SettingsWindow settingsWindow = new SettingsWindow();
-            settingsWindow.Show();
+            if(settingsWindow.ShowDialog().Value)
+            {
+                _mainWindowViewModel.RecordHotkeyDisplay = _mainWindowViewModel.RecordHotkey.ToString();
+            }
         }
         #endregion btnSetting_MouseUp
 

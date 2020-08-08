@@ -201,8 +201,11 @@ namespace SoundboardYourFriends.Model
 
             var FileCustomPropertyCollection = documentProperties.CustomProperties.Cast<CustomProperty>()
                 .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x);
-
-            FileCustomPropertyCollection["SoundboardSample_Hotkey"].set_Value(Hotkey.ToString());
+            
+            if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_Hotkey"))
+            {
+                FileCustomPropertyCollection["SoundboardSample_Hotkey"].set_Value(Hotkey.ToString());
+            }
 
             documentProperties.Save();
             documentProperties.Close();

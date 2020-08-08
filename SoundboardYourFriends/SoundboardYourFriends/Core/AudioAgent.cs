@@ -61,6 +61,7 @@ namespace SoundboardYourFriends.Core
 
                 audioDevice.DirectSoundOutInstance.Init(mixer);
                 audioDevice.DirectSoundOutInstance.Play();
+                audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) => { audioFileReader.Dispose(); };
             });
         }
         #endregion BeginAudioPlayback
