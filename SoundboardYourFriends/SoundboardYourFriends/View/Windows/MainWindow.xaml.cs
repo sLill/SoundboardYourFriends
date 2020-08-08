@@ -202,7 +202,6 @@ namespace SoundboardYourFriends.View.Windows
             base.OnClosed(e);
         }
         #endregion OnClosed
-
         #endregion Events..
 
         #endregion Methods..

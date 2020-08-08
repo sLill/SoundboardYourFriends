@@ -183,7 +183,7 @@ namespace SoundboardYourFriends.Model
             else
             {
                 FileUniqueId = Guid.Parse((string)FileCustomPropertyCollection["SoundboardSample_FileUniqueIdentifier"].get_Value());
-                Enum.TryParse(typeof(Key), (string)FileCustomPropertyCollection["SoundboardSample_FileUniqueIdentifier"].get_Value(), out object hotkey);
+                Enum.TryParse(typeof(Key), (string)FileCustomPropertyCollection["SoundboardSample_Hotkey"].get_Value(), out object hotkey);
 
                 hotkey = hotkey ?? Key.None;
                 Hotkey = (Key)hotkey;

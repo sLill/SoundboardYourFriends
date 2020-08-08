@@ -344,6 +344,8 @@ namespace SoundboardYourFriends.ViewModel
 
                 soundboardSample.FileTimeMin = 0;
                 soundboardSample.FileTimeMax = AudioAgent.GetFileAudioDuration(soundboardSample.FilePath).Seconds;
+                soundboardSample.FileTimeLowerValue = 0;
+                soundboardSample.FileTimeUpperValue = soundboardSample.FileTimeMax;
             }
 
             // File name
