@@ -175,7 +175,8 @@ namespace SoundboardYourFriends.ViewModel
         #region DeleteSampleAsync
         public async Task DeleteSampleAsync(SoundboardSample soundboardSample)
         {
-            // Oh god
+            // Recursively try to acquire file lock. This can sometimes take a few seconds to release after 
+            // a audio playback event has ended
             bool success = false;
             while (!success)
             {
