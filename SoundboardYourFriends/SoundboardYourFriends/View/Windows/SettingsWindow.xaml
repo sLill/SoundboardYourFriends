@@ -49,7 +49,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="11" Text="{Binding SoundboardSampleDirectory}"/>
+                <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="12" Text="{Binding SoundboardSampleDirectory}"/>
             </Grid>
         </DockPanel>
 
@@ -67,7 +67,7 @@
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="2">
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="4" FontSize="11" SelectedValue="{Binding GlobalKeyModifier}" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
+            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2" FontSize="12" SelectedValue="{Binding GlobalKeyModifier}" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
         </DockPanel>
 
         <!--Row 4-->
@@ -80,7 +80,7 @@
         <!--Row 8-->
         <DockPanel Grid.Row="8" Grid.Column="2">
             <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnCancel" Width="60" Height="20" Content="Cancel" Click="btnCancel_Click"/>
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnSave" Width="90" Height="20" Content="Save" Margin="0,0,7,0" Click="btnSave_Click"/>
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnSave" Width="80" Height="20" Content="Save" Margin="0,0,4,0" Click="btnSave_Click"/>
         </DockPanel>
     </Grid>
 </Window>
