@@ -31,7 +31,7 @@ namespace SoundboardYourFriends.Core
 
         #region Constructors..
         #region AudioAgent
-        static AudioAgent() 
+        static AudioAgent()
         {
             BeginCapturing();
         }
@@ -47,8 +47,8 @@ namespace SoundboardYourFriends.Core
         {
             audioDeviceCollection.ForEach(audioDevice =>
             {
-                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
                 AudioFileReader audioFileReader = new AudioFileReader(filePath);
+                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
 
                 VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
                 ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
@@ -61,7 +61,11 @@ namespace SoundboardYourFriends.Core
 
                 audioDevice.DirectSoundOutInstance.Init(mixer);
                 audioDevice.DirectSoundOutInstance.Play();
-                audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) => { audioFileReader.Dispose(); };
+                audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
+                {
+                         //audioFileReader.Close();
+                         audioFileReader.Dispose();
+                };
             });
         }
         #endregion BeginAudioPlayback
@@ -197,7 +201,7 @@ namespace SoundboardYourFriends.Core
             string fileNameFull = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, fileName);
 
             WaveFormat waveFormat = WasapiLoopbackCapture.WaveFormat;
-            using (WaveFileWriter waveFileWriter= new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
+            using (WaveFileWriter waveFileWriter = new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
             {
                 var bytesToWrite = ApplicationConfiguration.ByteSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize).ToArray();
                 waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);

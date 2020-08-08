@@ -1,16 +1,17 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using SoundboardYourFriends.Core;
+using SoundboardYourFriends.Core.Windows;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.View.Windows;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Interop;
-using SoundboardYourFriends.Core.Windows;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -171,13 +172,28 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion Closing
 
-        #region DeleteSample
-        public void DeleteSample(SoundboardSample soundboardSample)
+        #region DeleteSampleAsync
+        public async Task DeleteSampleAsync(SoundboardSample soundboardSample)
         {
-            File.Delete(soundboardSample.FilePath);
-            SoundboardSampleCollection.Remove(soundboardSample);
+            // Oh god
+            bool success = false;
+            while (!success)
+            {
+                try
+                {
+                    AudioAgent.StopAudioPlayback(SelectedOutputDevicesCollection.ToList());
+                    File.Delete(soundboardSample.FilePath);
+                    SoundboardSampleCollection.Remove(soundboardSample);
+
+                    success = true;
+                }
+                catch (Exception ex) 
+                {
+                    await Task.Delay(500);
+                }
+            }
         }
-        #endregion DeleteSample
+        #endregion DeleteSampleAsync
 
         #region HwndHook
         public IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

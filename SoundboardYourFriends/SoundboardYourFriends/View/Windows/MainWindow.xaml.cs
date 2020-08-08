@@ -76,13 +76,13 @@ namespace SoundboardYourFriends.View.Windows
         #endregion OnRegisterSoundboardSampleKeyPressed
 
         #region btnDelete_Click
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
 
             if (MessageBox.Show(this, "Confirm Delete", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                _mainWindowViewModel.DeleteSample(soundboardSample);
+                await _mainWindowViewModel.DeleteSampleAsync(soundboardSample);
             };
         }
         #endregion btnDelete_Click
