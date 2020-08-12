@@ -4,6 +4,7 @@ using SoundboardYourFriends.Core.Windows;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.View.Windows;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -168,6 +169,7 @@ namespace SoundboardYourFriends.ViewModel
             UnregisterHotKeysAndHooks();
 
             ApplicationConfiguration.RecordHotkey = RecordHotkey.Value;
+            SoundboardSampleCollection.ToList().ForEach(x => x.SaveMetadataProperties());
         }
         #endregion Closing
 
@@ -203,24 +205,29 @@ namespace SoundboardYourFriends.ViewModel
             {
                 case WM_HOTKEY:
 
-                    switch (wParam.ToInt32())
+                    // Record button
+                    int virtualKeyParam = (((int)lParam >> 16) & 0xFFFF);
+                    if (_recordHotKey != null && _recordHotKey != Key.None)
                     {
-                        case _recordHotkeyId:
-                            int vkey = (((int)lParam >> 16) & 0xFFFF);
-
-                            if (RecordHotkey != Key.None)
-                            {
-                                uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(RecordHotkey.Value).ToString("X"), 16);
-
-                                if (vkey == keyCode)
-                                {
-                                    AudioAgent.WriteAudioBufferToFile();
-                                }
-
-                                handled = true;
-                            }
-                            break;
+                        uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(_recordHotKey.Value).ToString("X"), 16);
+                        if (_recordHotkeyId == wParam.ToInt32() && virtualKeyParam == keyCode)
+                        {
+                            AudioAgent.WriteAudioBufferToFile();
+                        }
                     }
+
+                    // Soundboard samples
+                    var soundboardSample = SoundboardSampleCollection.Where(x => x.HotkeyId == wParam.ToInt32()).FirstOrDefault();
+                    if (soundboardSample != null && soundboardSample.Hotkey != Key.None)
+                    {
+                        uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(soundboardSample.Hotkey).ToString("X"), 16);
+                        if (soundboardSample.HotkeyId == wParam.ToInt32() && virtualKeyParam == keyCode)
+                        {
+                            AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, SelectedOutputDevicesCollection.ToList(), PlaybackType.Global, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+                        }
+                    }
+
+                    handled = true;
                     break;
             }
 
@@ -328,6 +335,7 @@ namespace SoundboardYourFriends.ViewModel
         {
             RecordHotkey = ApplicationConfiguration.RecordHotkey;
             RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
+
             SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
             {
                 if (soundboardSample.Hotkey != Key.None)
