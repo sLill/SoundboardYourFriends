@@ -357,6 +357,8 @@ namespace SoundboardYourFriends.ViewModel
         #region SaveSample
         public void SaveSample(SoundboardSample soundboardSample)
         {
+            SelectedOutputDevicesCollection.Where(x => x.DirectSoundOutInstance?.PlaybackState == PlaybackState.Playing).ToList().ForEach(x => x.DirectSoundOutInstance.Stop());
+
             // File length
             if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
             {
@@ -400,6 +402,7 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion SetAudioDevices
 
+        #region SetEvents
         private void SetEvents()
         {
             AudioAgent.FileWritten += OnFileWritten;
@@ -410,6 +413,7 @@ namespace SoundboardYourFriends.ViewModel
 
             audioMeterUpdateTimer.Elapsed += OnAudioMeterTimerElapsed;
         }
+        #endregion SetEvents
 
         #region StopAudioPlayback
         public void StopAudioPlayback()

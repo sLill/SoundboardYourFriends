@@ -33,7 +33,6 @@ namespace SoundboardYourFriends.Core.Windows
                 if (!RegisterHotKey(viewHandle, keyId, (uint)modifier, keyCode))
                 {
                     throw new Win32Exception(Marshal.GetLastWin32Error());
-
                 }
             }
         }

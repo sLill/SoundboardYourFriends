@@ -14,7 +14,6 @@
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
         <converters:VolumeToOpacityConverter x:Key="VolumeToOpacityConverter"/>
-        <converters:KeyToStringConverter x:Key="KeyToStringConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -163,8 +162,10 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel VerticalAlignment="Center" Width="150" Margin="15,0,0,0">
-                                        <TextBlock VerticalAlignment="Center" Text="Shorcut"/>
-                                        <TextBox VerticalAlignment="Center" Name="txtPlaybackHotkey" IsEnabled="False" Text="{Binding Hotkey, Converter={StaticResource KeyToStringConverter}}" Margin="5,0,0,0" PreviewMouseLeftButtonUp="txtPlaybackHotkey_PreviewMouseLeftButtonUp"/>
+                                        <TextBlock VerticalAlignment="Center" Text="Shortcut"/>
+                                        <Border VerticalAlignment="Center" BorderThickness="0.5" BorderBrush="Black" Margin="6,0,0,0">
+                                            <TextBlock VerticalAlignment="Center" Name="txtPlaybackHotkey" Text="{Binding HotkeyDisplay}" PreviewMouseLeftButtonDown="txtPlaybackHotkey_PreviewMouseLeftButtonDown"/>
+                                        </Border>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

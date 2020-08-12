@@ -67,6 +67,8 @@ namespace SoundboardYourFriends.View.Windows
         {
             _soundboardSamplesInFocus.ForEach(soundboardSample =>
             {
+                soundboardSample.Hotkey = e.Key;
+
                 _mainWindowViewModel.UnregisterSoundboardSampleHotKey(soundboardSample.HotkeyId);
                 _mainWindowViewModel.RegisterSoundboardSampleHotKey(e.Key, soundboardSample.HotkeyId);
             });
@@ -156,21 +158,21 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion btnStopButton_Clicked
 
-        #region txtPlaybackHotkey_PreviewMouseLeftButtonUp
-        private void txtPlaybackHotkey_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        #region txtPlaybackHotkey_PreviewMouseLeftButtonDown
+        private void txtPlaybackHotkey_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var hotkeyTextbox = sender as TextBox;
-            var soundboardSample = (SoundboardSample)hotkeyTextbox.DataContext;
+            var hotkeyControl = sender as TextBlock;
+            var soundboardSample = (SoundboardSample)hotkeyControl.DataContext;
 
             _soundboardSamplesInFocus.Add(soundboardSample);
 
             this.KeyDown -= OnRegisterSoundboardSampleKeyPressed;
             this.KeyDown += OnRegisterSoundboardSampleKeyPressed;
 
-            hotkeyTextbox.Text = "Press any key..";
+            hotkeyControl.Text = "Press any key..";
 
         }
-        #endregion txtPlaybackHotkey_PreviewMouseLeftButtonUp
+        #endregion txtPlaybackHotkey_PreviewMouseLeftButtonDown
 
         #region Window_Closing
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -128,7 +128,7 @@ namespace SoundboardYourFriends
             keyModifer = keyModifer ?? KeyModifier.None;
             GlobalKeyModifer = (KeyModifier)keyModifer;
 
-            ByteSampleSize = 7112000;
+            ByteSampleSize = 7112000 * 2;
         }
         #endregion ImportUserSettings
 

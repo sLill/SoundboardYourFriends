@@ -102,10 +102,24 @@ namespace SoundboardYourFriends.Model
             set 
             { 
                 _hotkey = value;
+                HotkeyDisplay = _hotkey.ToString();
                 RaisePropertyChanged();
             }
         }
         #endregion Hotkey
+
+        #region HotkeyDisplay
+        private string _hotkeyDisplay;
+        public string HotkeyDisplay
+        {
+            get { return $"{ApplicationConfiguration.GlobalKeyModifer} + {_hotkeyDisplay}"; }
+            set
+            {
+                _hotkeyDisplay = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion HotkeyDisplay
 
         #region HotkeyId
         private int _hotkeyId;
