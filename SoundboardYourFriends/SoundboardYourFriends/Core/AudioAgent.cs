@@ -32,7 +32,7 @@ namespace SoundboardYourFriends.Core
         #region AudioAgent
         static AudioAgent()
         {
-            BeginCapturing();
+
         }
         #endregion AudioAgent
         #endregion Constructors..
@@ -62,23 +62,27 @@ namespace SoundboardYourFriends.Core
                 audioDevice.DirectSoundOutInstance.Play();
                 audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
                 {
-                         //audioFileReader.Close();
-                         audioFileReader.Dispose();
+                    //audioFileReader.Close();
+                    audioFileReader.Dispose();
                 };
             });
         }
         #endregion BeginAudioPlayback
 
         #region BeginCapturing
-        private static void BeginCapturing()
+        public static void BeginCapturing()
         {
-            // Copies about once every 1.5 min when set to 7112000 * 4 (Gives ~20 sec audio clip)
-            int audioBufferMax = ApplicationConfiguration.ByteSampleSize * 4;
+            // Determines the audio buffer size in relation to the parent buffer. Bigger multiplier = smaller proportion. 
+            // Larger multiplier also means dumping and copying to a new parent buffer less frequently at the cost of using a larger chunk of virtual memory
+            // ex. If multiplier is 4, the audio buffer for a single soundboard sample will takeup 25% of the larger buffer
+            int audioBufferMultiplier = 5;
+
+            int audioBufferMax = ApplicationConfiguration.ByteSampleSize * audioBufferMultiplier;
             WasapiLoopbackCapture = new WasapiLoopbackCapture();
 
             WasapiLoopbackCapture.DataAvailable += (sender, e) =>
             {
-                // Copy a clip-sized chunk of audio to a new byte array upon filling this one up
+                // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
                 if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
                 {
                     List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize);
@@ -179,13 +183,18 @@ namespace SoundboardYourFriends.Core
         }
         #endregion StopAudioPlayback
 
-        #region StopListening
-        public static void StopListening()
+        #region StopCapture
+        public static void StopCapture()
         {
+            if (WasapiLoopbackCapture.CaptureState == CaptureState.Capturing)
+            {
+                WasapiLoopbackCapture.StopRecording();
+            }
+
             WasapiLoopbackCapture.Dispose();
             WasapiLoopbackCapture = null;
         }
-        #endregion StopListening
+        #endregion StopCapture
 
         #region TrimFile
         public static void TrimFile(string filePath, double beginTime, double endTime)

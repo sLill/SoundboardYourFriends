@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
         xmlns:windows="clr-namespace:SoundboardYourFriends.Core.Windows"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="300" Width="500">
+        Title="SettingsWindow" Height="300" Width="550">
 
     <Window.Resources>
         <ObjectDataProvider x:Key="KeyModifierEnum" MethodName="GetValues"
@@ -24,61 +24,80 @@
             <RowDefinition Height="26"/>
             <RowDefinition Height="26"/>
             <RowDefinition Height="26"/>
-            <RowDefinition Height="26"/>
-            <RowDefinition Height="26"/>
+            <RowDefinition Height="46"/>
+            <RowDefinition Height="22"/>
             <RowDefinition Height="26*"/>
             <RowDefinition Height="12"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="14"/>
         </Grid.ColumnDefinitions>
         
         <!--Row 1-->
         <DockPanel Grid.Row="1" Grid.Column="1">
             <Label HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock VerticalAlignment="Center" Text="SoundboardSampleDirectory"/>
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="SoundboardSampleDirectory"/>
             </Label>
         </DockPanel>
-        <DockPanel Grid.Row="1" Grid.Column="2" Margin="5,2,0,0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="12" Text="{Binding SoundboardSampleDirectory}"/>
-            </Grid>
+        <DockPanel Grid.Row="1" Grid.Column="2" Margin="5,0,0,0" Width="200" HorizontalAlignment="Left">
+            <TextBox Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="11" Text="{Binding SoundboardSampleDirectory}"/>
         </DockPanel>
 
         <!--Row 2-->
         <DockPanel Grid.Row="2" Grid.Column="1">
             <Label HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock VerticalAlignment="Center" Text="Audio Quality"/>
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Audio Quality"/>
             </Label>
         </DockPanel>
         
         <!--Row 3-->
         <DockPanel Grid.Row="3" Grid.Column="1">
             <Label HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock VerticalAlignment="Center" Text="Record Hotkey Modifier"/>
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Record Hotkey Modifier"/>
             </Label>
         </DockPanel>
-        <DockPanel Grid.Row="3" Grid.Column="2">
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2" FontSize="12" SelectedValue="{Binding GlobalKeyModifier}" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
+        <DockPanel Grid.Row="3" Grid.Column="2" Width="200" Margin="5,0,0,0" HorizontalAlignment="Left">
+            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,2,0,2" FontSize="11" SelectedValue="{Binding GlobalKeyModifier}" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
         </DockPanel>
 
         <!--Row 4-->
         <DockPanel Grid.Row="4" Grid.Column="1">
             <Label HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock VerticalAlignment="Center" Text="Playback Hotkey Modifier"/>
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Playback Hotkey Modifier"/>
+            </Label>
+        </DockPanel>
+
+        <!--Row 5-->
+        <DockPanel Grid.Row="5" Grid.Column="1">
+            <Label HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Sample Size"/>
+            </Label>
+        </DockPanel>
+        <DockPanel Grid.Row="5" Grid.Column="2" Margin="5,0,0,0">
+            <TextBox FontSize="11" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding ByteSampleSize}"/>
+            <Label HorizontalAlignment="Left" Margin="1,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="bytes"/>
             </Label>
         </DockPanel>
         
+        <!--Row 6-->
+        <DockPanel Grid.Row="6" Grid.Column="2" Margin="0,-5,0,0">
+            <Label HorizontalAlignment="Left" Margin="0" Width="auto">
+                <TextBlock FontSize="11"  Text="Your current capturing device averages"/>
+            </Label>
+            <Label HorizontalAlignment="Left" Margin="-2,0,-2,0" Width="auto">
+                    <TextBlock FontSize="11" FontWeight="Bold" Text="{Binding DeviceAverageBytesPerSecond}"/>
+                </Label>
+                <Label HorizontalAlignment="Left" Margin="0" Width="auto">
+                    <TextBlock FontSize="11" Text="bytes/second"/>
+                </Label>
+        </DockPanel>
+
         <!--Row 8-->
-        <DockPanel Grid.Row="8" Grid.Column="2">
+        <DockPanel Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2">
             <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnCancel" Width="60" Height="20" Content="Cancel" Click="btnCancel_Click"/>
             <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnSave" Width="80" Height="20" Content="Save" Margin="0,0,4,0" Click="btnSave_Click"/>
         </DockPanel>

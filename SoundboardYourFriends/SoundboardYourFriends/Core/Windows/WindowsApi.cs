@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 
@@ -30,10 +31,7 @@ namespace SoundboardYourFriends.Core.Windows
             if (key != Key.None)
             {
                 uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(key).ToString("X"), 16);
-                if (!RegisterHotKey(viewHandle, keyId, (uint)modifier, keyCode))
-                {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
-                }
+                RegisterHotKey(viewHandle, keyId, (uint)modifier, keyCode);
             }
         }
         #endregion RegisterHotKey

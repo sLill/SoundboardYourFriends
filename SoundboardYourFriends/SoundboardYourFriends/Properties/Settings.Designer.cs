@@ -80,5 +80,20 @@ namespace SoundboardYourFriends.Properties {
                 this["GlobalKeyModifier"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7112000")]
+        public int ByteSampleSize
+        {
+            get
+            {
+                return ((int)(this["ByteSampleSize"]));
+            }
+            set
+            {
+                this["ByteSampleSize"] = value;
+            }
+        }
     }
 }

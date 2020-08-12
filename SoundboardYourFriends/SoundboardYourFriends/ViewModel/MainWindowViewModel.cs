@@ -165,7 +165,7 @@ namespace SoundboardYourFriends.ViewModel
         #region Closing
         public void Closing()
         {
-            AudioAgent.StopListening();
+            AudioAgent.StopCapture();
             UnregisterHotKeysAndHooks();
 
             ApplicationConfiguration.RecordHotkey = RecordHotkey.Value;
@@ -234,6 +234,17 @@ namespace SoundboardYourFriends.ViewModel
             return IntPtr.Zero;
         }
         #endregion HwndHook
+
+        #region InitializeAsync
+        public void Initialize()
+        {
+            ApplicationConfiguration.ImportUserSettings();
+            AudioAgent.BeginCapturing();
+
+            LoadAudioSamples();
+            LoadConfig();
+        }
+        #endregion InitializeAsync
 
         #region LoadAudioDevices
         private void LoadAudioDevices()
@@ -333,8 +344,10 @@ namespace SoundboardYourFriends.ViewModel
         #region RegisterHotKeysAndHooks
         public void RegisterHotKeysAndHooks()
         {
-            RecordHotkey = ApplicationConfiguration.RecordHotkey;
-            RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
+            if (RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey))
+            {
+                RecordHotkey = ApplicationConfiguration.RecordHotkey;
+            }
 
             SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
             {
@@ -358,10 +371,14 @@ namespace SoundboardYourFriends.ViewModel
         #endregion RegisterSoundboardSampleHotKey
 
         #region RegisterRecordHotKey
-        public void RegisterRecordHotKey(Key key)
+        public bool RegisterRecordHotKey(Key key)
         {
-            RecordHotkey = key;
+            bool registerResult = true;
+
+            WindowsApi.UnregisterHotkey(WindowHandle, _recordHotkeyId);
             WindowsApi.RegisterHotKey(WindowHandle, key, _recordHotkeyId, ApplicationConfiguration.GlobalKeyModifer);
+
+            return registerResult;
         }
         #endregion RegisterRecordHotKey
 

@@ -75,8 +75,6 @@ namespace SoundboardYourFriends
         #region ApplicationConfiguration
         static ApplicationConfiguration()
         {
-            ImportUserSettings();
-
             // Save settings on application closing
             Application.Current.Exit += (sender, e) => 
             {
@@ -99,7 +97,7 @@ namespace SoundboardYourFriends
         #endregion GetSoundboardSampleDirectory
 
         #region ImportUserSettings
-        private static void ImportUserSettings()
+        public static void ImportUserSettings()
         {
             // Audio Capture DeviceIds
             DefaultCaptureDeviceIds = new List<Guid>();
@@ -128,7 +126,8 @@ namespace SoundboardYourFriends
             keyModifer = keyModifer ?? KeyModifier.None;
             GlobalKeyModifer = (KeyModifier)keyModifer;
 
-            ByteSampleSize = 7112000 * 2;
+            // Byte sample size
+            ByteSampleSize = Properties.Settings.Default.ByteSampleSize;
         }
         #endregion ImportUserSettings
 
@@ -157,6 +156,9 @@ namespace SoundboardYourFriends
 
             // Global modifier
             Properties.Settings.Default.GlobalKeyModifier = GlobalKeyModifer.ToString();
+
+            // Byte sample size
+            Properties.Settings.Default.ByteSampleSize = ByteSampleSize;
 
             Properties.Settings.Default.Save();
         }

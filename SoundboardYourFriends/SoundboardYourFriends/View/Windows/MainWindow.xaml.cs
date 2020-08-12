@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
+using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Model;
+using SoundboardYourFriends.Properties;
 using SoundboardYourFriends.View.UserControls;
 using SoundboardYourFriends.ViewModel;
 
@@ -68,11 +71,10 @@ namespace SoundboardYourFriends.View.Windows
             _soundboardSamplesInFocus.ForEach(soundboardSample =>
             {
                 soundboardSample.Hotkey = e.Key;
-
-                _mainWindowViewModel.UnregisterSoundboardSampleHotKey(soundboardSample.HotkeyId);
                 _mainWindowViewModel.RegisterSoundboardSampleHotKey(e.Key, soundboardSample.HotkeyId);
             });
 
+            _soundboardSamplesInFocus.Clear();
             this.KeyDown -= OnRegisterSoundboardSampleKeyPressed;
         }
         #endregion OnRegisterSoundboardSampleKeyPressed
@@ -150,6 +152,10 @@ namespace SoundboardYourFriends.View.Windows
                 _mainWindowViewModel.SoundboardSampleCollection.ToList().ForEach(x => x.Hotkey = x.Hotkey);
 
                 _mainWindowViewModel.RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
+
+                // Re-intialize capture device
+                AudioAgent.WasapiLoopbackCapture.RecordingStopped += (sender, e) => { AudioAgent.WasapiLoopbackCapture.StartRecording(); };
+                AudioAgent.WasapiLoopbackCapture.StopRecording();
             }
         }
         #endregion btnSetting_MouseUp
@@ -186,16 +192,15 @@ namespace SoundboardYourFriends.View.Windows
         #region Window_Loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
-            collectionView.GroupDescriptions.Add(groupDescription);
-
             var windowInteropHelper = new WindowInteropHelper(this);
             IntPtr windowHandle = windowInteropHelper.Handle;
             _mainWindowViewModel.WindowHandle = windowHandle;
-            
-            _mainWindowViewModel.LoadAudioSamples();
-            _mainWindowViewModel.LoadConfig();
+
+            _mainWindowViewModel.Initialize();
+
+            CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
+            collectionView.GroupDescriptions.Add(groupDescription);
         }
         #endregion Window_Loaded
 
