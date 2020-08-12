@@ -1,5 +1,4 @@
-﻿using NAudio.CoreAudioApi;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Core.Windows;
 using SoundboardYourFriends.Model;
@@ -8,14 +7,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Interop;
-using SharpDX.DirectSound;
-using System.Collections.Generic;
-using System.Printing.IndexedProperties;
-using System.Text.RegularExpressions;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -336,7 +330,10 @@ namespace SoundboardYourFriends.ViewModel
             RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
             SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
             {
-                RegisterSoundboardSampleHotKey(soundboardSample.Hotkey, soundboardSample.HotkeyId);
+                if (soundboardSample.Hotkey != Key.None)
+                {
+                    RegisterSoundboardSampleHotKey(soundboardSample.Hotkey, soundboardSample.HotkeyId);
+                }
             });
 
             // Hooks

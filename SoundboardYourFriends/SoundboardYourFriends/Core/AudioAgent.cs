@@ -1,17 +1,14 @@
-﻿using NAudio.CoreAudioApi;
-using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using NAudio.Wave.SampleProviders;
-using System.IO;
-using Microsoft.WindowsAPICodePack.Shell;
+﻿using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using NAudio.CoreAudioApi;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using SharpDX.DirectSound;
 using SoundboardYourFriends.Model;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
-using SoundboardYourFriends.Core;
 
 namespace SoundboardYourFriends.Core
 {
@@ -140,7 +137,7 @@ namespace SoundboardYourFriends.Core
                 {
                     try
                     {
-                        var deviceIdString = device.Properties[PropertyKeyLookup.PKEY_AudioEndpoint_GUID.NAudioPropertyKey]?.Value.ToString();
+                        var deviceIdString = device.Properties[PropertyKeyLookups.PKEY_AudioEndpoint_GUID.ToNAudioPropertyKey()]?.Value.ToString();
 
                         Regex guidRegex = new Regex(@"{(?<Guid>.{8}-.{4}-.{4}-.{4}-.{12})}");
                         deviceIdString = guidRegex.Match(deviceIdString).Groups["Guid"].Value;
@@ -148,8 +145,7 @@ namespace SoundboardYourFriends.Core
 
                         systemMMDeviceCollection[deviceId] = device;
                     }
-                    catch (Exception ex)
-                    { }
+                    catch { }
                 }
             }
 

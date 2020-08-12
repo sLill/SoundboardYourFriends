@@ -172,8 +172,7 @@ namespace SoundboardYourFriends.View.Windows
             this.KeyDown -= OnRegisterSoundboardSampleKeyPressed;
             this.KeyDown += OnRegisterSoundboardSampleKeyPressed;
 
-            hotkeyControl.Text = "Press any key..";
-
+            soundboardSample.HotkeyDisplay = "Press any key..";
         }
         #endregion txtPlaybackHotkey_PreviewMouseLeftButtonDown
 

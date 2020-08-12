@@ -22,7 +22,7 @@
             <RowDefinition Height="26"/>
             <RowDefinition Height="32"/>
             <RowDefinition Height="26"/>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="34"/>
             <RowDefinition Height="26*"/>
             <RowDefinition Height="8"/>
         </Grid.RowDefinitions>
@@ -54,7 +54,7 @@
 
         <!--Row 2-->
         <DockPanel  Grid.Row="2" Grid.Column="1">
-            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
+            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="20,-5,300,0" BorderThickness="0">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn>
@@ -96,7 +96,7 @@
 
         <!--Row 4-->
         <DockPanel Grid.Row="4" Grid.Column="1">
-            <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="20,-5,0,0" BorderThickness="0">
+            <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="20,-5,300,0" BorderThickness="0">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn>
@@ -115,7 +115,7 @@
 
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
-            <ListView Margin="0,5,0,0" Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
+            <ListView Margin="0,10,0,0" Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
 
                 <!--View-->
                 <ListView.View>
@@ -161,10 +161,10 @@
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <DockPanel VerticalAlignment="Center" Width="150" Margin="15,0,0,0">
+                                    <DockPanel VerticalAlignment="Center" Width="175" Margin="15,0,0,0">
                                         <TextBlock VerticalAlignment="Center" Text="Shortcut"/>
                                         <Border VerticalAlignment="Center" BorderThickness="0.5" BorderBrush="Black" Opacity="0.7" Margin="6,2,0,0">
-                                            <TextBlock VerticalAlignment="Center" Name="txtPlaybackHotkey" Text="{Binding HotkeyDisplay}" PreviewMouseLeftButtonDown="txtPlaybackHotkey_PreviewMouseLeftButtonDown"/>
+                                            <TextBlock VerticalAlignment="Center" Name="txtPlaybackHotkey" Text="{Binding HotkeyDisplay}" Margin="1,0,0,0" PreviewMouseLeftButtonDown="txtPlaybackHotkey_PreviewMouseLeftButtonDown"/>
                                         </Border>
                                     </DockPanel>
                                 </DataTemplate>
