@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using NAudio.CoreAudioApi;
+using NAudio.Wave;
 using SharpDX.DirectSound;
 using SoundboardYourFriends.Core;
 using System;
@@ -51,6 +52,15 @@ namespace SoundboardYourFriends.Model
             }
         }
         #endregion FriendlyName
+
+        #region AudioMeterInformation
+        private AudioMeterInformation _audioMeterInformation = null;
+        public AudioMeterInformation AudioMeterInformation
+        {
+            get { return _audioMeterInformation; }
+            set { _audioMeterInformation = value; }
+        }
+        #endregion AudioMeterInformation
         #endregion Properties..
 
         #region Methods..

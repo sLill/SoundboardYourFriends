@@ -163,7 +163,7 @@
                                 <DataTemplate>
                                     <DockPanel VerticalAlignment="Center" Width="150" Margin="15,0,0,0">
                                         <TextBlock VerticalAlignment="Center" Text="Shortcut"/>
-                                        <Border VerticalAlignment="Center" BorderThickness="0.5" BorderBrush="Black" Margin="6,0,0,0">
+                                        <Border VerticalAlignment="Center" BorderThickness="0.5" BorderBrush="Black" Opacity="0.7" Margin="6,2,0,0">
                                             <TextBlock VerticalAlignment="Center" Name="txtPlaybackHotkey" Text="{Binding HotkeyDisplay}" PreviewMouseLeftButtonDown="txtPlaybackHotkey_PreviewMouseLeftButtonDown"/>
                                         </Border>
                                     </DockPanel>

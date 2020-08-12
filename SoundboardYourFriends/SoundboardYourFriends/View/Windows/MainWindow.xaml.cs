@@ -208,7 +208,6 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion OnClosed
         #endregion Events..
-
         #endregion Methods..
     }
 }

@@ -12,6 +12,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Interop;
+using SharpDX.DirectSound;
+using System.Collections.Generic;
+using System.Printing.IndexedProperties;
+using System.Text.RegularExpressions;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -130,16 +134,15 @@ namespace SoundboardYourFriends.ViewModel
         #region OnAudioMeterTimerElapsed
         private void OnAudioMeterTimerElapsed(object sender, EventArgs e)
         {
-            using (var deviceEnumerator = new MMDeviceEnumerator())
+            if (SelectedCaptureDevicesCollection.Any())
             {
-                MMDevice defaultRenderDevice = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Communications);
-
-                if (SelectedCaptureDevicesCollection.Any())
-                {
-                    SelectedCaptureDevicesCollection[0].AudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
-                }
-                //OutputAudioPeak = (int)(defaultRenderDevice.AudioMeterInformation.MasterPeakValue * 100);
+                SelectedCaptureDevicesCollection[0].AudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
             }
+
+            SelectedOutputDevicesCollection.ToList().ForEach(outputDevice =>
+            {
+                outputDevice.AudioPeak = (int)(outputDevice.AudioMeterInformation.MasterPeakValue * 100);
+            });
         }
         #endregion OnAudioMeterTimerElapsed
 

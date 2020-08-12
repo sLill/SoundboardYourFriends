@@ -10,6 +10,8 @@ using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using SharpDX.DirectSound;
 using SoundboardYourFriends.Model;
+using System.Text.RegularExpressions;
+using SoundboardYourFriends.Core;
 
 namespace SoundboardYourFriends.Core
 {
@@ -130,13 +132,37 @@ namespace SoundboardYourFriends.Core
         public static IEnumerable<AudioDevice> GetWindowsAudioDevices()
         {
             var audioDevices = new List<AudioDevice>();
+
+            Dictionary<Guid, MMDevice> systemMMDeviceCollection = new Dictionary<Guid, MMDevice>();
+            using (var deviceEnumerator = new MMDeviceEnumerator())
+            {
+                foreach (var device in deviceEnumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active))
+                {
+                    try
+                    {
+                        var deviceIdString = device.Properties[PropertyKeyLookup.PKEY_AudioEndpoint_GUID.NAudioPropertyKey]?.Value.ToString();
+
+                        Regex guidRegex = new Regex(@"{(?<Guid>.{8}-.{4}-.{4}-.{4}-.{12})}");
+                        deviceIdString = guidRegex.Match(deviceIdString).Groups["Guid"].Value;
+                        Guid deviceId = Guid.Parse(deviceIdString);
+
+                        systemMMDeviceCollection[deviceId] = device;
+                    }
+                    catch (Exception ex)
+                    { }
+                }
+            }
+
             DirectSound.GetDevices().ForEach(audioDevice =>
             {
+                var mmDeviceInstance = systemMMDeviceCollection.ContainsKey(audioDevice.DriverGuid) ? systemMMDeviceCollection[audioDevice.DriverGuid] : null;
+
                 audioDevices.Add(new AudioDevice()
                 {
                     FriendlyName = audioDevice.Description,
                     DeviceId = audioDevice.DriverGuid,
-                    DirectSoundOutInstance = new DirectSoundOut(audioDevice.DriverGuid)
+                    DirectSoundOutInstance = new DirectSoundOut(audioDevice.DriverGuid),
+                    AudioMeterInformation = mmDeviceInstance?.AudioMeterInformation
                 });
             });
 
