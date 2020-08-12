@@ -137,7 +137,7 @@ namespace SoundboardYourFriends.Core
                 {
                     try
                     {
-                        var deviceIdString = device.Properties[PropertyKeyLookups.PKEY_AudioEndpoint_GUID.ToNAudioPropertyKey()]?.Value.ToString();
+                        var deviceIdString = device.Properties[WindowsDevicePropertyKeys.PKEY_AudioEndpoint_GUID.ToNAudioPropertyKey()]?.Value.ToString();
 
                         Regex guidRegex = new Regex(@"{(?<Guid>.{8}-.{4}-.{4}-.{4}-.{12})}");
                         deviceIdString = guidRegex.Match(deviceIdString).Groups["Guid"].Value;
