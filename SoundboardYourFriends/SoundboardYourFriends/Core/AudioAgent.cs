@@ -197,6 +197,8 @@ namespace SoundboardYourFriends.Core
         #region WriteAudioBufferToFile
         public static void WriteAudioBufferToFile()
         {
+            Directory.CreateDirectory(ApplicationConfiguration.SoundboardSampleDirectory);
+
             string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
             string fileNameFull = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, fileName);
 

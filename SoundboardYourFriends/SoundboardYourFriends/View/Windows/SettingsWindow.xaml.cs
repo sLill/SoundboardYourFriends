@@ -24,7 +24,6 @@ namespace SoundboardYourFriends.View.Windows
             DataContext = _settingsViewModel;
         }
         #endregion SettingsWindow
-
         #endregion Constructors..
 
         #region Methods..

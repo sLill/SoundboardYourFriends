@@ -147,6 +147,9 @@ namespace SoundboardYourFriends.View.Windows
             if(settingsWindow.ShowDialog().Value)
             {
                 _mainWindowViewModel.RecordHotkeyDisplay = _mainWindowViewModel.RecordHotkey.ToString();
+                _mainWindowViewModel.SoundboardSampleCollection.ToList().ForEach(x => x.Hotkey = x.Hotkey);
+
+                _mainWindowViewModel.RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
             }
         }
         #endregion btnSetting_MouseUp

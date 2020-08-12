@@ -263,27 +263,30 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadAudioSamples
         public void LoadAudioSamples()
         {
-            foreach (string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
+            if (Directory.Exists(ApplicationConfiguration.SoundboardSampleDirectory))
             {
-                string relativePath = Path.GetRelativePath(ApplicationConfiguration.SoundboardSampleDirectory, audioSamplePath);
-                string[] directorySplit = relativePath.Split('\\');
-                double totalSeconds = AudioAgent.GetFileAudioDuration(audioSamplePath).TotalSeconds;
-
-                string groupName = "Ungrouped";
-                if (directorySplit.Length > 1)
+                foreach (string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
                 {
-                    groupName = directorySplit[0];
+                    string relativePath = Path.GetRelativePath(ApplicationConfiguration.SoundboardSampleDirectory, audioSamplePath);
+                    string[] directorySplit = relativePath.Split('\\');
+                    double totalSeconds = AudioAgent.GetFileAudioDuration(audioSamplePath).TotalSeconds;
+
+                    string groupName = "Ungrouped";
+                    if (directorySplit.Length > 1)
+                    {
+                        groupName = directorySplit[0];
+                    }
+
+                    _soundboardSampleCollection.Add(new SoundboardSample(audioSamplePath)
+                    {
+                        GroupName = groupName,
+                        FileTimeMax = totalSeconds,
+                        FileTimeMin = 0,
+                        FileTimeUpperValue = totalSeconds,
+                        FileTimeLowerValue = 0,
+                        HotkeyId = _soundboardSampleCollection.Count
+                    });
                 }
-
-                _soundboardSampleCollection.Add(new SoundboardSample(audioSamplePath)
-                {
-                    GroupName = groupName,
-                    FileTimeMax = totalSeconds,
-                    FileTimeMin = 0,
-                    FileTimeUpperValue = totalSeconds,
-                    FileTimeLowerValue = 0,
-                    HotkeyId = _soundboardSampleCollection.Count
-                });
             }
         }
         #endregion LoadAudioSamples
