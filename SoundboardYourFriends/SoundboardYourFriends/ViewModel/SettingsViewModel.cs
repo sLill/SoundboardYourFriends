@@ -1,9 +1,5 @@
 ﻿using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Core.Windows;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
 
 namespace SoundboardYourFriends.ViewModel
 {
@@ -26,8 +22,8 @@ namespace SoundboardYourFriends.ViewModel
         public KeyModifier GlobalKeyModifier
         {
             get { return _globalKeyModifier; }
-            set 
-            { 
+            set
+            {
                 _globalKeyModifier = value;
                 RaisePropertyChanged();
             }
@@ -39,7 +35,7 @@ namespace SoundboardYourFriends.ViewModel
         public string SoundboardSampleDirectory
         {
             get { return _soundboardSampleDirectory; }
-            set 
+            set
             {
                 _soundboardSampleDirectory = value;
                 RaisePropertyChanged();
@@ -63,7 +59,7 @@ namespace SoundboardYourFriends.ViewModel
 
         #region Constructors..
         #region SettingsViewModel
-        public SettingsViewModel() 
+        public SettingsViewModel()
         {
             LoadApplicationSettings();
         }

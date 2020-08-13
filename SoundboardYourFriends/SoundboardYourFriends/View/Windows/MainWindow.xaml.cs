@@ -1,17 +1,14 @@
-﻿using System;
+﻿using SoundboardYourFriends.Core;
+using SoundboardYourFriends.Model;
+using SoundboardYourFriends.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
-using SoundboardYourFriends.Core;
-using SoundboardYourFriends.Model;
-using SoundboardYourFriends.Properties;
-using SoundboardYourFriends.View.UserControls;
-using SoundboardYourFriends.ViewModel;
 
 namespace SoundboardYourFriends.View.Windows
 {
@@ -36,7 +33,7 @@ namespace SoundboardYourFriends.View.Windows
 
         #region Constructors..
         #region MainWindow
-        public MainWindow() 
+        public MainWindow()
         {
             InitializeComponent();
 
@@ -146,7 +143,7 @@ namespace SoundboardYourFriends.View.Windows
         private void btnSettings_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SettingsWindow settingsWindow = new SettingsWindow();
-            if(settingsWindow.ShowDialog().Value)
+            if (settingsWindow.ShowDialog().Value)
             {
                 _mainWindowViewModel.RecordHotkeyDisplay = _mainWindowViewModel.RecordHotkey.ToString();
                 _mainWindowViewModel.SoundboardSampleCollection.ToList().ForEach(x => x.Hotkey = x.Hotkey);

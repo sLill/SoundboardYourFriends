@@ -1,7 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -23,7 +20,7 @@ namespace SoundboardYourFriends.View.UserControls
             set { SetValue(PlaybackCursorValueProperty, value); }
         }
 
-        public static DependencyProperty PlaybackCursorValueProperty = DependencyProperty.Register("PlaybackCursorValue", typeof(double), typeof(RangeSlider), 
+        public static DependencyProperty PlaybackCursorValueProperty = DependencyProperty.Register("PlaybackCursorValue", typeof(double), typeof(RangeSlider),
             new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         #endregion PlaybackCursorValue
 

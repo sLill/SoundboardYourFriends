@@ -16,7 +16,7 @@ namespace SoundboardYourFriends.View.Windows
 
         #region Properties..
         #region SelectedAudioDevices
-        public IEnumerable<AudioDevice> SelectedAudioDevices { get { return lstAudioDevices.SelectedItems.Cast<AudioDevice>();  } }
+        public IEnumerable<AudioDevice> SelectedAudioDevices { get { return lstAudioDevices.SelectedItems.Cast<AudioDevice>(); } }
         #endregion SelectedAudioDevices
         #endregion Properties..
 

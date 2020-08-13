@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace SoundboardYourFriends.Core.Windows
+﻿namespace SoundboardYourFriends.Core.Windows
 {
     public enum KeyModifier
     {

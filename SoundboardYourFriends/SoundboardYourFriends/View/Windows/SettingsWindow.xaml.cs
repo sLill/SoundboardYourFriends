@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32;
-using SoundboardYourFriends.View.UserControls;
-using SoundboardYourFriends.ViewModel;
+﻿using SoundboardYourFriends.ViewModel;
 using System.Windows;
 
 namespace SoundboardYourFriends.View.Windows
@@ -16,7 +14,7 @@ namespace SoundboardYourFriends.View.Windows
 
         #region Constructors..
         #region SettingsWindow
-        public SettingsWindow() 
+        public SettingsWindow()
         {
             InitializeComponent();
 

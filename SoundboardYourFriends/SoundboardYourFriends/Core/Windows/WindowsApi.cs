@@ -1,9 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
 
 namespace SoundboardYourFriends.Core.Windows
 {

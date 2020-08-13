@@ -4,7 +4,6 @@ using SoundboardYourFriends.Core.Windows;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.View.Windows;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -82,10 +81,10 @@ namespace SoundboardYourFriends.ViewModel
         #region SelectedSoundboardSample
         private SoundboardSample _selectedSoundboardSample;
         public SoundboardSample SelectedSoundboardSample
-        { 
+        {
             get { return _selectedSoundboardSample; }
-            set 
-            { 
+            set
+            {
                 _selectedSoundboardSample = value;
                 RaisePropertyChanged();
             }
@@ -94,14 +93,14 @@ namespace SoundboardYourFriends.ViewModel
 
         #region SoundboardSampleCollection
         private ObservableCollection<SoundboardSample> _soundboardSampleCollection = new ObservableCollection<SoundboardSample>();
-        public ObservableCollection<SoundboardSample> SoundboardSampleCollection 
-        { 
+        public ObservableCollection<SoundboardSample> SoundboardSampleCollection
+        {
             get { return _soundboardSampleCollection; }
-            set 
-            { 
+            set
+            {
                 _soundboardSampleCollection = value;
                 RaisePropertyChanged();
-            } 
+            }
         }
         #endregion SoundboardSampleCollection
 
@@ -189,7 +188,7 @@ namespace SoundboardYourFriends.ViewModel
 
                     success = true;
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     await Task.Delay(500);
                 }
@@ -322,7 +321,7 @@ namespace SoundboardYourFriends.ViewModel
                 // Move the playback cursor
                 int playbackTimerInterval = 200;
                 var playbackTimer = new System.Timers.Timer(playbackTimerInterval);
-                playbackTimer.Elapsed += (sender, e) => 
+                playbackTimer.Elapsed += (sender, e) =>
                 {
                     soundboardSample.PlaybackCursorValue = soundboardSample.PlaybackCursorValue + (playbackTimerInterval / 1000.0);
                 };
@@ -359,7 +358,7 @@ namespace SoundboardYourFriends.ViewModel
 
             // Hooks
             _hwndSource = HwndSource.FromHwnd(WindowHandle);
-            _hwndSource.AddHook(HwndHook);          
+            _hwndSource.AddHook(HwndHook);
         }
         #endregion RegisterHotKeysAndHooks
 

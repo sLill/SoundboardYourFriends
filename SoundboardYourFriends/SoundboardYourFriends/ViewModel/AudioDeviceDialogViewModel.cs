@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using NAudio;
-using NAudio.Wave;
-using SoundboardYourFriends.Core;
+﻿using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Model;
-using SharpDX.DirectSound;
+using System.Collections.ObjectModel;
 
 namespace SoundboardYourFriends.ViewModel
 {

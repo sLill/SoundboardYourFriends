@@ -1,10 +1,7 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using SharpDX.DirectSound;
 using SoundboardYourFriends.Core;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SoundboardYourFriends.Model
 {
@@ -44,9 +41,9 @@ namespace SoundboardYourFriends.Model
         private string _friendlyName;
         public string FriendlyName
         {
-            get { return _friendlyName; } 
-            set 
-            { 
+            get { return _friendlyName; }
+            set
+            {
                 _friendlyName = value;
                 RaisePropertyChanged();
             }

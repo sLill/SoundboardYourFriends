@@ -30,7 +30,7 @@ namespace SoundboardYourFriends.Core
         }
         public WindowsDevicePropertyKeys(string formatId, int propertyId)
             : this(new Guid(formatId), propertyId) { }
-        
+
         public WindowsDevicePropertyKeys(uint a, uint b, uint c, uint d, uint e, uint f, uint g, uint h, uint i, uint j, uint k, int propertyId)
             : this(new Guid((uint)a, (ushort)b, (ushort)c, (byte)d, (byte)e, (byte)f, (byte)g, (byte)h, (byte)i, (byte)j, (byte)k), propertyId) { }
         public string GetBaseString()
@@ -109,16 +109,16 @@ namespace SoundboardYourFriends.Core
         public static WindowsDevicePropertyKeys PKEY_Device_RemovalPolicyOverride = new WindowsDevicePropertyKeys(0xa45c254e, 0xdf1c, 0x4efd, 0x80, 0x20, 0x67, 0xd1, 0x46, 0xa8, 0x50, 0xe0, 35);    // DEVPROP_TYPE_UINT32
         public static WindowsDevicePropertyKeys PKEY_Device_InstallState = new WindowsDevicePropertyKeys(0xa45c254e, 0xdf1c, 0x4efd, 0x80, 0x20, 0x67, 0xd1, 0x46, 0xa8, 0x50, 0xe0, 36);    // DEVPROP_TYPE_UINT32
         public static WindowsDevicePropertyKeys PKEY_Device_LocationPaths = new WindowsDevicePropertyKeys(0xa45c254e, 0xdf1c, 0x4efd, 0x80, 0x20, 0x67, 0xd1, 0x46, 0xa8, 0x50, 0xe0, 37);    // DEVPROP_TYPE_STRING_LIST
-                                                                                                                                                                  //
-                                                                                                                                                                  // Device properties
-                                                                                                                                                                  // These PKEYs correspond to a device's status and problem code
-                                                                                                                                                                  //
+                                                                                                                                                                                              //
+                                                                                                                                                                                              // Device properties
+                                                                                                                                                                                              // These PKEYs correspond to a device's status and problem code
+                                                                                                                                                                                              //
         public static WindowsDevicePropertyKeys PKEY_Device_DevNodeStatus = new WindowsDevicePropertyKeys(0x4340a6c5, 0x93fa, 0x4706, 0x97, 0x2c, 0x7b, 0x64, 0x80, 0x08, 0xa5, 0xa7, 2);     // DEVPROP_TYPE_UINT32
         public static WindowsDevicePropertyKeys PKEY_Device_ProblemCode = new WindowsDevicePropertyKeys(0x4340a6c5, 0x93fa, 0x4706, 0x97, 0x2c, 0x7b, 0x64, 0x80, 0x08, 0xa5, 0xa7, 3);     // DEVPROP_TYPE_UINT32
-                                                                                                                                                                //
-                                                                                                                                                                // Device properties
-                                                                                                                                                                // These PKEYs correspond to device relations
-                                                                                                                                                                //
+                                                                                                                                                                                            //
+                                                                                                                                                                                            // Device properties
+                                                                                                                                                                                            // These PKEYs correspond to device relations
+                                                                                                                                                                                            //
         public static WindowsDevicePropertyKeys PKEY_Device_EjectionRelations = new WindowsDevicePropertyKeys(0x4340a6c5, 0x93fa, 0x4706, 0x97, 0x2c, 0x7b, 0x64, 0x80, 0x08, 0xa5, 0xa7, 4);     // DEVPROP_TYPE_STRING_LIST
         public static WindowsDevicePropertyKeys PKEY_Device_RemovalRelations = new WindowsDevicePropertyKeys(0x4340a6c5, 0x93fa, 0x4706, 0x97, 0x2c, 0x7b, 0x64, 0x80, 0x08, 0xa5, 0xa7, 5);     // DEVPROP_TYPE_STRING_LIST
         public static WindowsDevicePropertyKeys PKEY_Device_PowerRelations = new WindowsDevicePropertyKeys(0x4340a6c5, 0x93fa, 0x4706, 0x97, 0x2c, 0x7b, 0x64, 0x80, 0x08, 0xa5, 0xa7, 6);     // DEVPROP_TYPE_STRING_LIST
@@ -126,16 +126,16 @@ namespace SoundboardYourFriends.Core
         public static WindowsDevicePropertyKeys PKEY_Device_Parent = new WindowsDevicePropertyKeys(0x4340a6c5, 0x93fa, 0x4706, 0x97, 0x2c, 0x7b, 0x64, 0x80, 0x08, 0xa5, 0xa7, 8);     // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_Device_Children = new WindowsDevicePropertyKeys(0x4340a6c5, 0x93fa, 0x4706, 0x97, 0x2c, 0x7b, 0x64, 0x80, 0x08, 0xa5, 0xa7, 9);     // DEVPROP_TYPE_STRING_LIST
         public static WindowsDevicePropertyKeys PKEY_Device_Siblings = new WindowsDevicePropertyKeys(0x4340a6c5, 0x93fa, 0x4706, 0x97, 0x2c, 0x7b, 0x64, 0x80, 0x08, 0xa5, 0xa7, 10);    // DEVPROP_TYPE_STRING_LIST
-                                                                                                                                                             //
-                                                                                                                                                             // Other Device properties
-                                                                                                                                                             //
+                                                                                                                                                                                         //
+                                                                                                                                                                                         // Other Device properties
+                                                                                                                                                                                         //
         public static WindowsDevicePropertyKeys PKEY_Device_Reported = new WindowsDevicePropertyKeys(0x80497100, 0x8c73, 0x48b9, 0xaa, 0xd9, 0xce, 0x38, 0x7e, 0x19, 0xc5, 0x6e, 2);     // DEVPROP_TYPE_BOOLEAN
         public static WindowsDevicePropertyKeys PKEY_Device_Legacy = new WindowsDevicePropertyKeys(0x80497100, 0x8c73, 0x48b9, 0xaa, 0xd9, 0xce, 0x38, 0x7e, 0x19, 0xc5, 0x6e, 3);     // DEVPROP_TYPE_BOOLEAN
         public static WindowsDevicePropertyKeys PKEY_Device_InstanceId = new WindowsDevicePropertyKeys(0x78c34fc8, 0x104a, 0x4aca, 0x9e, 0xa4, 0x52, 0x4d, 0x52, 0x99, 0x6e, 0x57, 256);   // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_Numa_Proximity_Domain = new WindowsDevicePropertyKeys(0x540b947e, 0x8b40, 0x45bc, 0xa8, 0xa2, 0x6a, 0x0b, 0x89, 0x4c, 0xbd, 0xa2, 1);     // DEVPROP_TYPE_UINT32
-                                                                                                                                                                   //
-                                                                                                                                                                   // Device driver properties
-                                                                                                                                                                   //
+                                                                                                                                                                                               //
+                                                                                                                                                                                               // Device driver properties
+                                                                                                                                                                                               //
         public static WindowsDevicePropertyKeys PKEY_Device_DriverDate = new WindowsDevicePropertyKeys(0xa8b865dd, 0x2e3d, 0x4094, 0xad, 0x97, 0xe5, 0x93, 0xa7, 0xc, 0x75, 0xd6, 2);      // DEVPROP_TYPE_FILETIME
         public static WindowsDevicePropertyKeys PKEY_Device_DriverVersion = new WindowsDevicePropertyKeys(0xa8b865dd, 0x2e3d, 0x4094, 0xad, 0x97, 0xe5, 0x93, 0xa7, 0xc, 0x75, 0xd6, 3);      // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_Device_DriverDesc = new WindowsDevicePropertyKeys(0xa8b865dd, 0x2e3d, 0x4094, 0xad, 0x97, 0xe5, 0x93, 0xa7, 0xc, 0x75, 0xd6, 4);      // DEVPROP_TYPE_STRING
@@ -152,20 +152,20 @@ namespace SoundboardYourFriends.Core
         public static WindowsDevicePropertyKeys PKEY_Device_DriverLogoLevel = new WindowsDevicePropertyKeys(0xa8b865dd, 0x2e3d, 0x4094, 0xad, 0x97, 0xe5, 0x93, 0xa7, 0xc, 0x75, 0xd6, 15);     // DEVPROP_TYPE_UINT32
         public static WindowsDevicePropertyKeys PKEY_Device_NoConnectSound = new WindowsDevicePropertyKeys(0xa8b865dd, 0x2e3d, 0x4094, 0xad, 0x97, 0xe5, 0x93, 0xa7, 0xc, 0x75, 0xd6, 17);     // DEVPROP_TYPE_BOOLEAN
         public static WindowsDevicePropertyKeys PKEY_Device_GenericDriverInstalled = new WindowsDevicePropertyKeys(0xa8b865dd, 0x2e3d, 0x4094, 0xad, 0x97, 0xe5, 0x93, 0xa7, 0xc, 0x75, 0xd6, 18);     // DEVPROP_TYPE_BOOLEAN
-                                                                                                                                                                           //
-                                                                                                                                                                           // Device properties that were set by the driver package that was installed
-                                                                                                                                                                           // on the device.
-                                                                                                                                                                           //
+                                                                                                                                                                                                       //
+                                                                                                                                                                                                       // Device properties that were set by the driver package that was installed
+                                                                                                                                                                                                       // on the device.
+                                                                                                                                                                                                       //
         public static WindowsDevicePropertyKeys PKEY_DrvPkg_Model = new WindowsDevicePropertyKeys(0xcf73bb51, 0x3abf, 0x44a2, 0x85, 0xe0, 0x9a, 0x3d, 0xc7, 0xa1, 0x21, 0x32, 2);     // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_DrvPkg_VendorWebSite = new WindowsDevicePropertyKeys(0xcf73bb51, 0x3abf, 0x44a2, 0x85, 0xe0, 0x9a, 0x3d, 0xc7, 0xa1, 0x21, 0x32, 3);     // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_DrvPkg_DetailedDescription = new WindowsDevicePropertyKeys(0xcf73bb51, 0x3abf, 0x44a2, 0x85, 0xe0, 0x9a, 0x3d, 0xc7, 0xa1, 0x21, 0x32, 4);     // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_DrvPkg_DocumentationLink = new WindowsDevicePropertyKeys(0xcf73bb51, 0x3abf, 0x44a2, 0x85, 0xe0, 0x9a, 0x3d, 0xc7, 0xa1, 0x21, 0x32, 5);     // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_DrvPkg_Icon = new WindowsDevicePropertyKeys(0xcf73bb51, 0x3abf, 0x44a2, 0x85, 0xe0, 0x9a, 0x3d, 0xc7, 0xa1, 0x21, 0x32, 6);     // DEVPROP_TYPE_STRING_LIST
         public static WindowsDevicePropertyKeys PKEY_DrvPkg_BrandingIcon = new WindowsDevicePropertyKeys(0xcf73bb51, 0x3abf, 0x44a2, 0x85, 0xe0, 0x9a, 0x3d, 0xc7, 0xa1, 0x21, 0x32, 7);     // DEVPROP_TYPE_STRING_LIST
-                                                                                                                                                                 //
-                                                                                                                                                                 // Device setup class properties
-                                                                                                                                                                 // These PKEYs correspond to the old setupapi SPCRP_XXX properties
-                                                                                                                                                                 //
+                                                                                                                                                                                             //
+                                                                                                                                                                                             // Device setup class properties
+                                                                                                                                                                                             // These PKEYs correspond to the old setupapi SPCRP_XXX properties
+                                                                                                                                                                                             //
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_UpperFilters = new WindowsDevicePropertyKeys(0x4321918b, 0xf69e, 0x470d, 0xa5, 0xde, 0x4d, 0x88, 0xc7, 0x5a, 0xd2, 0x4b, 19);    // DEVPROP_TYPE_STRING_LIST
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_LowerFilters = new WindowsDevicePropertyKeys(0x4321918b, 0xf69e, 0x470d, 0xa5, 0xde, 0x4d, 0x88, 0xc7, 0x5a, 0xd2, 0x4b, 20);    // DEVPROP_TYPE_STRING_LIST
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_Security = new WindowsDevicePropertyKeys(0x4321918b, 0xf69e, 0x470d, 0xa5, 0xde, 0x4d, 0x88, 0xc7, 0x5a, 0xd2, 0x4b, 25);    // DEVPROP_TYPE_SECURITY_DESCRIPTOR
@@ -173,10 +173,10 @@ namespace SoundboardYourFriends.Core
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_DevType = new WindowsDevicePropertyKeys(0x4321918b, 0xf69e, 0x470d, 0xa5, 0xde, 0x4d, 0x88, 0xc7, 0x5a, 0xd2, 0x4b, 27);    // DEVPROP_TYPE_UINT32
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_Exclusive = new WindowsDevicePropertyKeys(0x4321918b, 0xf69e, 0x470d, 0xa5, 0xde, 0x4d, 0x88, 0xc7, 0x5a, 0xd2, 0x4b, 28);    // DEVPROP_TYPE_UINT32
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_Characteristics = new WindowsDevicePropertyKeys(0x4321918b, 0xf69e, 0x470d, 0xa5, 0xde, 0x4d, 0x88, 0xc7, 0x5a, 0xd2, 0x4b, 29);    // DEVPROP_TYPE_UINT32
-                                                                                                                                                                         //
-                                                                                                                                                                         // Device setup class properties
-                                                                                                                                                                         // These PKEYs correspond to registry values under the device class GUID key
-                                                                                                                                                                         //
+                                                                                                                                                                                                     //
+                                                                                                                                                                                                     // Device setup class properties
+                                                                                                                                                                                                     // These PKEYs correspond to registry values under the device class GUID key
+                                                                                                                                                                                                     //
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_Name = new WindowsDevicePropertyKeys(0x259abffc, 0x50a7, 0x47ce, 0xaf, 0x8, 0x68, 0xc9, 0xa7, 0xd7, 0x33, 0x66, 2);  // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_ClassName = new WindowsDevicePropertyKeys(0x259abffc, 0x50a7, 0x47ce, 0xaf, 0x8, 0x68, 0xc9, 0xa7, 0xd7, 0x33, 0x66, 3);  // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_Icon = new WindowsDevicePropertyKeys(0x259abffc, 0x50a7, 0x47ce, 0xaf, 0x8, 0x68, 0xc9, 0xa7, 0xd7, 0x33, 0x66, 4);  // DEVPROP_TYPE_STRING
@@ -188,19 +188,19 @@ namespace SoundboardYourFriends.Core
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_NoUseClass = new WindowsDevicePropertyKeys(0x259abffc, 0x50a7, 0x47ce, 0xaf, 0x8, 0x68, 0xc9, 0xa7, 0xd7, 0x33, 0x66, 10); // DEVPROP_TYPE_BOOLEAN
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_DefaultService = new WindowsDevicePropertyKeys(0x259abffc, 0x50a7, 0x47ce, 0xaf, 0x8, 0x68, 0xc9, 0xa7, 0xd7, 0x33, 0x66, 11); // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_IconPath = new WindowsDevicePropertyKeys(0x259abffc, 0x50a7, 0x47ce, 0xaf, 0x8, 0x68, 0xc9, 0xa7, 0xd7, 0x33, 0x66, 12); // DEVPROP_TYPE_STRING_LIST
-                                                                                                                                                              //
-                                                                                                                                                              // Other Device setup class properties
-                                                                                                                                                              //
+                                                                                                                                                                                          //
+                                                                                                                                                                                          // Other Device setup class properties
+                                                                                                                                                                                          //
         public static WindowsDevicePropertyKeys PKEY_DeviceClass_ClassCoInstallers = new WindowsDevicePropertyKeys(0x713d1703, 0xa2e2, 0x49f5, 0x92, 0x14, 0x56, 0x47, 0x2e, 0xf3, 0xda, 0x5c, 2); // DEVPROP_TYPE_STRING_LIST
-                                                                                                                                                                       //
-                                                                                                                                                                       // Device interface properties
-                                                                                                                                                                       //
+                                                                                                                                                                                                   //
+                                                                                                                                                                                                   // Device interface properties
+                                                                                                                                                                                                   //
         public static WindowsDevicePropertyKeys PKEY_DeviceInterface_FriendlyName = new WindowsDevicePropertyKeys(0x026e516e, 0xb814, 0x414b, 0x83, 0xcd, 0x85, 0x6d, 0x6f, 0xef, 0x48, 0x22, 2); // DEVPROP_TYPE_STRING
         public static WindowsDevicePropertyKeys PKEY_DeviceInterface_Enabled = new WindowsDevicePropertyKeys(0x026e516e, 0xb814, 0x414b, 0x83, 0xcd, 0x85, 0x6d, 0x6f, 0xef, 0x48, 0x22, 3); // DEVPROP_TYPE_BOOLEAN
         public static WindowsDevicePropertyKeys PKEY_DeviceInterface_ClassGuid = new WindowsDevicePropertyKeys(0x026e516e, 0xb814, 0x414b, 0x83, 0xcd, 0x85, 0x6d, 0x6f, 0xef, 0x48, 0x22, 4); // DEVPROP_TYPE_GUID
-                                                                                                                                                                   //
-                                                                                                                                                                   // Device interface class properties
-                                                                                                                                                                   //
+                                                                                                                                                                                               //
+                                                                                                                                                                                               // Device interface class properties
+                                                                                                                                                                                               //
         public static WindowsDevicePropertyKeys PKEY_DeviceInterfaceClass_DefaultInterface = new WindowsDevicePropertyKeys(0x14c83a99, 0x0b3f, 0x44b7, 0xbe, 0x4c, 0xa1, 0x78, 0xd3, 0x99, 0x05, 0x64, 2); // DEVPROP_TYPE_STRING
 
         public static WindowsDevicePropertyKeys PKEY_Audio_ChannelCount = new WindowsDevicePropertyKeys(0x64440490, 0x4C8B, 0x11D1, 0x8B, 0x70, 0x08, 0x00, 0x36, 0xB1, 0x1A, 0x03, 7);
@@ -855,7 +855,7 @@ namespace SoundboardYourFriends.Core
         public static WindowsDevicePropertyKeys PKEY_PNPX_ServiceId = new WindowsDevicePropertyKeys(0x656A3BB3, 0xECC0, 0x43FD, 0x84, 0x77, 0x4A, 0xE0, 0x40, 0x4A, 0x96, 0xCD, 0x00004001);   // VT_LPWSTR
         public static WindowsDevicePropertyKeys PKEY_PNPX_ServiceTypes = new WindowsDevicePropertyKeys(0x656A3BB3, 0xECC0, 0x43FD, 0x84, 0x77, 0x4A, 0xE0, 0x40, 0x4A, 0x96, 0xCD, 0x00004002);   // VT_LPWSTR | VT_VECTOR
         public static WindowsDevicePropertyKeys PKEY_PNPX_DomainName = new WindowsDevicePropertyKeys(0x656A3BB3, 0xECC0, 0x43FD, 0x84, 0x77, 0x4A, 0xE0, 0x40, 0x4A, 0x96, 0xCD, 0x00005000);   // VT_LPWSTR
-                                                                                                                                                                    // Use PKEY_ComputerName (propkey.h)     public static PropertyKeyLookup PKEY_PNPX_MachineName = new PropertyKeyLookup( 0x656A3BB3, 0xECC0, 0x43FD, 0x84, 0x77, 0x4A, 0xE0, 0x40, 0x4A, 0x96, 0xCD, 0x00005001);   // VT_LPWSTR
+                                                                                                                                                                                                // Use PKEY_ComputerName (propkey.h)     public static PropertyKeyLookup PKEY_PNPX_MachineName = new PropertyKeyLookup( 0x656A3BB3, 0xECC0, 0x43FD, 0x84, 0x77, 0x4A, 0xE0, 0x40, 0x4A, 0x96, 0xCD, 0x00005001);   // VT_LPWSTR
         public static WindowsDevicePropertyKeys PKEY_PNPX_ShareName = new WindowsDevicePropertyKeys(0x656A3BB3, 0xECC0, 0x43FD, 0x84, 0x77, 0x4A, 0xE0, 0x40, 0x4A, 0x96, 0xCD, 0x00005002);   // VT_LPWSTR
         public static WindowsDevicePropertyKeys PKEY_SSDP_AltLocationInfo = new WindowsDevicePropertyKeys(0x656A3BB3, 0xECC0, 0x43FD, 0x84, 0x77, 0x4A, 0xE0, 0x40, 0x4A, 0x96, 0xCD, 0x00006000);   // VT_LPWSTR
         public static WindowsDevicePropertyKeys PKEY_SSDP_DevLifeTime = new WindowsDevicePropertyKeys(0x656A3BB3, 0xECC0, 0x43FD, 0x84, 0x77, 0x4A, 0xE0, 0x40, 0x4A, 0x96, 0xCD, 0x00006001);   // VT_UI4
@@ -880,7 +880,7 @@ namespace SoundboardYourFriends.Core
         public static WindowsDevicePropertyKeys PKEY_WCN_EncryptType = new WindowsDevicePropertyKeys(0x88190b83, 0x4684, 0x11da, 0xa2, 0x6a, 0x00, 0x02, 0xb3, 0x98, 0x8e, 0x81, 0x00000004); // VT_INT
         public static WindowsDevicePropertyKeys PKEY_WCN_ConnType = new WindowsDevicePropertyKeys(0x88190b84, 0x4684, 0x11da, 0xa2, 0x6a, 0x00, 0x02, 0xb3, 0x98, 0x8e, 0x81, 0x00000005); // VT_INT
         public static WindowsDevicePropertyKeys PKEY_WCN_ConfigMethods = new WindowsDevicePropertyKeys(0x88190b85, 0x4684, 0x11da, 0xa2, 0x6a, 0x00, 0x02, 0xb3, 0x98, 0x8e, 0x81, 0x00000006); // VT_INT
-                                                                                                                                                                    //public static PropertyKeyLookup PKEY_WCN_DeviceType = new PropertyKeyLookup( 0x88190b86, 0x4684, 0x11da, 0xa2, 0x6a, 0x00, 0x02, 0xb3, 0x98, 0x8e, 0x81, 0x00000007); // VT_INT
+                                                                                                                                                                                                //public static PropertyKeyLookup PKEY_WCN_DeviceType = new PropertyKeyLookup( 0x88190b86, 0x4684, 0x11da, 0xa2, 0x6a, 0x00, 0x02, 0xb3, 0x98, 0x8e, 0x81, 0x00000007); // VT_INT
         public static WindowsDevicePropertyKeys PKEY_WCN_RfBand = new WindowsDevicePropertyKeys(0x88190b87, 0x4684, 0x11da, 0xa2, 0x6a, 0x00, 0x02, 0xb3, 0x98, 0x8e, 0x81, 0x00000008); // VT_INT
         public static WindowsDevicePropertyKeys PKEY_WCN_AssocState = new WindowsDevicePropertyKeys(0x88190b88, 0x4684, 0x11da, 0xa2, 0x6a, 0x00, 0x02, 0xb3, 0x98, 0x8e, 0x81, 0x00000009); // VT_INT
         public static WindowsDevicePropertyKeys PKEY_WCN_ConfigError = new WindowsDevicePropertyKeys(0x88190b89, 0x4684, 0x11da, 0xa2, 0x6a, 0x00, 0x02, 0xb3, 0x98, 0x8e, 0x81, 0x0000000a); // VT_INT

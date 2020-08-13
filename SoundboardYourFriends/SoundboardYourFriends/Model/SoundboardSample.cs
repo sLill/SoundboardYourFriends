@@ -1,11 +1,8 @@
-﻿using SoundboardYourFriends.Core;
+﻿using DSOFile;
+using SoundboardYourFriends.Core;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DSOFile;
-using System.Reflection.Metadata;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 
 namespace SoundboardYourFriends.Model
@@ -83,7 +80,7 @@ namespace SoundboardYourFriends.Model
 
         #region GroupName
         private string _groupName;
-        public string GroupName 
+        public string GroupName
         {
             get { return _groupName; }
             set
@@ -99,8 +96,8 @@ namespace SoundboardYourFriends.Model
         public Key Hotkey
         {
             get { return _hotkey; }
-            set 
-            { 
+            set
+            {
                 _hotkey = value;
                 HotkeyDisplay = _hotkey.ToString();
                 RaisePropertyChanged();
@@ -136,14 +133,14 @@ namespace SoundboardYourFriends.Model
 
         #region Name
         private string _name;
-        public string Name 
+        public string Name
         {
             get { return _name; }
-            set 
-            { 
+            set
+            {
                 _name = value;
                 RaisePropertyChanged();
-            } 
+            }
         }
         #endregion Name
 
@@ -163,7 +160,7 @@ namespace SoundboardYourFriends.Model
 
         #region Constructors..
         #region SoundboardSample
-        public SoundboardSample(string filePath) 
+        public SoundboardSample(string filePath)
         {
             this.FilePath = filePath;
             this.Name = Path.GetFileNameWithoutExtension(filePath);
@@ -215,7 +212,7 @@ namespace SoundboardYourFriends.Model
 
             var FileCustomPropertyCollection = documentProperties.CustomProperties.Cast<CustomProperty>()
                 .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x);
-            
+
             if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_Hotkey"))
             {
                 FileCustomPropertyCollection["SoundboardSample_Hotkey"].set_Value(Hotkey.ToString());

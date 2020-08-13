@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Security;
 using System.Windows;
 using System.Windows.Input;
 
 namespace SoundboardYourFriends
 {
-    public static class ApplicationConfiguration 
+    public static class ApplicationConfiguration
     {
         #region Member Variables..
         #endregion Member Variables..
@@ -76,9 +75,9 @@ namespace SoundboardYourFriends
         static ApplicationConfiguration()
         {
             // Save settings on application closing
-            Application.Current.Exit += (sender, e) => 
+            Application.Current.Exit += (sender, e) =>
             {
-                SaveUserSettings(); 
+                SaveUserSettings();
             };
         }
         #endregion ApplicationConfiguration
@@ -101,7 +100,7 @@ namespace SoundboardYourFriends
         {
             // Audio Capture DeviceIds
             DefaultCaptureDeviceIds = new List<Guid>();
-            Properties.Settings.Default.CaptureDeviceIds?.Cast<string>().ToList().ForEach(captureDeviceIdString => 
+            Properties.Settings.Default.CaptureDeviceIds?.Cast<string>().ToList().ForEach(captureDeviceIdString =>
             {
                 ((List<Guid>)DefaultCaptureDeviceIds).Add(Guid.Parse(captureDeviceIdString));
             });
@@ -143,7 +142,7 @@ namespace SoundboardYourFriends
 
             // Audio Output DeviceIds
             Properties.Settings.Default.OutputDeviceIds = new StringCollection();
-            DefaultOutputDeviceIds.ToList().ForEach(outputDeviceId => 
+            DefaultOutputDeviceIds.ToList().ForEach(outputDeviceId =>
             {
                 Properties.Settings.Default.OutputDeviceIds.Add(outputDeviceId.ToString());
             });
