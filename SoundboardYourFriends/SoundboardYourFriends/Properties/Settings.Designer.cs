@@ -8,6 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using NAudio.Mixer;
+using System;
+
 namespace SoundboardYourFriends.Properties {
     
     
@@ -93,6 +96,20 @@ namespace SoundboardYourFriends.Properties {
             set
             {
                 this["ByteSampleSize"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.IDictionary OutputDevicePlaybackSettings
+        {
+            get
+            {
+                return ((global::System.Collections.IDictionary)(this["OutputDevicePlaybackSettings"]));
+            }
+            set
+            {
+                this["OutputDevicePlaybackSettings"] = value;
             }
         }
     }

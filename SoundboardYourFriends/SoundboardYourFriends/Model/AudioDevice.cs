@@ -11,6 +11,15 @@ namespace SoundboardYourFriends.Model
         #endregion Member Variables..
 
         #region Properties..
+        #region AudioMeterInformation
+        private AudioMeterInformation _audioMeterInformation = null;
+        public AudioMeterInformation AudioMeterInformation
+        {
+            get { return _audioMeterInformation; }
+            set { _audioMeterInformation = value; }
+        }
+        #endregion AudioMeterInformation
+
         #region AudioPeak
         private int _AudioPeak;
         public int AudioPeak
@@ -50,14 +59,31 @@ namespace SoundboardYourFriends.Model
         }
         #endregion FriendlyName
 
-        #region AudioMeterInformation
-        private AudioMeterInformation _audioMeterInformation = null;
-        public AudioMeterInformation AudioMeterInformation
+        #region GlobalPlaybackEnabled
+        private bool _globalPlaybackEnabled;
+        public bool GlobalPlaybackEnabled
         {
-            get { return _audioMeterInformation; }
-            set { _audioMeterInformation = value; }
+            get { return _globalPlaybackEnabled; }
+            set
+            {
+                _globalPlaybackEnabled = value;
+                RaisePropertyChanged();
+            }
         }
-        #endregion AudioMeterInformation
+        #endregion GlobalPlaybackEnabled
+
+        #region LocalPlaybackEnabled
+        private bool _localPlaybackEnabled;
+        public bool LocalPlaybackEnabled
+        {
+            get { return _localPlaybackEnabled; }
+            set
+            {
+                _localPlaybackEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion LocalPlaybackEnabled
         #endregion Properties..
 
         #region Methods..

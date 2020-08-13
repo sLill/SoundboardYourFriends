@@ -57,6 +57,7 @@ namespace SoundboardYourFriends.ViewModel
             {
                 _selectedCaptureDevicesCollection = value;
                 ApplicationConfiguration.DefaultCaptureDeviceIds = value.Select(x => x.DeviceId);
+                ApplicationConfiguration.OutputDevicePlaybackSettings = value.ToDictionary(x => x.DeviceId, x => (x.LocalPlaybackEnabled, x.GlobalPlaybackEnabled));
 
                 RaisePropertyChanged();
             }

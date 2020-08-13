@@ -121,6 +121,12 @@
   <data name="DeleteButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="GlobalAudioIndicator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GlobalAudioIndicator.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="LocalAudioIndicator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LocalAudioIndicator.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="PlayButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PlayButton.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

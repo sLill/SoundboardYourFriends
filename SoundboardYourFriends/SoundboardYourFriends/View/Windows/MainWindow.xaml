@@ -14,6 +14,7 @@
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
         <converters:VolumeToOpacityConverter x:Key="VolumeToOpacityConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -54,7 +55,7 @@
 
         <!--Row 2-->
         <DockPanel  Grid.Row="2" Grid.Column="1">
-            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="20,-5,300,0" BorderThickness="0">
+            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="13,-5,300,0" BorderThickness="0">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn>
@@ -96,13 +97,31 @@
 
         <!--Row 4-->
         <DockPanel Grid.Row="4" Grid.Column="1">
-            <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="20,-5,300,0" BorderThickness="0">
+            <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="-5,-5,300,0" BorderThickness="0">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
+                        <GridViewColumn Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel Margin="0">
+                                        <Image VerticalAlignment="Center" Source="/Resources/LocalAudioIndicator.png" Height="10" Width="10"  Visibility="{Binding LocalPlaybackEnabled, Converter={StaticResource BoolToVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel Margin="-13,0,0,0">
+                                        <Image VerticalAlignment="Center" Source="/Resources/GlobalAudioIndicator.png" Height="10" Width="10" Visibility="{Binding GlobalPlaybackEnabled, Converter={StaticResource BoolToVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <DockPanel Name="pnlOutputAudioScope" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0">
+                                    <DockPanel Name="pnlOutputAudioScope" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="-5,0,0,0">
                                         <TextBlock Text="{Binding FriendlyName}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
                                     </DockPanel>
                                 </DataTemplate>

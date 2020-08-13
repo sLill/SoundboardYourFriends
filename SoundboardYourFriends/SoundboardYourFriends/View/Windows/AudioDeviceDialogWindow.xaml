@@ -35,13 +35,43 @@
             </Label>
             <ListView Name="lstAudioDevices" DockPanel.Dock="Top" Margin="0,0,0,0" SelectionMode="Multiple" ItemsSource="{Binding AudioDevices}">
                 <ListView.View>
-                    <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
-                        <GridViewColumn Width="auto" DisplayMemberBinding="{Binding FriendlyName}"/>
+                    <GridView>
+                        <GridViewColumn Header="Device" Width="auto" DisplayMemberBinding="{Binding FriendlyName}"/>
+                        <GridViewColumn Width="60">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <DockPanel HorizontalAlignment="Left">
+                                        <Image DockPanel.Dock="Left" VerticalAlignment="Center" Source="/Resources/LocalAudioIndicator.png" Height="10" Width="10" />
+                                        <TextBlock DockPanel.Dock="Left" Margin="4,0,0,0" Text="Local"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate >
+                                    <CheckBox Name="cbLocal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding LocalPlaybackEnabled}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="60">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <DockPanel HorizontalAlignment="Left">
+                                        <Image DockPanel.Dock="Left" VerticalAlignment="Center" Source="/Resources/GlobalAudioIndicator.png" Height="10" Width="10" />
+                                        <TextBlock DockPanel.Dock="Left" Margin="4,0,0,0" Text="Global"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="cbGlobal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding GlobalPlaybackEnabled}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
         </DockPanel>
-                
+
         <!--Row 3-->
         <DockPanel Grid.Row="2" Grid.Column="1">
             <Button Name="btnOK" Margin="0,10,0,6" Width="95" HorizontalAlignment="Right" FontSize="10" PreviewMouseLeftButtonDown="btnOK_PreviewMouseLeftButtonDown">

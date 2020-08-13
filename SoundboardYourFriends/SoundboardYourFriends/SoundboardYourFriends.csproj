@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <None Remove="Resources\DeleteButton.png" />
+    <None Remove="Resources\GlobalAudioIndicator.png" />
+    <None Remove="Resources\LocalAudioIndicator.png" />
     <None Remove="Resources\PlayButton.png" />
     <None Remove="Resources\PlayButtonGray.png" />
     <None Remove="Resources\RecordButton.png" />
@@ -36,6 +38,12 @@
 
   <ItemGroup>
     <Resource Include="Resources\DeleteButton.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\GlobalAudioIndicator.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\LocalAudioIndicator.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\PlayButton.png">

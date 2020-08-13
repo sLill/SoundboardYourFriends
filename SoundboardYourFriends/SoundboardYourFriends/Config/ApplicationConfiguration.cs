@@ -1,11 +1,15 @@
-﻿using SoundboardYourFriends.Core.Windows;
+﻿using NAudio.Wave;
+using SoundboardYourFriends.Core.Windows;
+using SoundboardYourFriends.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Xps;
 
 namespace SoundboardYourFriends
 {
@@ -41,6 +45,15 @@ namespace SoundboardYourFriends
             set { _defaultOutputDeviceIds = value; }
         }
         #endregion DefaultOutputDeviceIds
+
+        #region OutputDevicePlaybackSettings
+        private static Dictionary<Guid, (bool, bool)> _outputDevicePlaybackSettings;
+        public static Dictionary<Guid, (bool, bool)> OutputDevicePlaybackSettings 
+        {
+            get { return _outputDevicePlaybackSettings; }
+            set { _outputDevicePlaybackSettings = value; }
+        }
+        #endregion OutputDevicePlaybackSettings
 
         #region GlobalKeyModifer
         private static KeyModifier _globalKeyModifier = KeyModifier.None;
@@ -127,6 +140,9 @@ namespace SoundboardYourFriends
 
             // Byte sample size
             ByteSampleSize = Properties.Settings.Default.ByteSampleSize;
+
+            // Output device playback settings
+            OutputDevicePlaybackSettings = Properties.Settings.Default.OutputDevicePlaybackSettings?.Cast<KeyValuePair<Guid, (bool, bool)>>().ToDictionary(x => x.Key, x => (x.Value.Item1, x.Value.Item2));
         }
         #endregion ImportUserSettings
 
@@ -158,6 +174,9 @@ namespace SoundboardYourFriends
 
             // Byte sample size
             Properties.Settings.Default.ByteSampleSize = ByteSampleSize;
+
+            // Output device playback settings
+            Properties.Settings.Default.OutputDevicePlaybackSettings = OutputDevicePlaybackSettings;
 
             Properties.Settings.Default.Save();
         }

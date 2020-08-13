@@ -73,6 +73,26 @@ namespace SoundboardYourFriends.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] GlobalAudioIndicator {
+            get {
+                object obj = ResourceManager.GetObject("GlobalAudioIndicator", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] LocalAudioIndicator {
+            get {
+                object obj = ResourceManager.GetObject("LocalAudioIndicator", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] PlayButton {
             get {
                 object obj = ResourceManager.GetObject("PlayButton", resourceCulture);
