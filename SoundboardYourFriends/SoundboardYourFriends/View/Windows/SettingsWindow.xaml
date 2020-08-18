@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
         xmlns:windows="clr-namespace:SoundboardYourFriends.Core.Windows"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="300" Width="550">
+        Title="SettingsWindow" Height="300" Width="550"
+        WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ObjectDataProvider x:Key="KeyModifierEnum" MethodName="GetValues"
@@ -27,13 +28,14 @@
             <RowDefinition Height="46"/>
             <RowDefinition Height="22"/>
             <RowDefinition Height="26*"/>
-            <RowDefinition Height="12"/>
+            <RowDefinition Height="8"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="8"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="8"/>
         </Grid.ColumnDefinitions>
         
         <!--Row 1-->
@@ -98,7 +100,7 @@
 
         <!--Row 8-->
         <DockPanel Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2">
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnCancel" Width="60" Height="20" Content="Cancel" Click="btnCancel_Click"/>
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnCancel" Width="60" Height="20" Content="Cancel" Margin="0,0,0,0" Click="btnCancel_Click"/>
             <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnSave" Width="80" Height="20" Content="Save" Margin="0,0,4,0" Click="btnSave_Click"/>
         </DockPanel>
     </Grid>

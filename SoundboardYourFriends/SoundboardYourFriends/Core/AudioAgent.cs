@@ -42,7 +42,7 @@ namespace SoundboardYourFriends.Core
         #endregion Event Handlers..
 
         #region BeginAudioPlayback
-        public static void BeginAudioPlayback(string filePath, AudioDevice audioDevice, PlaybackType playbackType, double beginTime, double endTime)
+        public static void BeginAudioPlayback(string filePath, AudioDevice audioDevice, double beginTime, double endTime)
         {
             AudioFileReader audioFileReader = new AudioFileReader(filePath);
             MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
@@ -60,8 +60,8 @@ namespace SoundboardYourFriends.Core
             audioDevice.DirectSoundOutInstance.Play();
             audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
             {
-                    //audioFileReader.Close();
-                    audioFileReader.Dispose();
+                //audioFileReader.Close();
+                audioFileReader.Dispose();
             };
         }
         #endregion BeginAudioPlayback

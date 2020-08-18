@@ -6,13 +6,14 @@
         xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
         xmlns:converters="clr-namespace:SoundboardYourFriends.Converters"
         mc:Ignorable="d"
-        Title="Audio Devices" Height="300" Width="500">
+        Title="Audio Devices" Height="300" Width="500"
+        WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
-        <converters:GlobalPlaybackEnabledConverter x:Key="GlobalPlaybackEnabledConverter"/>
+        <converters:LocalPlaybackEnabledConverter x:Key="LocalPlaybackEnabledConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -50,7 +51,7 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate >
-                                    <CheckBox Name="cbLocal" Margin="0" HorizontalAlignment="Stretch" IsChecked="True" IsEnabled="False"/>
+                                    <CheckBox Name="cbLocal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding PlaybackType, Converter={StaticResource LocalPlaybackEnabledConverter}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -65,7 +66,7 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox Name="cbGlobal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding PlaybackType, Converter={StaticResource GlobalPlaybackEnabledConverter}}"/>
+                                    <CheckBox Name="cbGlobal" Margin="0" HorizontalAlignment="Stretch" IsChecked="True" IsEnabled="False"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

@@ -1,5 +1,5 @@
 ﻿public enum PlaybackType
 {
-    Local,
-    Global
+    Global,
+    Local
 }
