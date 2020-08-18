@@ -4,9 +4,6 @@ using System.Windows.Controls;
 
 namespace SoundboardYourFriends.View.UserControls
 {
-    /// <summary>
-    /// Interaction logic for RangeSlider.xaml
-    /// </summary>
     public partial class RangeSlider : UserControl
     {
         #region Member Variables..

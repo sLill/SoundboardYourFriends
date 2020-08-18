@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using AutoUpdaterDotNET;
 
 namespace SoundboardYourFriends
 {
@@ -7,5 +8,9 @@ namespace SoundboardYourFriends
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            //AutoUpdater.Start("http://rbsoft.org/updates/AutoUpdaterTest.xml");
+        }
     }
 }
