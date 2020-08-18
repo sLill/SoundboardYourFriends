@@ -67,8 +67,16 @@ namespace SoundboardYourFriends.View.Windows
         {
             _soundboardSamplesInFocus.ForEach(soundboardSample =>
             {
-                soundboardSample.Hotkey = e.Key;
-                _mainWindowViewModel.RegisterSoundboardSampleHotKey(e.Key, soundboardSample.HotkeyId);
+                if (e.Key == Key.Delete || e.Key == Key.Escape)
+                {
+                    soundboardSample.Hotkey = Key.None;
+                    _mainWindowViewModel.UnregisterSoundboardSampleHotKey(soundboardSample.HotkeyId);
+                }
+                else 
+                {
+                    soundboardSample.Hotkey = e.Key;
+                    _mainWindowViewModel.RegisterSoundboardSampleHotKey(e.Key, soundboardSample.HotkeyId);
+                }
             });
 
             _soundboardSamplesInFocus.Clear();
