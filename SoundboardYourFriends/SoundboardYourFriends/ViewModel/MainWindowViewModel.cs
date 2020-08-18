@@ -223,7 +223,7 @@ namespace SoundboardYourFriends.ViewModel
                         uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(soundboardSample.Hotkey).ToString("X"), 16);
                         if (soundboardSample.HotkeyId == wParam.ToInt32() && virtualKeyParam == keyCode)
                         {
-                            AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, SelectedOutputDevicesCollection.ToList(), PlaybackType.Global, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+                            PlayAudioSample(soundboardSample, PlaybackType.Global);
                         }
                     }
 
@@ -326,27 +326,30 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            if (SelectedOutputDevicesCollection.Any())
+            // Move the playback cursor
+            int playbackTimerInterval = 200;
+            var playbackTimer = new System.Timers.Timer(playbackTimerInterval);
+            playbackTimer.Elapsed += (sender, e) =>
             {
-                // Move the playback cursor
-                int playbackTimerInterval = 200;
-                var playbackTimer = new System.Timers.Timer(playbackTimerInterval);
-                playbackTimer.Elapsed += (sender, e) =>
-                {
-                    soundboardSample.PlaybackCursorValue = soundboardSample.PlaybackCursorValue + (playbackTimerInterval / 1000.0);
-                };
+                soundboardSample.PlaybackCursorValue = soundboardSample.PlaybackCursorValue + (playbackTimerInterval / 1000.0);
+            };
 
-                SelectedOutputDevicesCollection[0].DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
+            SelectedOutputDevicesCollection.Where(x => x.PlaybackType <= playbackType).ToList().ForEach(outputDevice =>
+            {
+                outputDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
                 {
-                    playbackTimer.Stop();
+                    if (soundboardSample.PlaybackCursorValue != soundboardSample.FileTimeLowerValue)
+                    {
+                        playbackTimer.Stop();
 
-                    // Reset the playback cursor position
-                    soundboardSample.PlaybackCursorValue = soundboardSample.FileTimeLowerValue;
+                        // Reset the playback cursor position
+                        soundboardSample.PlaybackCursorValue = soundboardSample.FileTimeLowerValue;
+                    }
                 };
 
                 playbackTimer.Start();
-                AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, SelectedOutputDevicesCollection.ToList(), playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
-            }
+                AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, outputDevice, playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+            });
         }
         #endregion PlayAudioSample
 

@@ -42,30 +42,27 @@ namespace SoundboardYourFriends.Core
         #endregion Event Handlers..
 
         #region BeginAudioPlayback
-        public static void BeginAudioPlayback(string filePath, List<AudioDevice> audioDeviceCollection, PlaybackType playbackType, double beginTime, double endTime)
+        public static void BeginAudioPlayback(string filePath, AudioDevice audioDevice, PlaybackType playbackType, double beginTime, double endTime)
         {
-            audioDeviceCollection.ForEach(audioDevice =>
+            AudioFileReader audioFileReader = new AudioFileReader(filePath);
+            MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
+
+            VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
+            ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
+
+            OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
+            offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
+            offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
+
+            mixer.AddMixerInput(offsetSampleProvider);
+
+            audioDevice.DirectSoundOutInstance.Init(mixer);
+            audioDevice.DirectSoundOutInstance.Play();
+            audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
             {
-                AudioFileReader audioFileReader = new AudioFileReader(filePath);
-                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
-
-                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
-                ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
-
-                OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
-                offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
-                offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
-
-                mixer.AddMixerInput(offsetSampleProvider);
-
-                audioDevice.DirectSoundOutInstance.Init(mixer);
-                audioDevice.DirectSoundOutInstance.Play();
-                audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
-                {
                     //audioFileReader.Close();
                     audioFileReader.Dispose();
-                };
-            });
+            };
         }
         #endregion BeginAudioPlayback
 
