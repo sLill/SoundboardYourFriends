@@ -329,14 +329,18 @@ namespace SoundboardYourFriends.ViewModel
             // Move the playback cursor
             int playbackTimerInterval = 200;
             var playbackTimer = new System.Timers.Timer(playbackTimerInterval);
+            soundboardSample.PlaybackCursorValue = soundboardSample.FileTimeLowerValue;
+
             playbackTimer.Elapsed += (sender, e) =>
             {
                 soundboardSample.PlaybackCursorValue = soundboardSample.PlaybackCursorValue + (playbackTimerInterval / 1000.0);
             };
 
-            SelectedOutputDevicesCollection.Where(x => x.PlaybackType <= playbackType).ToList().ForEach(outputDevice =>
+            var outputDevices = SelectedOutputDevicesCollection.Where(x => x.PlaybackType <= playbackType).ToList();
+
+            if (outputDevices.Any())
             {
-                outputDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
+                outputDevices[0].DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
                 {
                     if (soundboardSample.PlaybackCursorValue != soundboardSample.FileTimeLowerValue)
                     {
@@ -348,6 +352,10 @@ namespace SoundboardYourFriends.ViewModel
                 };
 
                 playbackTimer.Start();
+            }
+
+            outputDevices.ForEach(outputDevice =>
+            {
                 AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, outputDevice, playbackType, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
             });
         }

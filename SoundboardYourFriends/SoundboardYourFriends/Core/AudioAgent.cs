@@ -199,11 +199,13 @@ namespace SoundboardYourFriends.Core
             byte[] audioInputBuffer;
             using (var waveFileReader = new WaveFileReader(filePath))
             {
-                double beginTimeAsPercent = beginTime / GetFileAudioDuration(filePath).Seconds;
-                double endTimeAsPercent = endTime / GetFileAudioDuration(filePath).Seconds;
+                double beginTimeAsPercent = beginTime / GetFileAudioDuration(filePath).TotalSeconds;
+                double endTimeAsPercent = endTime / GetFileAudioDuration(filePath).TotalSeconds;
 
-                int beginByteIndex = (int)(waveFileReader.Length * beginTimeAsPercent);
-                int endByteIndex = (int)(waveFileReader.Length * endTimeAsPercent);
+                var fileInfo = new FileInfo(filePath);
+
+                int beginByteIndex = (int)(fileInfo.Length * beginTimeAsPercent);
+                int endByteIndex = (int)(fileInfo.Length * endTimeAsPercent);
 
                 // Round to the nearest block
                 beginByteIndex = (int)Math.Round((double)beginByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign;
