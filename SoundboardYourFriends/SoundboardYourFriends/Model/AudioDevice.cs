@@ -59,31 +59,14 @@ namespace SoundboardYourFriends.Model
         }
         #endregion FriendlyName
 
-        #region GlobalPlaybackEnabled
-        private bool _globalPlaybackEnabled;
-        public bool GlobalPlaybackEnabled
+        #region PlaybackType
+        private PlaybackType _playbackType;
+        public PlaybackType PlaybackType
         {
-            get { return _globalPlaybackEnabled; }
-            set
-            {
-                _globalPlaybackEnabled = value;
-                RaisePropertyChanged();
-            }
+            get { return _playbackType; }
+            set { _playbackType = value; }
         }
-        #endregion GlobalPlaybackEnabled
-
-        #region LocalPlaybackEnabled
-        private bool _localPlaybackEnabled;
-        public bool LocalPlaybackEnabled
-        {
-            get { return _localPlaybackEnabled; }
-            set
-            {
-                _localPlaybackEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion LocalPlaybackEnabled
+        #endregion PlaybackType
         #endregion Properties..
 
         #region Methods..

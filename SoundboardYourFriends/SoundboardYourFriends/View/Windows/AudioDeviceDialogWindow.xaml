@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
+        xmlns:converters="clr-namespace:SoundboardYourFriends.Converters"
         mc:Ignorable="d"
         Title="Audio Devices" Height="300" Width="500">
 
@@ -11,6 +12,7 @@
         <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
+        <converters:GlobalPlaybackEnabledConverter x:Key="GlobalPlaybackEnabledConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -48,7 +50,7 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate >
-                                    <CheckBox Name="cbLocal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding LocalPlaybackEnabled}"/>
+                                    <CheckBox Name="cbLocal" Margin="0" HorizontalAlignment="Stretch" IsChecked="True" IsEnabled="False"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -63,7 +65,7 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox Name="cbGlobal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding GlobalPlaybackEnabled}"/>
+                                    <CheckBox Name="cbGlobal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding PlaybackType, Converter={StaticResource GlobalPlaybackEnabledConverter}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

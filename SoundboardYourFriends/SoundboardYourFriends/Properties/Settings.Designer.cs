@@ -101,15 +101,15 @@ namespace SoundboardYourFriends.Properties {
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.IDictionary OutputDevicePlaybackSettings
+        public global::System.Collections.Specialized.StringCollection OutputDevicePlaybackTypeCollection
         {
             get
             {
-                return ((global::System.Collections.IDictionary)(this["OutputDevicePlaybackSettings"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["OutputDevicePlaybackTypeCollection"]));
             }
             set
             {
-                this["OutputDevicePlaybackSettings"] = value;
+                this["OutputDevicePlaybackTypeCollection"] = value;
             }
         }
     }

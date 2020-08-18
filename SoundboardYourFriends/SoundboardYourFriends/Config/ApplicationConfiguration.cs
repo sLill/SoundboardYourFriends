@@ -46,14 +46,14 @@ namespace SoundboardYourFriends
         }
         #endregion DefaultOutputDeviceIds
 
-        #region OutputDevicePlaybackSettings
-        private static Dictionary<Guid, (bool, bool)> _outputDevicePlaybackSettings;
-        public static Dictionary<Guid, (bool, bool)> OutputDevicePlaybackSettings 
+        #region OutputDevicePlaybackTypeCollection
+        private static Dictionary<Guid, PlaybackType> _outputDevicePlaybackCollection;
+        public static Dictionary<Guid, PlaybackType> OutputDevicePlaybackTypeCollection 
         {
-            get { return _outputDevicePlaybackSettings; }
-            set { _outputDevicePlaybackSettings = value; }
+            get { return _outputDevicePlaybackCollection; }
+            set { _outputDevicePlaybackCollection = value; }
         }
-        #endregion OutputDevicePlaybackSettings
+        #endregion OutputDevicePlaybackTypeCollection
 
         #region GlobalKeyModifer
         private static KeyModifier _globalKeyModifier = KeyModifier.None;
@@ -141,8 +141,14 @@ namespace SoundboardYourFriends
             // Byte sample size
             ByteSampleSize = Properties.Settings.Default.ByteSampleSize;
 
-            // Output device playback settings
-            OutputDevicePlaybackSettings = Properties.Settings.Default.OutputDevicePlaybackSettings?.Cast<KeyValuePair<Guid, (bool, bool)>>().ToDictionary(x => x.Key, x => (x.Value.Item1, x.Value.Item2));
+            // Output device playback type
+            OutputDevicePlaybackTypeCollection = new Dictionary<Guid, PlaybackType>();
+            Properties.Settings.Default.OutputDevicePlaybackTypeCollection?.Cast<string>().ToList().ForEach(outputDevicePlaybackType =>
+            {
+                Guid deviceId = Guid.Parse(outputDevicePlaybackType.Split(',')[0]);
+                PlaybackType playbackType = (PlaybackType)Enum.Parse(typeof(PlaybackType), outputDevicePlaybackType.Split(',')[1]);
+                OutputDevicePlaybackTypeCollection[deviceId] = playbackType;
+            });
         }
         #endregion ImportUserSettings
 
@@ -176,7 +182,11 @@ namespace SoundboardYourFriends
             Properties.Settings.Default.ByteSampleSize = ByteSampleSize;
 
             // Output device playback settings
-            Properties.Settings.Default.OutputDevicePlaybackSettings = OutputDevicePlaybackSettings;
+            Properties.Settings.Default.OutputDevicePlaybackTypeCollection = new StringCollection();
+            OutputDevicePlaybackTypeCollection.Cast<KeyValuePair<Guid, PlaybackType>>().ToList().ForEach(outputDevicePlaybackType =>
+            {
+                Properties.Settings.Default.OutputDevicePlaybackTypeCollection.Add(string.Join(",", outputDevicePlaybackType.Key.ToString(), outputDevicePlaybackType.Value.ToString()));
+            });
 
             Properties.Settings.Default.Save();
         }

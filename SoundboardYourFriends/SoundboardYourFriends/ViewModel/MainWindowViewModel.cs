@@ -57,7 +57,6 @@ namespace SoundboardYourFriends.ViewModel
             {
                 _selectedCaptureDevicesCollection = value;
                 ApplicationConfiguration.DefaultCaptureDeviceIds = value.Select(x => x.DeviceId);
-                ApplicationConfiguration.OutputDevicePlaybackSettings = value.ToDictionary(x => x.DeviceId, x => (x.LocalPlaybackEnabled, x.GlobalPlaybackEnabled));
 
                 RaisePropertyChanged();
             }
@@ -73,6 +72,7 @@ namespace SoundboardYourFriends.ViewModel
             {
                 _selectedOutputDevicesCollection = value;
                 ApplicationConfiguration.DefaultOutputDeviceIds = value.Select(x => x.DeviceId);
+                ApplicationConfiguration.OutputDevicePlaybackTypeCollection = value.ToDictionary(x => x.DeviceId, x => x.PlaybackType);
 
                 RaisePropertyChanged();
             }
@@ -269,6 +269,15 @@ namespace SoundboardYourFriends.ViewModel
                                           join audioDeviceId in ApplicationConfiguration.DefaultOutputDeviceIds
                                              on activeDevice.DeviceId equals audioDeviceId
                                           select activeDevice;
+
+                activeOutputDevices.ToList().ForEach(activeDevice =>
+                {
+                    try
+                    {
+                        activeDevice.PlaybackType = ApplicationConfiguration.OutputDevicePlaybackTypeCollection[activeDevice.DeviceId];
+                    }
+                    catch { }
+                });
 
                 SelectedOutputDevicesCollection = new ObservableCollection<AudioDevice>(activeOutputDevices);
             }

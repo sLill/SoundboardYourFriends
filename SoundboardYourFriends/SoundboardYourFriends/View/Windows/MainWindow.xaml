@@ -15,15 +15,17 @@
         </Style>
         <converters:VolumeToOpacityConverter x:Key="VolumeToOpacityConverter"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:LocalPlaybackVisibilityConverter x:Key="LocalPlaybackVisibilityConverter"/>
+        <converters:GlobalPlaybackVisibilityConverter x:Key="GlobalPlaybackVisibilityConverter"/>
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="8"/>
             <RowDefinition Height="26"/>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="38"/>
             <RowDefinition Height="26"/>
-            <RowDefinition Height="34"/>
+            <RowDefinition Height="38"/>
             <RowDefinition Height="26*"/>
             <RowDefinition Height="8"/>
         </Grid.RowDefinitions>
@@ -104,7 +106,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Margin="0">
-                                        <Image VerticalAlignment="Center" Source="/Resources/LocalAudioIndicator.png" Height="10" Width="10"  Visibility="{Binding LocalPlaybackEnabled, Converter={StaticResource BoolToVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
+                                        <Image VerticalAlignment="Center" Source="/Resources/LocalAudioIndicator.png" Height="10" Width="10"  Visibility="{Binding PlaybackType, Converter={StaticResource LocalPlaybackVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -113,7 +115,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Margin="-13,0,0,0">
-                                        <Image VerticalAlignment="Center" Source="/Resources/GlobalAudioIndicator.png" Height="10" Width="10" Visibility="{Binding GlobalPlaybackEnabled, Converter={StaticResource BoolToVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
+                                        <Image VerticalAlignment="Center" Source="/Resources/GlobalAudioIndicator.png" Height="10" Width="10" Visibility="{Binding PlaybackType, Converter={StaticResource GlobalPlaybackVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
