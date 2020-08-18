@@ -1,5 +1,7 @@
-﻿using NAudio.CoreAudioApi;
+﻿using Microsoft.Windows.Themes;
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using SoundboardYourFriends.Core;
 using System;
 
@@ -8,6 +10,7 @@ namespace SoundboardYourFriends.Model
     public class AudioDevice : ObservableObject, IDisposable
     {
         #region Member Variables..
+        private DirectSoundOut _directSoundOutInstance { get; set; }
         #endregion Member Variables..
 
         #region Properties..
@@ -33,10 +36,6 @@ namespace SoundboardYourFriends.Model
         }
         #endregion AudioPeak
 
-        #region DirectSoundOutInstance
-        public DirectSoundOut DirectSoundOutInstance { get; set; }
-        #endregion DirectSoundOutInstance
-
         #region DeviceId
         private Guid _deviceId;
         public Guid DeviceId
@@ -59,6 +58,10 @@ namespace SoundboardYourFriends.Model
         }
         #endregion FriendlyName
 
+        #region PlaybackState
+        public PlaybackState PlaybackState => _directSoundOutInstance.PlaybackState; 
+        #endregion PlaybackState
+
         #region PlaybackType
         private PlaybackType _playbackType;
         public PlaybackType PlaybackType
@@ -69,13 +72,57 @@ namespace SoundboardYourFriends.Model
         #endregion PlaybackType
         #endregion Properties..
 
+        #region Events..
+        public event EventHandler PlaybackStopped;
+        #endregion Events..
+
+        #region Constructors..
+        #region AudioDevice
+        public AudioDevice(Guid deviceId)
+        {
+            DeviceId = deviceId;
+            Initialize();
+        }
+        #endregion AudioDevice
+        #endregion Constructors..
+
         #region Methods..
         #region Dispose
         public void Dispose()
         {
-            DirectSoundOutInstance?.Dispose();
+            _directSoundOutInstance?.Dispose();
         }
         #endregion Dispose
+
+        #region Initialize
+        public void Initialize()
+        {
+            _directSoundOutInstance = new DirectSoundOut(DeviceId);
+        }
+        #endregion Initialize
+
+        #region InitializeAndPlay
+        public void InitializeAndPlay(MixingSampleProvider mixer)
+        {
+            _directSoundOutInstance.Init(mixer);
+            _directSoundOutInstance.Play();
+
+            RaisePropertyChanged("DirectSoundInstance.PlaybackState");
+        }
+        #endregion InitializeAndPlay
+
+        #region Stop
+        public void Stop()
+        {
+            _directSoundOutInstance.PlaybackStopped += (sender, e) =>
+            {
+                this.PlaybackStopped?.Invoke(this, EventArgs.Empty);
+                RaisePropertyChanged("DirectSoundInstance.PlaybackState");
+            };
+
+            _directSoundOutInstance.Stop();
+        }
+        #endregion Stop
         #endregion Methods..
     }
 }

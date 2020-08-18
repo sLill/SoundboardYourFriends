@@ -3,6 +3,7 @@ using SoundboardYourFriends.Core;
 using System;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using System.Windows.Input;
 
 namespace SoundboardYourFriends.Model
@@ -10,6 +11,8 @@ namespace SoundboardYourFriends.Model
     public class SoundboardSample : ObservableObject
     {
         #region Member Variables..
+        private int _playbackTimerInterval = 200;
+        private Timer _playbackTimer = null;
         #endregion Member Variables..
 
         #region Properties..
@@ -171,6 +174,15 @@ namespace SoundboardYourFriends.Model
         #endregion Constructors..
 
         #region Methods..
+        #region Event Handlers..
+        #region OnPlaybackTimerElapsed
+        private void OnPlaybackTimerElapsed(object sender, EventArgs e)
+        {
+            PlaybackCursorValue = PlaybackCursorValue + (_playbackTimerInterval / 1000.0);
+        }
+        #endregion OnPlaybackTimerElapsed
+        #endregion Event Handlers..
+
         #region InitializePropertiesFromMetaData
         private void InitializePropertiesFromMetaData()
         {
@@ -222,6 +234,38 @@ namespace SoundboardYourFriends.Model
             documentProperties.Close();
         }
         #endregion SaveMetadataProperties
+
+        #region StartPlaybackTimer
+        public void StartPlaybackTimer()
+        {
+            if (_playbackTimer != null)
+            {
+                StopPlaybackTimer();
+            }
+
+            PlaybackCursorValue = FileTimeLowerValue;
+
+            _playbackTimer = new Timer(_playbackTimerInterval);
+            _playbackTimer.Elapsed += OnPlaybackTimerElapsed;
+            _playbackTimer.Start();
+        }
+        #endregion StartPlaybackTimer
+
+        #region StopPlaybackTimer
+        public void StopPlaybackTimer()
+        {
+            PlaybackCursorValue = FileTimeLowerValue;
+
+            if (_playbackTimer != null)
+            {
+                _playbackTimer.Stop();
+                _playbackTimer.Elapsed -= OnPlaybackTimerElapsed;
+
+                _playbackTimer.Dispose();
+                _playbackTimer = null;
+            }
+        }
+        #endregion StopPlaybackTimer
         #endregion Methods..
     }
 }

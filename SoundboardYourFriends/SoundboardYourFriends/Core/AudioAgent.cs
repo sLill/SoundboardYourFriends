@@ -56,9 +56,8 @@ namespace SoundboardYourFriends.Core
 
             mixer.AddMixerInput(offsetSampleProvider);
 
-            audioDevice.DirectSoundOutInstance.Init(mixer);
-            audioDevice.DirectSoundOutInstance.Play();
-            audioDevice.DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
+            audioDevice.InitializeAndPlay(mixer);
+            audioDevice.PlaybackStopped += (sender, e) =>
             {
                 //audioFileReader.Close();
                 audioFileReader.Dispose();
@@ -154,11 +153,9 @@ namespace SoundboardYourFriends.Core
             {
                 var mmDeviceInstance = systemMMDeviceCollection.ContainsKey(audioDevice.DriverGuid) ? systemMMDeviceCollection[audioDevice.DriverGuid] : null;
 
-                audioDevices.Add(new AudioDevice()
+                audioDevices.Add(new AudioDevice(audioDevice.DriverGuid)
                 {
                     FriendlyName = audioDevice.Description,
-                    DeviceId = audioDevice.DriverGuid,
-                    DirectSoundOutInstance = new DirectSoundOut(audioDevice.DriverGuid),
                     AudioMeterInformation = mmDeviceInstance?.AudioMeterInformation
                 });
             });
@@ -172,9 +169,9 @@ namespace SoundboardYourFriends.Core
         {
             audioDeviceCollection.ForEach(audioDevice =>
             {
-                if (audioDevice.DirectSoundOutInstance.PlaybackState == PlaybackState.Playing)
+                if (audioDevice.PlaybackState == PlaybackState.Playing)
                 {
-                    audioDevice.DirectSoundOutInstance.Stop();
+                    audioDevice.Stop();
                 }
             });
         }

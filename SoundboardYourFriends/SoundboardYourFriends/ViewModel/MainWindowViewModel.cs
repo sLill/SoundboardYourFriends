@@ -160,6 +160,12 @@ namespace SoundboardYourFriends.ViewModel
             SoundboardSampleCollection.Add(NewSoundboardSample);
         }
         #endregion OnFileWritten
+
+        public void OnAudioPlaybackStopped(object sender, EventArgs e)
+        {
+            SoundboardSampleCollection.ToList().ForEach(x => x.StopPlaybackTimer());
+            ((AudioDevice)sender).PlaybackStopped -= OnAudioPlaybackStopped;
+        }
         #endregion Events..
 
         #region Closing
@@ -326,32 +332,11 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackType playbackType)
         {
-            // Move the playback cursor
-            int playbackTimerInterval = 200;
-            var playbackTimer = new System.Timers.Timer(playbackTimerInterval);
-            soundboardSample.PlaybackCursorValue = soundboardSample.FileTimeLowerValue;
-
-            playbackTimer.Elapsed += (sender, e) =>
-            {
-                soundboardSample.PlaybackCursorValue = soundboardSample.PlaybackCursorValue + (playbackTimerInterval / 1000.0);
-            };
-
             var outputDevices = SelectedOutputDevicesCollection.Where(x => x.PlaybackType >= playbackType).ToList();
-
             if (outputDevices.Any())
             {
-                outputDevices[0].DirectSoundOutInstance.PlaybackStopped += (sender, e) =>
-                {
-                    if (soundboardSample.PlaybackCursorValue != soundboardSample.FileTimeLowerValue)
-                    {
-                        playbackTimer.Stop();
-
-                        // Reset the playback cursor position
-                        soundboardSample.PlaybackCursorValue = soundboardSample.FileTimeLowerValue;
-                    }
-                };
-
-                playbackTimer.Start();
+                outputDevices[0].PlaybackStopped += OnAudioPlaybackStopped;
+                soundboardSample.StartPlaybackTimer();
             }
 
             outputDevices.ForEach(outputDevice =>
@@ -405,7 +390,7 @@ namespace SoundboardYourFriends.ViewModel
         #region SaveSample
         public void SaveSample(SoundboardSample soundboardSample)
         {
-            SelectedOutputDevicesCollection.Where(x => x.DirectSoundOutInstance?.PlaybackState == PlaybackState.Playing).ToList().ForEach(x => x.DirectSoundOutInstance.Stop());
+            SelectedOutputDevicesCollection.Where(x => x.PlaybackState == PlaybackState.Playing).ToList().ForEach(x => x.Stop());
 
             // File length
             if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
