@@ -18,7 +18,7 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:LocalPlaybackVisibilityConverter x:Key="LocalPlaybackVisibilityConverter"/>
         <converters:GlobalPlaybackVisibilityConverter x:Key="GlobalPlaybackVisibilityConverter"/>
-        <converters:PlaybackStateToEnabledConverter x:Key="PlaybackStateToEnabledConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -178,7 +178,7 @@
                                                                   VerticalAlignment="Center" 
                                                                   Margin="5,0,0,0" 
                                                                   Width="200" 
-                                                                  IsEnabled="{Binding DirectSoundOutInstance.PlaybackState, Converter={StaticResource PlaybackStateToEnabledConverter}}"
+                                                                  IsEnabled="{Binding FileLocked, Converter={StaticResource InverseBooleanConverter}, Mode=TwoWay}"
                                                                   Maximum="{Binding FileTimeMax}" 
                                                                   Minimum="{Binding FileTimeMin}" 
                                                                   UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" 

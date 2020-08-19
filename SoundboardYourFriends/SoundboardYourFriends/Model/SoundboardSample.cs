@@ -1,4 +1,5 @@
 ﻿using DSOFile;
+using NAudio.Wave;
 using SoundboardYourFriends.Core;
 using System;
 using System.IO;
@@ -16,6 +17,19 @@ namespace SoundboardYourFriends.Model
         #endregion Member Variables..
 
         #region Properties..
+        #region FileLocked
+        private bool _fileLocked;
+        public bool FileLocked
+        {
+            get { return _fileLocked; }
+            set
+            {
+                _fileLocked = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion FileLocked
+
         #region FilePath
         public string FilePath { get; set; }
         #endregion FilePath
@@ -168,6 +182,9 @@ namespace SoundboardYourFriends.Model
             this.FilePath = filePath;
             this.Name = Path.GetFileNameWithoutExtension(filePath);
 
+            _playbackTimer = new Timer(_playbackTimerInterval);
+            _playbackTimer.Elapsed += OnPlaybackTimerElapsed;
+
             InitializePropertiesFromMetaData();
         }
         #endregion SoundboardSample
@@ -238,32 +255,20 @@ namespace SoundboardYourFriends.Model
         #region StartPlaybackTimer
         public void StartPlaybackTimer()
         {
-            if (_playbackTimer != null)
-            {
-                StopPlaybackTimer();
-            }
-
-            PlaybackCursorValue = FileTimeLowerValue;
-
-            _playbackTimer = new Timer(_playbackTimerInterval);
-            _playbackTimer.Elapsed += OnPlaybackTimerElapsed;
+            StopPlaybackTimer();
             _playbackTimer.Start();
+
+            FileLocked = true;
         }
         #endregion StartPlaybackTimer
 
         #region StopPlaybackTimer
         public void StopPlaybackTimer()
         {
+            _playbackTimer.Stop();
             PlaybackCursorValue = FileTimeLowerValue;
 
-            if (_playbackTimer != null)
-            {
-                _playbackTimer.Stop();
-                _playbackTimer.Elapsed -= OnPlaybackTimerElapsed;
-
-                _playbackTimer.Dispose();
-                _playbackTimer = null;
-            }
+            FileLocked = false;
         }
         #endregion StopPlaybackTimer
         #endregion Methods..

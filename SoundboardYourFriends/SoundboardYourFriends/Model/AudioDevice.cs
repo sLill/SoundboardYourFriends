@@ -59,7 +59,16 @@ namespace SoundboardYourFriends.Model
         #endregion FriendlyName
 
         #region PlaybackState
-        public PlaybackState PlaybackState => _directSoundOutInstance.PlaybackState; 
+        private PlaybackState _playbackState = PlaybackState.Stopped;
+        public PlaybackState PlaybackState
+        {
+            get { return _playbackState; }
+            set
+            {
+                _playbackState = value;
+                RaisePropertyChanged();
+            }
+        }
         #endregion PlaybackState
 
         #region PlaybackType
@@ -98,6 +107,11 @@ namespace SoundboardYourFriends.Model
         public void Initialize()
         {
             _directSoundOutInstance = new DirectSoundOut(DeviceId);
+            _directSoundOutInstance.PlaybackStopped += (sender, e) =>
+            {
+                this.PlaybackStopped?.Invoke(this, EventArgs.Empty);
+                PlaybackState = PlaybackState.Stopped;
+            };
         }
         #endregion Initialize
 
@@ -107,19 +121,13 @@ namespace SoundboardYourFriends.Model
             _directSoundOutInstance.Init(mixer);
             _directSoundOutInstance.Play();
 
-            RaisePropertyChanged("DirectSoundInstance.PlaybackState");
+            PlaybackState = PlaybackState.Playing;
         }
         #endregion InitializeAndPlay
 
         #region Stop
         public void Stop()
         {
-            _directSoundOutInstance.PlaybackStopped += (sender, e) =>
-            {
-                this.PlaybackStopped?.Invoke(this, EventArgs.Empty);
-                RaisePropertyChanged("DirectSoundInstance.PlaybackState");
-            };
-
             _directSoundOutInstance.Stop();
         }
         #endregion Stop

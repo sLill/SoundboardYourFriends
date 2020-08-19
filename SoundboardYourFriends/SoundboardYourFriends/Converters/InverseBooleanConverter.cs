@@ -5,12 +5,12 @@ using System.Windows.Data;
 
 namespace SoundboardYourFriends.Converters
 {
-    public class PlaybackStateToEnabledConverter : IValueConverter
+    public class InverseBooleanConverter : IValueConverter
     {
         #region Methods..
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((PlaybackState)value) != PlaybackState.Playing;
+            return !(bool)value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
