@@ -143,7 +143,7 @@
                 <!--View-->
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
-                        <GridViewColumn DisplayMemberBinding="{Binding GroupName}" />
+                        <!--<GridViewColumn DisplayMemberBinding="{Binding GroupName}"/>-->
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -225,31 +225,20 @@
                     </GridView>
                 </ListView.View>
 
-                <!--Grouping-->
                 <ListView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding GroupName}"/>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListView.GroupStyle>
-
-                <!--<ListView.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
                             <Style TargetType="{x:Type GroupItem}">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate>
-                                            <Expander IsExpanded="True">
+                                            <Expander IsExpanded="False">
                                                 <Expander.Header>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding GroupName}" FontWeight="Bold" Foreground="Gray" FontSize="22" VerticalAlignment="Bottom" />
+                                                        <TextBlock Text="{Binding Name}" FontWeight="DemiBold" Foreground="DarkSlateGray" FontSize="18" VerticalAlignment="Center" />
                                                     </StackPanel>
                                                 </Expander.Header>
-                                                <ItemsPresenter />
+                                                <ItemsPresenter Margin="10,0,0,0"/>
                                             </Expander>
                                         </ControlTemplate>
                                     </Setter.Value>
@@ -257,7 +246,9 @@
                             </Style>
                         </GroupStyle.ContainerStyle>
                     </GroupStyle>
-                </ListView.GroupStyle>-->
+                </ListView.GroupStyle>
+
+
             </ListView>
         </DockPanel>
     </Grid>

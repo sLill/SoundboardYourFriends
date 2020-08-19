@@ -203,9 +203,7 @@ namespace SoundboardYourFriends.View.Windows
 
             _mainWindowViewModel.Initialize();
 
-            CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
-            collectionView.GroupDescriptions.Add(groupDescription);
+            InitializeControls();
         }
         #endregion Window_Loaded
 
@@ -217,6 +215,15 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion OnClosed
         #endregion Events..
+
+        #region InitializeControls
+        private void InitializeControls()
+        {
+            CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
+            collectionView.GroupDescriptions.Add(groupDescription);
+        }
+        #endregion InitializeControls
         #endregion Methods..
     }
 }
