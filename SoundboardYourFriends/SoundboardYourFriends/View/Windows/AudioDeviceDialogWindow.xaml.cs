@@ -27,6 +27,8 @@ namespace SoundboardYourFriends.View.Windows
 
             _audioDeviceDialogViewModel = new AudioDeviceDialogViewModel(audioDeviceType);
             DataContext = _audioDeviceDialogViewModel;
+
+            InitializeGrid();
         }
         #endregion Constructors..
 
@@ -47,6 +49,21 @@ namespace SoundboardYourFriends.View.Windows
 
         }
         #endregion Dispose
+
+        #region InitializeGrid
+        private void InitializeGrid()
+        {
+            if (_audioDeviceDialogViewModel.AudioDeviceType == AudioDeviceType.Capture)
+            {
+                // Removed unused columns
+                var localPlaybackColumn = audioDeviceGrid.Columns[1];
+                var globalPlaybackColumn = audioDeviceGrid.Columns[2];
+
+                audioDeviceGrid.Columns.Remove(localPlaybackColumn);
+                audioDeviceGrid.Columns.Remove(globalPlaybackColumn);
+            }
+        }
+        #endregion InitializeGrid
         #endregion Methods..
     }
 }

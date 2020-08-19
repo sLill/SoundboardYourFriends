@@ -7,7 +7,7 @@
         xmlns:converters="clr-namespace:SoundboardYourFriends.Converters"
         xmlns:userControls="clr-namespace:SoundboardYourFriends.View.UserControls"
         mc:Ignorable="d"
-        Title="Soundboard Your Friends" Height="550" Width="900" Closing="Window_Closing" Loaded="Window_Loaded"
+        Title="Soundboard Your Friends" Height="550" Width="900" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
@@ -26,7 +26,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="8"/>
             <RowDefinition Height="26"/>
-            <RowDefinition Height="38"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="26"/>
             <RowDefinition Height="38"/>
             <RowDefinition Height="26*"/>

@@ -8,6 +8,7 @@ using SoundboardYourFriends.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace SoundboardYourFriends.Core
@@ -65,21 +66,22 @@ namespace SoundboardYourFriends.Core
         }
         #endregion BeginAudioPlayback
 
-        #region BeginCapturing
-        public static void BeginCapturing()
+        #region BeginAudioCapture
+        public static void BeginAudioCapture(AudioDevice audioDevice)
         {
+            StopAudioCapture();
+
             // Determines the audio buffer size in relation to the parent buffer. Bigger multiplier = smaller proportion. 
             // Larger multiplier also means dumping and copying to a new parent buffer less frequently at the cost of using a larger chunk of virtual memory
             // ex. If multiplier is 4, the audio buffer for a single soundboard sample will takeup 25% of the larger buffer
             int audioBufferMultiplier = 5;
-
             int audioBufferMax = ApplicationConfiguration.ByteSampleSize * audioBufferMultiplier;
-            WasapiLoopbackCapture = new WasapiLoopbackCapture();
 
+            WasapiLoopbackCapture = new WasapiLoopbackCapture(audioDevice.MMDeviceInstance);
             WasapiLoopbackCapture.DataAvailable += (sender, e) =>
             {
-                // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
-                if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
+                    // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
+                    if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
                 {
                     List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize);
                     _audioByteBuffer.Clear();
@@ -93,7 +95,7 @@ namespace SoundboardYourFriends.Core
 
             WasapiLoopbackCapture.StartRecording();
         }
-        #endregion BeginCapturing
+        #endregion BeginAudioCapture
 
         #region ConvertToMixerChannelCount
         private static ISampleProvider ConvertToMixerChannelCount(ISampleProvider mixer, ISampleProvider input)
@@ -156,6 +158,7 @@ namespace SoundboardYourFriends.Core
                 audioDevices.Add(new AudioDevice(audioDevice.DriverGuid)
                 {
                     FriendlyName = audioDevice.Description,
+                    MMDeviceInstance = mmDeviceInstance,
                     AudioMeterInformation = mmDeviceInstance?.AudioMeterInformation
                 });
             });
@@ -177,18 +180,18 @@ namespace SoundboardYourFriends.Core
         }
         #endregion StopAudioPlayback
 
-        #region StopCapture
-        public static void StopCapture()
+        #region StopAudioCapture
+        public static void StopAudioCapture()
         {
-            if (WasapiLoopbackCapture.CaptureState == CaptureState.Capturing)
+            if (WasapiLoopbackCapture?.CaptureState == CaptureState.Capturing)
             {
                 WasapiLoopbackCapture.StopRecording();
             }
 
-            WasapiLoopbackCapture.Dispose();
+            WasapiLoopbackCapture?.Dispose();
             WasapiLoopbackCapture = null;
         }
-        #endregion StopCapture
+        #endregion StopAudioCapture
 
         #region TrimFile
         public static void TrimFile(string filePath, double beginTime, double endTime)
@@ -224,20 +227,22 @@ namespace SoundboardYourFriends.Core
         #region WriteAudioBufferToFile
         public static void WriteAudioBufferToFile()
         {
-            Directory.CreateDirectory(ApplicationConfiguration.SoundboardSampleDirectory);
-
-            string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
-            string fileNameFull = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, fileName);
-
-            WaveFormat waveFormat = WasapiLoopbackCapture.WaveFormat;
-            using (WaveFileWriter waveFileWriter = new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
+            if (WasapiLoopbackCapture != null)
             {
-                var bytesToWrite = ApplicationConfiguration.ByteSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize).ToArray();
-                waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);
-            }
+                Directory.CreateDirectory(ApplicationConfiguration.SoundboardSampleDirectory);
 
-            _audioByteBuffer.Clear();
-            AudioAgent.FileWritten?.Invoke(fileNameFull, EventArgs.Empty);
+                string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
+                string fileNameFull = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, fileName);
+
+                using (WaveFileWriter waveFileWriter = new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
+                {
+                    var bytesToWrite = ApplicationConfiguration.ByteSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize).ToArray();
+                    waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);
+                }
+
+                _audioByteBuffer.Clear();
+                AudioAgent.FileWritten?.Invoke(fileNameFull, EventArgs.Empty);
+            }
         }
         #endregion WriteAudioBufferToFile
         #endregion Methods..

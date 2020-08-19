@@ -187,13 +187,6 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion txtPlaybackHotkey_PreviewMouseLeftButtonDown
 
-        #region Window_Closing
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            _mainWindowViewModel.Closing();
-        }
-        #endregion Window_Closing
-
         #region Window_Loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -202,6 +195,7 @@ namespace SoundboardYourFriends.View.Windows
             _mainWindowViewModel.WindowHandle = windowHandle;
 
             _mainWindowViewModel.Initialize();
+            this.Closing += _mainWindowViewModel.OnWindowClosing;
 
             InitializeControls();
         }

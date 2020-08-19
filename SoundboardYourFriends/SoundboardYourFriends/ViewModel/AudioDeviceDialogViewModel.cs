@@ -1,6 +1,8 @@
 ﻿using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Model;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Design;
+using System.Linq;
 
 namespace SoundboardYourFriends.ViewModel
 {

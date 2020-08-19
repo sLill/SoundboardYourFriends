@@ -145,9 +145,13 @@ namespace SoundboardYourFriends
             OutputDevicePlaybackTypeCollection = new Dictionary<Guid, PlaybackType>();
             Properties.Settings.Default.OutputDevicePlaybackTypeCollection?.Cast<string>().ToList().ForEach(outputDevicePlaybackType =>
             {
-                Guid deviceId = Guid.Parse(outputDevicePlaybackType.Split(',')[0]);
-                PlaybackType playbackType = (PlaybackType)Enum.Parse(typeof(PlaybackType), outputDevicePlaybackType.Split(',')[1]);
-                OutputDevicePlaybackTypeCollection[deviceId] = playbackType;
+                try
+                {
+                    Guid deviceId = Guid.Parse(outputDevicePlaybackType.Split(',')[0]);
+                    PlaybackType playbackType = (PlaybackType)Enum.Parse(typeof(PlaybackType), outputDevicePlaybackType.Split(',')[1]);
+                    OutputDevicePlaybackTypeCollection[deviceId] = playbackType;
+                }
+                catch { }
             });
         }
         #endregion ImportUserSettings

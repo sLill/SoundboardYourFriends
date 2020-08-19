@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -57,7 +58,8 @@ namespace SoundboardYourFriends.ViewModel
             {
                 _selectedCaptureDevicesCollection = value;
                 ApplicationConfiguration.DefaultCaptureDeviceIds = value.Select(x => x.DeviceId);
-
+                BeginAudioCapture();
+                
                 RaisePropertyChanged();
             }
         }
@@ -161,23 +163,37 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion OnFileWritten
 
+        #region OnAudioPlaybackStopped
         public void OnAudioPlaybackStopped(object sender, EventArgs e)
         {
             SoundboardSampleCollection.ToList().ForEach(x => x.StopPlaybackTimer());
             ((AudioDevice)sender).PlaybackStopped -= OnAudioPlaybackStopped;
         }
-        #endregion Events..
+        #endregion OnAudioPlaybackStopped
 
-        #region Closing
-        public void Closing()
+        #region OnWindowClosing
+        public void OnWindowClosing(object sender, EventArgs e)
         {
-            AudioAgent.StopCapture();
+            AudioAgent.StopAudioCapture();
             UnregisterHotKeysAndHooks();
 
             ApplicationConfiguration.RecordHotkey = RecordHotkey.Value;
             SoundboardSampleCollection.ToList().ForEach(x => x.SaveMetadataProperties());
         }
-        #endregion Closing
+        #endregion OnWindowClosing
+        #endregion Events..
+
+        #region BeginAudioCapture
+        private void BeginAudioCapture()
+        {
+            AudioAgent.StopAudioCapture();
+
+            if (SelectedCaptureDevicesCollection.Any())
+            {
+                AudioAgent.BeginAudioCapture(SelectedCaptureDevicesCollection.First());
+            }
+        }
+        #endregion BeginAudioCapture
 
         #region DeleteSampleAsync
         public async Task DeleteSampleAsync(SoundboardSample soundboardSample)
@@ -241,16 +257,16 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion HwndHook
 
-        #region InitializeAsync
+        #region Initialize
         public void Initialize()
         {
             ApplicationConfiguration.ImportUserSettings();
-            AudioAgent.BeginCapturing();
-
+            
             LoadAudioSamples();
             LoadConfig();
+            BeginAudioCapture();
         }
-        #endregion InitializeAsync
+        #endregion Initialize
 
         #region LoadAudioDevices
         private void LoadAudioDevices()

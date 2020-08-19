@@ -38,7 +38,7 @@
             </Label>
             <ListView Name="lstAudioDevices" DockPanel.Dock="Top" Margin="0,0,0,0" SelectionMode="Multiple" ItemsSource="{Binding AudioDevices}">
                 <ListView.View>
-                    <GridView>
+                    <GridView x:Name="audioDeviceGrid">
                         <GridViewColumn Header="Device" Width="auto" DisplayMemberBinding="{Binding FriendlyName}"/>
                         <GridViewColumn Width="60">
                             <GridViewColumn.HeaderTemplate>
@@ -50,7 +50,7 @@
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
-                                <DataTemplate >
+                                <DataTemplate>
                                     <CheckBox Name="cbLocal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding PlaybackType, Converter={StaticResource LocalPlaybackEnabledConverter}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

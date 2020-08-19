@@ -58,6 +58,15 @@ namespace SoundboardYourFriends.Model
         }
         #endregion FriendlyName
 
+        #region MMDeviceInstance
+        private MMDevice _mmDeviceInstance = null;
+        public MMDevice MMDeviceInstance
+        {
+            get { return _mmDeviceInstance; }
+            set { _mmDeviceInstance = value; }
+        }
+        #endregion MMDeviceInstance
+
         #region PlaybackState
         private PlaybackState _playbackState = PlaybackState.Stopped;
         public PlaybackState PlaybackState
