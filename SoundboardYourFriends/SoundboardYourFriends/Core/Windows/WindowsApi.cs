@@ -22,13 +22,17 @@ namespace SoundboardYourFriends.Core.Windows
         #endregion Windows..
 
         #region RegisterHotKey
-        public static void RegisterHotKey(IntPtr viewHandle, Key key, int keyId, KeyModifier modifier)
+        public static bool RegisterHotKey(IntPtr viewHandle, Key key, int keyId, KeyModifier modifier)
         {
+            bool result = false;
+
             if (key != Key.None)
             {
                 uint keyCode = Convert.ToUInt32(KeyInterop.VirtualKeyFromKey(key).ToString("X"), 16);
-                RegisterHotKey(viewHandle, keyId, (uint)modifier, keyCode);
+                result = RegisterHotKey(viewHandle, keyId, (uint)modifier, keyCode);
             }
+
+            return result;
         }
         #endregion RegisterHotKey
 

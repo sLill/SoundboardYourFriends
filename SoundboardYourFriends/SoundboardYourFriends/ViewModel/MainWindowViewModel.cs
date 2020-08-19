@@ -397,7 +397,10 @@ namespace SoundboardYourFriends.ViewModel
             bool registerResult = true;
 
             WindowsApi.UnregisterHotkey(WindowHandle, _recordHotkeyId);
-            WindowsApi.RegisterHotKey(WindowHandle, key, _recordHotkeyId, ApplicationConfiguration.GlobalKeyModifer);
+            if (WindowsApi.RegisterHotKey(WindowHandle, key, _recordHotkeyId, ApplicationConfiguration.GlobalKeyModifer))
+            {
+                RecordHotkey = key;
+            }
 
             return registerResult;
         }

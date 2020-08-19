@@ -10,12 +10,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <PublishSingleFile>true</PublishSingleFile>
-    <PublishTrimmed>true</PublishTrimmed>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Resources\DeleteButton.png" />
     <None Remove="Resources\GlobalAudioIndicator.png" />

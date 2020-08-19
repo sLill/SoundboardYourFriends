@@ -55,9 +55,7 @@ namespace SoundboardYourFriends.View.Windows
         #region OnRegisterRecordKeyPressed
         public void OnRegisterRecordKeyPressed(object sender, KeyEventArgs e)
         {
-            _mainWindowViewModel.UnregisterRecordHotKey();
             _mainWindowViewModel.RegisterRecordHotKey(e.Key);
-
             this.KeyDown -= OnRegisterRecordKeyPressed;
         }
         #endregion OnRegisterRecordKeyPressed
