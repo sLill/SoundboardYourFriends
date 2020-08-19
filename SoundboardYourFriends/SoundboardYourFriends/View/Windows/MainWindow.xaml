@@ -19,6 +19,7 @@
         <converters:LocalPlaybackVisibilityConverter x:Key="LocalPlaybackVisibilityConverter"/>
         <converters:GlobalPlaybackVisibilityConverter x:Key="GlobalPlaybackVisibilityConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -143,7 +144,6 @@
                 <!--View-->
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
-                        <!--<GridViewColumn DisplayMemberBinding="{Binding GroupName}"/>-->
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -178,7 +178,7 @@
                                                                   VerticalAlignment="Center" 
                                                                   Margin="5,0,0,0" 
                                                                   Width="200" 
-                                                                  IsEnabled="{Binding FileLocked, Converter={StaticResource InverseBooleanConverter}, Mode=TwoWay}"
+                                                                  IsEnabled="{Binding FileLocked, Converter={StaticResource InverseBooleanConverter}}"
                                                                   Maximum="{Binding FileTimeMax}" 
                                                                   Minimum="{Binding FileTimeMin}" 
                                                                   UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" 
@@ -207,7 +207,7 @@
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <DockPanel Name="pnlMediaPanel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25,0,0,0">
+                                    <DockPanel IsEnabled="{Binding FileLocked, Converter={StaticResource InverseBooleanConverter}}" Opacity="{Binding FileLocked, Converter={StaticResource BoolToOpacityConverter}}" Name="pnlMediaPanel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25,0,0,0">
                                         <Button Name="btnSave" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Margin="3,0,0,0" Click="btnSave_Click">
                                             <StackPanel Background="Transparent">
                                                 <Image Source="/Resources/SaveButtonGray.png" Height="20" Width="20"/>
@@ -235,7 +235,7 @@
                                             <Expander IsExpanded="False">
                                                 <Expander.Header>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Name}" FontWeight="DemiBold" Foreground="DarkSlateGray" FontSize="18" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{Binding Name}" FontWeight="DemiBold" Foreground="DarkSlateGray" FontSize="16" VerticalAlignment="Center" />
                                                     </StackPanel>
                                                 </Expander.Header>
                                                 <ItemsPresenter Margin="10,0,0,0"/>
@@ -247,7 +247,6 @@
                         </GroupStyle.ContainerStyle>
                     </GroupStyle>
                 </ListView.GroupStyle>
-
 
             </ListView>
         </DockPanel>

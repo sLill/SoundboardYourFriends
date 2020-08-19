@@ -96,6 +96,14 @@ namespace SoundboardYourFriends.Model
         #endregion Constructors..
 
         #region Methods..
+        #region Event Handlers..
+        private void OnDirectSoundPlaybackStopped(object sender, EventArgs e)
+        {
+            this.PlaybackStopped?.Invoke(this, EventArgs.Empty);
+            PlaybackState = PlaybackState.Stopped;
+        }
+        #endregion Event Handlers..
+
         #region Dispose
         public void Dispose()
         {
@@ -107,11 +115,7 @@ namespace SoundboardYourFriends.Model
         public void Initialize()
         {
             _directSoundOutInstance = new DirectSoundOut(DeviceId);
-            _directSoundOutInstance.PlaybackStopped += (sender, e) =>
-            {
-                this.PlaybackStopped?.Invoke(this, EventArgs.Empty);
-                PlaybackState = PlaybackState.Stopped;
-            };
+            _directSoundOutInstance.PlaybackStopped += OnDirectSoundPlaybackStopped;
         }
         #endregion Initialize
 

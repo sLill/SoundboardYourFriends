@@ -390,8 +390,6 @@ namespace SoundboardYourFriends.ViewModel
         #region SaveSample
         public void SaveSample(SoundboardSample soundboardSample)
         {
-            SelectedOutputDevicesCollection.Where(x => x.PlaybackState == PlaybackState.Playing).ToList().ForEach(x => x.Stop());
-
             // File length
             if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
             {
