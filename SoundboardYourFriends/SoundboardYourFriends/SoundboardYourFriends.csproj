@@ -4,12 +4,16 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
-    <!--<PublishSingleFile>true</PublishSingleFile>
-    <PublishTrimmed>true</PublishTrimmed>-->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
 
   <ItemGroup>
@@ -97,6 +101,7 @@
     <PackageReference Include="SharpDX.DirectSound" Version="4.2.0" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+    <PackageReference Include="WiX" Version="3.11.2" />
   </ItemGroup>
 
   <ItemGroup>
