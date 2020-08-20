@@ -55,9 +55,7 @@ namespace SoundboardYourFriends.View.Windows
         #region OnRegisterRecordKeyPressed
         public void OnRegisterRecordKeyPressed(object sender, KeyEventArgs e)
         {
-            _mainWindowViewModel.UnregisterRecordHotKey();
             _mainWindowViewModel.RegisterRecordHotKey(e.Key);
-
             this.KeyDown -= OnRegisterRecordKeyPressed;
         }
         #endregion OnRegisterRecordKeyPressed
@@ -153,13 +151,16 @@ namespace SoundboardYourFriends.View.Windows
             SettingsWindow settingsWindow = new SettingsWindow();
             if (settingsWindow.ShowDialog().Value)
             {
-                _mainWindowViewModel.RecordHotkeyDisplay = _mainWindowViewModel.RecordHotkey?.ToString();
+                _mainWindowViewModel.RecordHotkeyDisplay = _mainWindowViewModel.RecordHotkey.ToString();
                 _mainWindowViewModel.SoundboardSampleCollection.ToList().ForEach(x => x.Hotkey = x.Hotkey);
 
                 _mainWindowViewModel.RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
 
                 // Re-intialize capture device
-                _mainWindowViewModel.BeginAudioCapture();
+                if (_mainWindowViewModel.SelectedCaptureDevicesCollection.Any())
+                {
+                    AudioAgent.BeginAudioCapture(_mainWindowViewModel.SelectedCaptureDevicesCollection.First());
+                }
             }
         }
         #endregion btnSetting_MouseUp
