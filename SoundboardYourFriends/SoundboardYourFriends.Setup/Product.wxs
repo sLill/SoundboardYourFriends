@@ -23,6 +23,9 @@
     <!--<Icon Id="AppIcon" SourceFile="$(var.SampleApp.ProjectDir)app.ico"/>
     <Property Id="ARPPRODUCTION" Value="AppIcon"/>-->
 	</Product>
+  
+  
+  
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
@@ -33,6 +36,15 @@
 	</Fragment>
 
 	<Fragment>
+    <!--ExeCommand="&quot;$(var.SolutionDir)VBCable\VBCABLE_Setup_x64.exe&quot;"-->
+
+    <Binary Id ="CustomActions" SourceFile="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.dll"/>
+    <CustomAction Id="InstallVBCableAction" Impersonate="no" Return="check" Execute="immediate" BinaryKey="CustomActions" DllEntry="InstallVBCable"/>
+
+    <InstallExecuteSequence>
+      <Custom Action='InstallVBCableAction' Before='InstallFiles'/>
+    </InstallExecuteSequence>
+    
 		<!--SoundboardYourFriends Components-->
     <ComponentGroup Id="SoundboardYourFriendsComponents">
       
@@ -49,10 +61,6 @@
         <RemoveFolder Id ="ApplicationProgramsFolder" On="uninstall"/>
       </Component>-->
       
-			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-			<!-- <Component Id="ProductComponent"> -->
-				<!-- TODO: Insert files, registry keys, and other resources here. -->
-			<!-- </Component> -->
 		</ComponentGroup>
 
     <!--VB Cable Components-->
@@ -60,4 +68,9 @@
       
     </ComponentGroup>
 	</Fragment>
+  
+  
+  
+  
+  
 </Wix>
