@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="SoundboardYourFriends" Language="1033" Version="1.0.0.0" Manufacturer="sLill" UpgradeCode="cb925a61-ff0e-4de0-ab2a-f774bf6d658b">
+		<Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine"/>
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+    <!--Installer variables-->
+    <?define SolutionDir="$(var.SoundboardYourFriends.TargetDir)..\..\..\Resources\License.rtf" ?>
+    
+		<Feature Id="ProductFeature" Title="SoundboardYourFriends.Setup" Level="1" Description="Install SoundboardYourFriends">
+			<ComponentGroupRef Id="SoundboardYourFriendsComponents" />
+		</Feature>
+
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)"/>
+    
+    <!--UI-->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="WixUI_InstallDir"/>
+    
+    <!--Application Icon-->
+    <!--<Icon Id="AppIcon" SourceFile="$(var.SampleApp.ProjectDir)app.ico"/>
+    <Property Id="ARPPRODUCTION" Value="AppIcon"/>-->
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<!--SoundboardYourFriends Components-->
+    <ComponentGroup Id="SoundboardYourFriendsComponents">
+      
+      <!--Executable-->
+      <Component Id="ApplicationExecutable" Guid="C4EC9BB0-BE19-40AE-BF76-7FD0582A924D" Directory="INSTALLFOLDER">
+        <File Id="SoundboardYourFriends.exe" Source="$(var.SoundboardYourFriends.TargetDir)publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
+      </Component>
+      
+      <!--Shortcuts-->
+      <!--<Component Id="ApplicationShortcuts" Guid="80F41634-4643-4197-B62C-F422E51C539B" Directory="ApplicationProgramsFolder">
+        <Shortcut Id="ApplicationShortcut" Name="!(bind.property.ProductName)" WorkingDirectory="MAINFOLDER" Description="Starts !(bind.property.ProductName)" Target="[#$(var.SoundboardYourFriends.TargetFileName)]" />
+        <RegistryValue Root="HKCU" Key="Software\!(bind.property.Manufacturer)\!(bind.property.ProductName)" 
+                       Name="ApplicationShortcutsInstalled" Type="integer" Value="1" KeyPath="yes"/>
+        <RemoveFolder Id ="ApplicationProgramsFolder" On="uninstall"/>
+      </Component>-->
+      
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			<!-- </Component> -->
+		</ComponentGroup>
+
+    <!--VB Cable Components-->
+    <ComponentGroup Id="VBCableComponents">
+      
+    </ComponentGroup>
+	</Fragment>
+</Wix>

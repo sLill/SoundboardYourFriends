@@ -10,7 +10,7 @@ namespace SoundboardYourFriends.ViewModel
 
         #region Properties..
         #region DeviceAverageBytesPerSecond
-        private int _deviceAverageBytesPerSecond = AudioAgent.WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
+        private int _deviceAverageBytesPerSecond = AudioAgent.WasapiLoopbackCapture?.WaveFormat.AverageBytesPerSecond ?? 0;
         public int DeviceAverageBytesPerSecond
         {
             get { return _deviceAverageBytesPerSecond; }

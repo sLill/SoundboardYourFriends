@@ -184,7 +184,7 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Events..
 
         #region BeginAudioCapture
-        private void BeginAudioCapture()
+        public void BeginAudioCapture()
         {
             AudioAgent.StopAudioCapture();
 

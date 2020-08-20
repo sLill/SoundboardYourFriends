@@ -153,14 +153,13 @@ namespace SoundboardYourFriends.View.Windows
             SettingsWindow settingsWindow = new SettingsWindow();
             if (settingsWindow.ShowDialog().Value)
             {
-                _mainWindowViewModel.RecordHotkeyDisplay = _mainWindowViewModel.RecordHotkey.ToString();
+                _mainWindowViewModel.RecordHotkeyDisplay = _mainWindowViewModel.RecordHotkey?.ToString();
                 _mainWindowViewModel.SoundboardSampleCollection.ToList().ForEach(x => x.Hotkey = x.Hotkey);
 
                 _mainWindowViewModel.RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
 
                 // Re-intialize capture device
-                AudioAgent.WasapiLoopbackCapture.RecordingStopped += (sender, e) => { AudioAgent.WasapiLoopbackCapture.StartRecording(); };
-                AudioAgent.WasapiLoopbackCapture.StopRecording();
+                _mainWindowViewModel.BeginAudioCapture();
             }
         }
         #endregion btnSetting_MouseUp
