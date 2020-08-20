@@ -157,8 +157,10 @@ namespace SoundboardYourFriends.View.Windows
                 _mainWindowViewModel.RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
 
                 // Re-intialize capture device
-                AudioAgent.WasapiLoopbackCapture.RecordingStopped += (sender, e) => { AudioAgent.WasapiLoopbackCapture.StartRecording(); };
-                AudioAgent.WasapiLoopbackCapture.StopRecording();
+                if (_mainWindowViewModel.SelectedCaptureDevicesCollection.Any())
+                {
+                    AudioAgent.BeginAudioCapture(_mainWindowViewModel.SelectedCaptureDevicesCollection.First());
+                }
             }
         }
         #endregion btnSetting_MouseUp
