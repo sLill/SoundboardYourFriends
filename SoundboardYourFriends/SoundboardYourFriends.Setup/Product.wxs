@@ -9,7 +9,7 @@
     <!--Features-->
     <Feature Id="ProductFeature" Title="SoundboardYourFriends.Setup" Level="1" Description="Install SoundboardYourFriends">
       <ComponentGroupRef Id="SoundboardYourFriendsComponents" />
-      <ComponentRef Id="ApplicationShortcut"/>
+      <ComponentRef Id="DesktopShortcut"/>
     </Feature>
 
     <!--Installer variables-->
@@ -22,15 +22,6 @@
     <!--Application Icon-->
     <!--<Icon Id="AppIcon" SourceFile="$(var.SampleApp.ProjectDir)app.ico"/>
     <Property Id="ARPPRODUCTION" Value="AppIcon"/>-->
-
-    <!--Shortcuts-->
-    <DirectoryRef Id="ApplicationProgramsFolder">
-      <Component Id="ApplicationShortcut" Guid="80F41634-4643-4197-B62C-F422E51C539B">
-        <Shortcut Id="ApplicationStartMenuShortcut" Name="!(bind.property.ProductName)" WorkingDirectory="MAINFOLDER" Description="Starts !(bind.property.ProductName)" Target="$(var.SoundboardYourFriends.ProjectDir)$(var.SoundboardYourFriends.TargetFileName)" />
-        <RemoveFolder Id ="ApplicationProgramsFolder" On="uninstall"/>
-        <RegistryValue Root="HKCU" Key="Software\!(bind.property.ProductName)\!(bind.property.ProductName)" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
-      </Component>
-    </DirectoryRef>
 
     <!--Custom Actions-->
     <Binary Id ="CustomActions" src="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.CA.dll"/>
@@ -53,14 +44,18 @@
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)" />
       </Directory>
-      <Directory Id="ProgramMenuFolder">
-        <Directory Id="ApplicationProgramsFolder" Name="My Application Name"/>
-      </Directory>
+      
+      <!--<Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="SoundboardYourFriends"/>
+      </Directory>-->
+
+      <Directory Id="DesktopFolder" Name="Desktop"/>
+
     </Directory>
   </Fragment>
 
+  <!--SoundboardYourFriends Components-->
   <Fragment>
-    <!--SoundboardYourFriends Components-->
     <ComponentGroup Id="SoundboardYourFriendsComponents">
       
       <!--Executable-->
@@ -72,8 +67,28 @@
       <Component Id="ApplicationReadMe" Guid="42569300-872E-40FF-9561-E199CD2EE44D" Directory="INSTALLFOLDER">
         <File Id="README" Name="ReadMe.txt" Source="$(var.SolutionDir)..\README.MD" Vital="yes" KeyPath="yes"/>       
       </Component>
-      
     </ComponentGroup>
   </Fragment>
 
+  <!--Shortcuts-->
+  <Fragment>
+    <Component Id="DesktopShortcut" Directory="INSTALLFOLDER" Guid="*">
+      <RegistryValue Id="RegShortcutDesktop"
+              Root="HKCU"
+              Key="Software\SoundboardYourFriends\SoundboardYourFriends"
+              Name="DesktopShortcut"
+              Value="1"
+              Type="integer"
+              KeyPath="yes" />
+
+      <Shortcut Id="desktopSC"
+              Target="[INSTALLFOLDER]SoundboardYourFriends.exe"
+              WorkingDirectory="INSTALLFOLDER"
+              Directory="DesktopFolder"
+              Name="SoundboardYourFriends"
+              Advertise="no"/>
+    </Component>
+    <!--Icon="icon.ico"-->
+  </Fragment>
+  
 </Wix>
