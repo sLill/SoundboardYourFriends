@@ -29,7 +29,7 @@
     <CustomAction Id="RegisterDSOFileDllAction2" Impersonate="no" Return="check" Execute="deferred" BinaryKey="CustomActions" DllEntry="RegisterDSOFileDll" HideTarget="no"/>
     <CustomAction Id="InstallVBCableAction1" Property="InstallVBCableAction2" Value="SolutionDirectory=$(var.SolutionDir)"/>
     <CustomAction Id="InstallVBCableAction2" Impersonate="no" Return="check" Execute="deferred" BinaryKey="CustomActions" DllEntry="InstallVBCable" HideTarget="no"/>
-    
+
     <InstallExecuteSequence>
       <Custom Action='RegisterDSOFileDllAction1' Before='RegisterDSOFileDllAction2'>NOT Installed AND NOT REMOVE</Custom>
       <Custom Action='RegisterDSOFileDllAction2' Before='InstallFiles'>NOT Installed AND NOT REMOVE</Custom>
@@ -41,13 +41,14 @@
   <!--Directories-->
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
+
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)" />
       </Directory>
-      
-      <!--<Directory Id="ProgramMenuFolder">
+
+      <Directory Id="ProgramMenuFolder">
         <Directory Id="ApplicationProgramsFolder" Name="SoundboardYourFriends"/>
-      </Directory>-->
+      </Directory>
 
       <Directory Id="DesktopFolder" Name="Desktop"/>
 
@@ -57,15 +58,15 @@
   <!--SoundboardYourFriends Components-->
   <Fragment>
     <ComponentGroup Id="SoundboardYourFriendsComponents">
-      
+
       <!--Executable-->
       <Component Id="ApplicationExecutable" Guid="C4EC9BB0-BE19-40AE-BF76-7FD0582A924D" Directory="INSTALLFOLDER">
         <File Id="SoundboardYourFriends.exe" Source="$(var.SoundboardYourFriends.TargetDir)publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
       </Component>
-      
+
       <!--README-->
       <Component Id="ApplicationReadMe" Guid="42569300-872E-40FF-9561-E199CD2EE44D" Directory="INSTALLFOLDER">
-        <File Id="README" Name="ReadMe.txt" Source="$(var.SolutionDir)..\README.MD" Vital="yes" KeyPath="yes"/>       
+        <File Id="README" Name="ReadMe.txt" Source="$(var.SolutionDir)..\README.MD" Vital="yes" KeyPath="yes"/>
       </Component>
     </ComponentGroup>
   </Fragment>
@@ -74,21 +75,30 @@
   <Fragment>
     <Component Id="DesktopShortcut" Directory="INSTALLFOLDER" Guid="*">
       <RegistryValue Id="RegShortcutDesktop"
-              Root="HKCU"
-              Key="Software\SoundboardYourFriends\SoundboardYourFriends"
-              Name="DesktopShortcut"
-              Value="1"
-              Type="integer"
-              KeyPath="yes" />
+          Root="HKCU"
+          Key="Software\SoundboardYourFriends\SoundboardYourFriends"
+          Name="DesktopShortcut"
+          Value="1"
+          Type="integer"
+          KeyPath="yes" />
 
       <Shortcut Id="desktopSC"
-              Target="[INSTALLFOLDER]SoundboardYourFriends.exe"
-              WorkingDirectory="INSTALLFOLDER"
-              Directory="DesktopFolder"
-              Name="SoundboardYourFriends"
-              Advertise="no"/>
+          Target="[INSTALLFOLDER]SoundboardYourFriends.exe"
+          WorkingDirectory="INSTALLFOLDER"
+          Directory="DesktopFolder"
+          Name="SoundboardYourFriends"
+          Advertise="no"/>
+
+      <Shortcut Id="startmenuSC"
+          Target="[INSTALLFOLDER]SoundboardYourFriends.exe"
+          WorkingDirectory="INSTALLFOLDER"
+          Directory="ApplicationProgramsFolder"
+          Name="SoundboardYourFriends"
+          Advertise="no"/>
+
+      <RemoveFolder Id="RemoveApplicationProgramsFolder" Directory="ApplicationProgramsFolder" On="uninstall" />
     </Component>
     <!--Icon="icon.ico"-->
   </Fragment>
-  
+
 </Wix>
