@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Text;
 using Microsoft.Deployment.WindowsInstaller;
+using System.Linq;
 
 namespace SoundboardYourFriends.Setup.CustomActions
 {
@@ -14,28 +15,33 @@ namespace SoundboardYourFriends.Setup.CustomActions
         public static ActionResult InstallVBCable(Session session)
         {
             session.Log("Begin InstallVBCable");
-            var actionResult = ActionResult.Success;
 
             try
             {
-                string VBCableSetupPath = Path.Combine(Regex.Replace(session["InstallDir"],
+                session.CustomActionData.Keys.Cast<string>().ToList().ForEach(x => session.Log($"CustomDataKeyValue : {x}"));
+
+                string solutionDirectory = session.CustomActionData["SolutionDirectory"];
+
+                session.Log($"CustomAction InstallVBCable exe path - {solutionDirectory}");
+                string VBCableSetupPath = Path.Combine(Regex.Replace(solutionDirectory,
                     @"SoundboardYourFriends\\SoundboardYourFriends",
                     @"SoundboardYourFriends\\VBCable\\VBCABLE_Setup_x64.exe"));
 
-                var VBCableProcess = Process.Start(VBCableSetupPath);
+                var VBCableProcess = new Process();
+                VBCableProcess.StartInfo.FileName = VBCableSetupPath;
+                VBCableProcess.StartInfo.UseShellExecute = true;
+                VBCableProcess.StartInfo.Verb = "runas";
+                VBCableProcess.Start();
                 VBCableProcess.WaitForExit();
 
-                int exitCode = VBCableProcess.ExitCode;
-                actionResult = VBCableProcess.ExitCode == 1 ? ActionResult.Success : ActionResult.UserExit;
-            }
+                session.Log($"CustomAction InstallVBCable completed successfully");
+        }
             catch (Exception ex)
             {
-                actionResult = ActionResult.Failure;
-                session.Log(ex.Message);
+                session.Log($"CustomAction InstallVBCable failed - {ex.Message}");
             }
 
-            session.Log($"CustomAction InstallVBCable complete");
-            return actionResult;
+            return ActionResult.Success;
         }
     }
 }
