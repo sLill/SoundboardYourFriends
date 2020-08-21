@@ -62,10 +62,17 @@
   <Fragment>
     <!--SoundboardYourFriends Components-->
     <ComponentGroup Id="SoundboardYourFriendsComponents">
+      
       <!--Executable-->
       <Component Id="ApplicationExecutable" Guid="C4EC9BB0-BE19-40AE-BF76-7FD0582A924D" Directory="INSTALLFOLDER">
         <File Id="SoundboardYourFriends.exe" Source="$(var.SoundboardYourFriends.TargetDir)publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
       </Component>
+      
+      <!--README-->
+      <Component Id="ApplicationReadMe" Guid="42569300-872E-40FF-9561-E199CD2EE44D" Directory="INSTALLFOLDER">
+        <File Id="README" Name="ReadMe.txt" Source="$(var.SolutionDir)..\README.MD" Vital="yes" KeyPath="yes"/>       
+      </Component>
+      
     </ComponentGroup>
   </Fragment>
 

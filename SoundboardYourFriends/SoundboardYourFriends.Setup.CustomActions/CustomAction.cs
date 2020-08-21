@@ -58,7 +58,6 @@ namespace SoundboardYourFriends.Setup.CustomActions
                 registerDSOFileProcess.StartInfo.FileName = DSOFileSetupPath;
                 registerDSOFileProcess.StartInfo.Verb = "runas";
                 registerDSOFileProcess.StartInfo.CreateNoWindow = true;
-                //registerDSOFileProcess.StartInfo.RedirectStandardError = true;
                 registerDSOFileProcess.StartInfo.UseShellExecute = true;
 
                 registerDSOFileProcess.Start();
