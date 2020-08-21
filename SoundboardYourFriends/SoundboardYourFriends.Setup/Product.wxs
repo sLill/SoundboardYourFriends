@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="SoundboardYourFriends" Language="1033" Version="1.0.0.0" Manufacturer="sLill" UpgradeCode="cb925a61-ff0e-4de0-ab2a-f774bf6d658b">
-		<Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine"/>
+  <Product Id="*" Name="SoundboardYourFriends" Language="1033" Version="1.0.0.0" Manufacturer="sLill" UpgradeCode="cb925a61-ff0e-4de0-ab2a-f774bf6d658b">
+    <Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine"/>
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate EmbedCab="yes" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!--Features-->
+    <Feature Id="ProductFeature" Title="SoundboardYourFriends.Setup" Level="1" Description="Install SoundboardYourFriends">
+      <ComponentGroupRef Id="SoundboardYourFriendsComponents" />
+      <ComponentRef Id="ApplicationShortcut"/>
+    </Feature>
 
     <!--Installer variables-->
     <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)SoundboardYourFriends\Resources\License.rtf"/>
-    
+
     <!--UI-->
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     <UIRef Id="WixUI_InstallDir"/>
-    
+
     <!--Application Icon-->
     <!--<Icon Id="AppIcon" SourceFile="$(var.SampleApp.ProjectDir)app.ico"/>
     <Property Id="ARPPRODUCTION" Value="AppIcon"/>-->
@@ -30,43 +36,33 @@
     <Binary Id ="CustomActions" src="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.CA.dll"/>
     <CustomAction Id="InstallVBCableAction1" Property="InstallVBCableAction2" Value="SolutionDirectory=$(var.SolutionDir)"/>
     <CustomAction Id="InstallVBCableAction2" Impersonate="no" Return="check" Execute="deferred" BinaryKey="CustomActions" DllEntry="InstallVBCable" HideTarget="no"/>
-    
-    <InstallExecuteSequence>
-      <Custom Action='InstallVBCableAction1' Before='InstallVBCableAction2'/>
-      <Custom Action='InstallVBCableAction2' After='InstallFiles'/>
-    </InstallExecuteSequence>
 
-    <Feature Id="ProductFeature" Title="SoundboardYourFriends.Setup" Level="1" Description="Install SoundboardYourFriends">
-      <ComponentGroupRef Id="SoundboardYourFriendsComponents" />
-      <ComponentRef Id="ApplicationShortcut"/>
-    </Feature>
-	</Product>
-  
+    <InstallExecuteSequence>
+      <Custom Action='InstallVBCableAction1' Before='InstallVBCableAction2'>NOT Installed AND NOT REMOVE</Custom>
+      <Custom Action='InstallVBCableAction2' After='InstallFiles'>NOT Installed AND NOT REMOVE</Custom>
+    </InstallExecuteSequence>
+  </Product>
+
   <!--Directories-->
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)" />
-			</Directory>
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)" />
+      </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="ApplicationProgramsFolder" Name="My Application Name"/>
       </Directory>
-		</Directory>
-	</Fragment>
+    </Directory>
+  </Fragment>
 
-	<Fragment>   
-		<!--SoundboardYourFriends Components-->
+  <Fragment>
+    <!--SoundboardYourFriends Components-->
     <ComponentGroup Id="SoundboardYourFriendsComponents">
-      
       <!--Executable-->
       <Component Id="ApplicationExecutable" Guid="C4EC9BB0-BE19-40AE-BF76-7FD0582A924D" Directory="INSTALLFOLDER">
         <File Id="SoundboardYourFriends.exe" Source="$(var.SoundboardYourFriends.TargetDir)publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
       </Component>
     </ComponentGroup>
-	</Fragment>
-  
-  
-  
-  
-  
+  </Fragment>
+
 </Wix>
