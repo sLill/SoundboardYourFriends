@@ -24,9 +24,10 @@ namespace SoundboardYourFriends.Setup.CustomActions
                     @"SoundboardYourFriends\\VBCable\\VBCABLE_Setup_x64.exe"));
 
                 var VBCableProcess = new Process();
-                VBCableProcess.StartInfo.FileName = VBCableSetupPath;
                 VBCableProcess.StartInfo.UseShellExecute = true;
+                VBCableProcess.StartInfo.FileName = VBCableSetupPath;
                 VBCableProcess.StartInfo.Verb = "runas";
+
                 VBCableProcess.Start();
                 VBCableProcess.WaitForExit();
 
@@ -55,8 +56,11 @@ namespace SoundboardYourFriends.Setup.CustomActions
 
                 var registerDSOFileProcess = new Process();
                 registerDSOFileProcess.StartInfo.FileName = DSOFileSetupPath;
-                registerDSOFileProcess.StartInfo.UseShellExecute = true;
                 registerDSOFileProcess.StartInfo.Verb = "runas";
+                registerDSOFileProcess.StartInfo.CreateNoWindow = true;
+                //registerDSOFileProcess.StartInfo.RedirectStandardError = true;
+                registerDSOFileProcess.StartInfo.UseShellExecute = true;
+
                 registerDSOFileProcess.Start();
                 registerDSOFileProcess.WaitForExit();
 
