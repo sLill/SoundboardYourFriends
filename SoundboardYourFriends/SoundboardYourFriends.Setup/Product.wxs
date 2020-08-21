@@ -34,10 +34,14 @@
 
     <!--Custom Actions-->
     <Binary Id ="CustomActions" src="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.CA.dll"/>
+    <CustomAction Id="RegisterDSOFileDllAction1" Property="RegisterDSOFileDllAction2" Value="SolutionDirectory=$(var.SolutionDir)"/>
+    <CustomAction Id="RegisterDSOFileDllAction2" Impersonate="no" Return="check" Execute="deferred" BinaryKey="CustomActions" DllEntry="RegisterDSOFileDll" HideTarget="no"/>
     <CustomAction Id="InstallVBCableAction1" Property="InstallVBCableAction2" Value="SolutionDirectory=$(var.SolutionDir)"/>
     <CustomAction Id="InstallVBCableAction2" Impersonate="no" Return="check" Execute="deferred" BinaryKey="CustomActions" DllEntry="InstallVBCable" HideTarget="no"/>
-
+    
     <InstallExecuteSequence>
+      <Custom Action='RegisterDSOFileDllAction1' Before='RegisterDSOFileDllAction2'>NOT Installed AND NOT REMOVE</Custom>
+      <Custom Action='RegisterDSOFileDllAction2' Before='InstallFiles'>NOT Installed AND NOT REMOVE</Custom>
       <Custom Action='InstallVBCableAction1' Before='InstallVBCableAction2'>NOT Installed AND NOT REMOVE</Custom>
       <Custom Action='InstallVBCableAction2' After='InstallFiles'>NOT Installed AND NOT REMOVE</Custom>
     </InstallExecuteSequence>
