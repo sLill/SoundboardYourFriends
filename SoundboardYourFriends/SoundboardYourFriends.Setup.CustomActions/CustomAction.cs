@@ -14,15 +14,28 @@ namespace SoundboardYourFriends.Setup.CustomActions
         public static ActionResult InstallVBCable(Session session)
         {
             session.Log("Begin InstallVBCable");
+            var actionResult = ActionResult.Success;
 
-            string VBCableSetupPath = Path.Combine(Regex.Replace(Environment.CurrentDirectory,
-                @"SoundboardYourFriends\\SoundboardYourFriends\\SoundboardYourFriends\.Setup\.CustomActions",
-                @"VBCable\VBCABLE_Setup_x64.exe"));
+            try
+            {
+                string VBCableSetupPath = Path.Combine(Regex.Replace(session["InstallDir"],
+                    @"SoundboardYourFriends\\SoundboardYourFriends",
+                    @"SoundboardYourFriends\\VBCable\\VBCABLE_Setup_x64.exe"));
 
-            var VBCableProcess = Process.Start(VBCableSetupPath);
-            int exitCode = VBCableProcess.ExitCode;
+                var VBCableProcess = Process.Start(VBCableSetupPath);
+                VBCableProcess.WaitForExit();
 
-            return ActionResult.Success;
+                int exitCode = VBCableProcess.ExitCode;
+                actionResult = VBCableProcess.ExitCode == 1 ? ActionResult.Success : ActionResult.UserExit;
+            }
+            catch (Exception ex)
+            {
+                actionResult = ActionResult.Failure;
+                session.Log(ex.Message);
+            }
+
+            session.Log($"CustomAction InstallVBCable complete");
+            return actionResult;
         }
     }
 }

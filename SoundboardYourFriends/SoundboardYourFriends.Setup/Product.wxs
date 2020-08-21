@@ -7,13 +7,12 @@
 		<MediaTemplate EmbedCab="yes" />
 
     <!--Installer variables-->
-    <?define SolutionDir="$(var.SoundboardYourFriends.TargetDir)..\..\..\Resources\License.rtf" ?>
     
 		<Feature Id="ProductFeature" Title="SoundboardYourFriends.Setup" Level="1" Description="Install SoundboardYourFriends">
 			<ComponentGroupRef Id="SoundboardYourFriendsComponents" />
 		</Feature>
 
-    <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)"/>
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)SoundboardYourFriends\Resources\License.rtf"/>
     
     <!--UI-->
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
@@ -23,8 +22,6 @@
     <!--<Icon Id="AppIcon" SourceFile="$(var.SampleApp.ProjectDir)app.ico"/>
     <Property Id="ARPPRODUCTION" Value="AppIcon"/>-->
 	</Product>
-  
-  
   
 
 	<Fragment>
@@ -36,9 +33,9 @@
 	</Fragment>
 
 	<Fragment>
-    <!--ExeCommand="&quot;$(var.SolutionDir)VBCable\VBCABLE_Setup_x64.exe&quot;"-->
-
-    <Binary Id ="CustomActions" SourceFile="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.dll"/>
+    <!--Custom Actions--> 
+    <Property Id="InstallDir" Value="$(var.SolutionDir)"/>
+    <Binary Id ="CustomActions" src="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.CA.dll"/>
     <CustomAction Id="InstallVBCableAction" Impersonate="no" Return="check" Execute="immediate" BinaryKey="CustomActions" DllEntry="InstallVBCable"/>
 
     <InstallExecuteSequence>
