@@ -66,7 +66,7 @@
 
       <!--Updater-->
       <Component Id="ApplicationUpdater" Guid="3390180B-885A-4BCC-ACB3-1825BBFB8EEE" Directory="INSTALLFOLDER">
-        <File Id="updater.exe" Source="$(var.SolutionDir)SoundboardYourFriends.Update\bin\Release\netcoreapp3.1\publish\updater.exe" Vital="yes" KeyPath="yes"/>
+        <File Id="update.exe" Source="$(var.SolutionDir)SoundboardYourFriends.Update\bin\Release\netcoreapp3.1\publish\update.exe" Vital="yes" KeyPath="yes"/>
       </Component>
 
       <!--README-->
