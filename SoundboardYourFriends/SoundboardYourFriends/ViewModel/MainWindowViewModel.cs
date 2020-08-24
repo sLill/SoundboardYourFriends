@@ -220,6 +220,15 @@ namespace SoundboardYourFriends.ViewModel
         #endregion DeleteSampleAsync
 
         #region HwndHook
+        /// <summary>
+        /// Provides application shortcut functions for shortcut events from Windows
+        /// </summary>
+        /// <param name="hwnd"></param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <param name="handled"></param>
+        /// <returns></returns>
         public IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             const int WM_HOTKEY = 0x0312;
