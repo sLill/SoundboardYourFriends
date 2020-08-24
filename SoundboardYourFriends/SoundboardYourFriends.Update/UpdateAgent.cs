@@ -7,10 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SoundboardYourFriends.Update
@@ -33,19 +29,27 @@ namespace SoundboardYourFriends.Update
 
             using (var httpClient = new HttpClient())
             {
+
                 try
                 {
                     httpClient.DefaultRequestHeaders.Add("User-Agent", "SoundboardYourFriends");
                     var response = await httpClient.GetStringAsync("http://api.github.com/repos/sLill/SoundboardYourFriends/releases");
-                   
+
                     var remoteRelease = JsonConvert.DeserializeObject<List<Release>>(response).Max(x => x);
                     var localVersion = Assembly.GetExecutingAssembly().GetName().Version;
                     release = remoteRelease.Version > localVersion ? remoteRelease : null;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Could not retrieve release info{Environment.NewLine}");
-                    throw ex;
+                    if (ex.Message.Contains("rate limit exceeded"))
+                    {
+                        Console.WriteLine($"Github Api rate limit exceeded for this hour{Environment.NewLine}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Could not retrieve release info{Environment.NewLine}");
+                        throw ex;
+                    }
                 }
             }
 
@@ -61,21 +65,21 @@ namespace SoundboardYourFriends.Update
                 try
                 {
                     //{System.Net.DownloadProgressChangedEventArgs
-                    webClient.DownloadProgressChanged += (sender, e) => 
+                    webClient.DownloadProgressChanged += (sender, e) =>
                     {
                         double percentComplete = ((double)e.BytesReceived / (double)e.TotalBytesToReceive) * 100.0;
                         Console.Write($"\rDownload progress: {Math.Round(percentComplete, 1)}%");
                     };
 
-                    webClient.DownloadFileCompleted += (sender, e) => 
-                    { 
+                    webClient.DownloadFileCompleted += (sender, e) =>
+                    {
                         Console.WriteLine($"{Environment.NewLine}Download complete.");
                         UpdateComplete?.Invoke(null, EventArgs.Empty);
                     };
 
                     string executableDownloadUrl = updateInformation.Assets.First(asset => asset.Name.Contains("SoundboardYourFriends.exe")).BrowserDownloadUrl;
                     string filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SoundboardYourFriends.exe");
-                    
+
                     webClient.DownloadFileAsync(new Uri(executableDownloadUrl), filePath);
                 }
                 catch (Exception ex)

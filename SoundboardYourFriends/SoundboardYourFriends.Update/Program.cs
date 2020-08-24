@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace SoundboardYourFriends.Update
 {
@@ -35,11 +34,13 @@ namespace SoundboardYourFriends.Update
                 {
                     Console.WriteLine("No updates found.");
                 }
+
+                OnUpdateComplete(null, EventArgs.Empty);
             }
             catch (Exception ex)
             {
                 string message = $"Error: {ex.ToString()}";
-                _errorRaised = true; 
+                _errorRaised = true;
             }
 
             Console.ReadKey();
@@ -53,8 +54,7 @@ namespace SoundboardYourFriends.Update
             UpdateAgent.UpdateComplete -= OnUpdateComplete;
 
             // Start the main application
-            string applicationPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SoundboardYourFriends.exe");
-            Process.Start(applicationPath, "-u");
+            Process.Start("SoundboardYourFriends.exe", "-u");
 
             if (_errorRaised)
             {
