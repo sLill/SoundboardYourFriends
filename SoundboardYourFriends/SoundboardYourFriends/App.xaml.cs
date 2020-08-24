@@ -21,7 +21,7 @@ namespace SoundboardYourFriends
             if (!e.Args.ToList().Contains("-u") && !IsDebug)
             {
                 // Close this application and run the updater first
-                Process.Start("updater.exe");
+                Process.Start("update.exe");
                 Environment.Exit(0);
             }
         }
