@@ -211,7 +211,7 @@ namespace SoundboardYourFriends.ViewModel
 
                     success = true;
                 }
-                catch (Exception ex)
+                catch
                 {
                     await Task.Delay(500);
                 }

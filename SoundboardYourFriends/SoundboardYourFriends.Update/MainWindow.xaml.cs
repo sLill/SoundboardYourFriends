@@ -34,7 +34,7 @@ namespace SoundboardYourFriends.Update
                 {
                     System.Threading.Thread.Sleep(5000);
                 }
-                catch (Exception ex)
+                catch 
                 {
 
                 }
