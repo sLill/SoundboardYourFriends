@@ -10,22 +10,27 @@ namespace SoundboardYourFriends.Update
     public class Program
     {
         #region Member Variables..
-        private static bool _errorRaised = false;
+        private static object _lockObject = new object();
+        private static bool _updatePending = false;
         #endregion Member Variables..
 
         #region Main
         static void Main(string[] args)
         {
+            LogAgent.Open();
+
             try
             {
-                Console.WriteLine("Checking for updates..");
+                LogAgent.WriteLine("Checking for updates..");
                 UpdateAgent.UpdateComplete += OnUpdateComplete;
 
                 string currentVersionParameter = args.FirstOrDefault() ?? "1.0.0.0";
                 Version currentVersion = new Version(currentVersionParameter);
 
                 var updateInformation = UpdateAgent.CheckForUpdatesAsync(currentVersion).Result;
-                if (updateInformation != null)
+                _updatePending = updateInformation != null;
+
+                if (_updatePending)
                 {
                     // Close the application if it's already running
                     var process = Process.GetProcessesByName("SoundboardYourFriends");
@@ -36,42 +41,50 @@ namespace SoundboardYourFriends.Update
                 }
                 else
                 {
-                    Console.WriteLine("No updates found.");
+                    LogAgent.WriteLine("No updates found.");
                     OnUpdateComplete(null, EventArgs.Empty);
                 }
             }
             catch (Exception ex)
             {
-                string message = $"Error: {ex.ToString()}";
-                Console.WriteLine(message);
+                lock(_lockObject)
+                {
+                    _updatePending = false;
+                }
 
-                _errorRaised = true;
+                string message = $"{Environment.NewLine}Update failed: {ex.ToString()}";
+                LogAgent.WriteLine(message);
             }
+            finally
+            {
+                // Suppress application startup until the update download completes
+                while (_updatePending)
+                { }
 
-            Console.ReadKey();
+                // Start the main application
+                Process.Start("SoundboardYourFriends.exe", "-u");
+
+                LogAgent.Close();
+                Environment.Exit(0);
+            }
         }
         #endregion Main
 
         #region Methods..
+        #region Event Handlers..
         #region OnUpdateComplete
         private static void OnUpdateComplete(object sender, EventArgs e)
         {
             UpdateAgent.UpdateComplete -= OnUpdateComplete;
 
-            // Start the main application
-            Process.Start("SoundboardYourFriends.exe", "-u");
-
-            if (_errorRaised)
+            LogAgent.WriteLine("Update complete.");
+            lock(_lockObject)
             {
-                Console.WriteLine($"{Environment.NewLine}Update failed.");
-            }
-            else
-            {
-                Console.WriteLine("Update complete.");
-                Environment.Exit(0);
+                _updatePending = false;
             }
         }
         #endregion OnUpdateComplete 
+        #endregion Event Handlers..
         #endregion Methods..
     }
 }

@@ -29,7 +29,6 @@ namespace SoundboardYourFriends.Update
 
             using (var httpClient = new HttpClient())
             {
-
                 try
                 {
                     httpClient.DefaultRequestHeaders.Add("User-Agent", "SoundboardYourFriends");
@@ -42,11 +41,11 @@ namespace SoundboardYourFriends.Update
                 {
                     if (ex.Message.Contains("rate limit exceeded"))
                     {
-                        Console.WriteLine($"Github Api rate limit exceeded for this hour{Environment.NewLine}");
+                        LogAgent.WriteLine($"Github Api rate limit exceeded for this hour{Environment.NewLine}");
                     }
                     else
                     {
-                        Console.WriteLine($"Could not retrieve release info{Environment.NewLine}");
+                        LogAgent.WriteLine($"Could not retrieve release info{Environment.NewLine}");
                         throw ex;
                     }
                 }
@@ -63,16 +62,15 @@ namespace SoundboardYourFriends.Update
             {
                 try
                 {
-                    //{System.Net.DownloadProgressChangedEventArgs
                     webClient.DownloadProgressChanged += (sender, e) =>
                     {
                         double percentComplete = ((double)e.BytesReceived / (double)e.TotalBytesToReceive) * 100.0;
-                        Console.Write($"\rDownload progress: {Math.Round(percentComplete, 1)}%");
+                        LogAgent.Write($"\rDownload progress: {Math.Round(percentComplete, 1)}%");
                     };
 
                     webClient.DownloadFileCompleted += (sender, e) =>
                     {
-                        Console.WriteLine($"{Environment.NewLine}Download complete.");
+                        LogAgent.WriteLine($"{Environment.NewLine}Download complete.");
                         UpdateComplete?.Invoke(null, EventArgs.Empty);
                     };
 
@@ -83,7 +81,7 @@ namespace SoundboardYourFriends.Update
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Could not update application.{Environment.NewLine}");
+                    LogAgent.WriteLine($"Could not update application.{Environment.NewLine}");
                     throw ex;
                 }
             }
