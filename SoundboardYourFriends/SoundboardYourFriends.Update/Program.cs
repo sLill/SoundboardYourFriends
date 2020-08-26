@@ -33,9 +33,8 @@ namespace SoundboardYourFriends.Update
                 else
                 {
                     Console.WriteLine("No updates found.");
+                    OnUpdateComplete(null, EventArgs.Empty);
                 }
-
-                OnUpdateComplete(null, EventArgs.Empty);
             }
             catch (Exception ex)
             {
