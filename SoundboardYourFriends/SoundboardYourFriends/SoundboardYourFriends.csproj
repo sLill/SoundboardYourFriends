@@ -6,6 +6,10 @@
     <UseWPF>true</UseWPF>
     <PackageLicenseFile>License.rtf</PackageLicenseFile>
     <ApplicationIcon>SoundboardYourFriendsIcon.ico</ApplicationIcon>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <PackageIcon>SoundboardYourFriendsIcon.ico</PackageIcon>
+    <RepositoryUrl>https://github.com/sLill/SoundboardYourFriends</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,6 +28,10 @@
     <None Remove="Resources\SettingsGear.png" />
     <None Remove="Resources\StopButton.png" />
     <None Include="Resources\License.rtf">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Resources\SoundboardYourFriendsIcon.ico">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
