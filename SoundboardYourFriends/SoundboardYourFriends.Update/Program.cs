@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 
 namespace SoundboardYourFriends.Update
 {
@@ -17,16 +18,19 @@ namespace SoundboardYourFriends.Update
         {
             try
             {
-                // Close the application if it's already running
-                var process = Process.GetProcessesByName("SoundboardYourFriends");
-                process.Cast<Process>().ToList().ForEach(process => process.Kill());
-
                 Console.WriteLine("Checking for updates..");
                 UpdateAgent.UpdateComplete += OnUpdateComplete;
 
-                var updateInformation = UpdateAgent.CheckForUpdatesAsync().Result;
+                string currentVersionParameter = args.FirstOrDefault() ?? "1.0.0.0";
+                Version currentVersion = new Version(currentVersionParameter);
+
+                var updateInformation = UpdateAgent.CheckForUpdatesAsync(currentVersion).Result;
                 if (updateInformation != null)
                 {
+                    // Close the application if it's already running
+                    var process = Process.GetProcessesByName("SoundboardYourFriends");
+                    process.Cast<Process>().ToList().ForEach(process => process.Kill());
+
                     // Not a waiting function
                     UpdateAgent.UpdateApplicationAsync(updateInformation);
                 }
@@ -39,6 +43,8 @@ namespace SoundboardYourFriends.Update
             catch (Exception ex)
             {
                 string message = $"Error: {ex.ToString()}";
+                Console.WriteLine(message);
+
                 _errorRaised = true;
             }
 

@@ -23,7 +23,7 @@ namespace SoundboardYourFriends.Update
         /// Returns release information for tagged versions ahead of the local application version
         /// </summary>
         /// <returns>Returns null if no updates are available</returns>
-        public static async Task<Release> CheckForUpdatesAsync()
+        public static async Task<Release> CheckForUpdatesAsync(Version currentVersion)
         {
             Release release = null;
 
@@ -36,8 +36,7 @@ namespace SoundboardYourFriends.Update
                     var response = await httpClient.GetStringAsync("http://api.github.com/repos/sLill/SoundboardYourFriends/releases");
 
                     var remoteRelease = JsonConvert.DeserializeObject<List<Release>>(response).Max(x => x);
-                    var localVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                    release = remoteRelease.Version > localVersion ? remoteRelease : null;
+                    release = remoteRelease.Version > currentVersion ? remoteRelease : null;
                 }
                 catch (Exception ex)
                 {

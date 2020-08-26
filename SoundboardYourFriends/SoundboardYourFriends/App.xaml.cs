@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 
 namespace SoundboardYourFriends
@@ -21,7 +22,7 @@ namespace SoundboardYourFriends
             if (!e.Args.ToList().Contains("-u") && !IsDebug)
             {
                 // Close this application and run the updater first
-                Process.Start("update.exe");
+                Process.Start("update.exe", Assembly.GetExecutingAssembly().GetName().Version.ToString());
                 Environment.Exit(0);
             }
         }
