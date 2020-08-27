@@ -61,7 +61,7 @@
 
       <!--Executable-->
       <Component Id="ApplicationExecutable" Guid="C4EC9BB0-BE19-40AE-BF76-7FD0582A924D" Directory="INSTALLFOLDER">
-        <File Id="SoundboardYourFriends.exe" Source="$(var.SoundboardYourFriends.TargetDir)publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
+        <File Id="SoundboardYourFriends.exe" Source="$(var.SolutionDir)SoundboardYourFriends\bin\Release\netcoreapp3.1\publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
       </Component>
 
       <!--Updater-->
