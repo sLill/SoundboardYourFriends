@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Resources;
 
 namespace SoundboardYourFriends.Update
 {
@@ -11,26 +8,25 @@ namespace SoundboardYourFriends.Update
     {
         #region Member Variables..
         private static object _lockObject = new object();
-        private static bool _updatePending = false;
+        private static bool _updateInProgress = false;
         #endregion Member Variables..
 
         #region Main
         static void Main(string[] args)
         {
-            LogAgent.Open();
+            LoggingAgent.Open();
 
             try
             {
-                LogAgent.WriteLine("Checking for updates..");
-                UpdateAgent.UpdateComplete += OnUpdateComplete;
+                LoggingAgent.WriteLine("Checking for updates..");
 
                 string currentVersionParameter = args.FirstOrDefault() ?? "1.0.0.0";
                 Version currentVersion = new Version(currentVersionParameter);
 
                 var updateInformation = UpdateAgent.CheckForUpdatesAsync(currentVersion).Result;
-                _updatePending = updateInformation != null;
+                _updateInProgress = updateInformation != null;
 
-                if (_updatePending)
+                if (_updateInProgress)
                 {
                     // Close the application if it's already running
                     var process = Process.GetProcessesByName("SoundboardYourFriends");
@@ -41,7 +37,7 @@ namespace SoundboardYourFriends.Update
                 }
                 else
                 {
-                    LogAgent.WriteLine("No updates found.");
+                    LoggingAgent.WriteLine("No updates found.");
                     OnUpdateComplete(null, EventArgs.Empty);
                 }
             }
@@ -49,22 +45,22 @@ namespace SoundboardYourFriends.Update
             {
                 lock(_lockObject)
                 {
-                    _updatePending = false;
+                    _updateInProgress = false;
                 }
 
                 string message = $"{Environment.NewLine}Update failed: {ex.ToString()}";
-                LogAgent.WriteLine(message);
+                LoggingAgent.WriteLine(message);
             }
             finally
             {
                 // Suppress application startup until the update download completes
-                while (_updatePending)
+                while (_updateInProgress)
                 { }
 
                 // Start the main application
                 Process.Start("SoundboardYourFriends.exe", "-u");
 
-                LogAgent.Close();
+                LoggingAgent.Close();
                 Environment.Exit(0);
             }
         }
@@ -77,10 +73,12 @@ namespace SoundboardYourFriends.Update
         {
             UpdateAgent.UpdateComplete -= OnUpdateComplete;
 
-            LogAgent.WriteLine("Update complete.");
+            LoggingAgent.WriteLine("Update complete.");
+            LoggingAgent.WriteLine($"{Environment.NewLine}{Environment.NewLine}");
+
             lock(_lockObject)
             {
-                _updatePending = false;
+                _updateInProgress = false;
             }
         }
         #endregion OnUpdateComplete 

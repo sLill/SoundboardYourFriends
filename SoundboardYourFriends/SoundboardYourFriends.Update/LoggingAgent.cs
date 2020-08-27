@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SoundboardYourFriends.Update
 {
-    public static class LogAgent
+    public static class LoggingAgent
     {
         #region Member Variables..
         private static StreamWriter _logWriter = null;

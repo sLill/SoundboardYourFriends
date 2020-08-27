@@ -41,11 +41,11 @@ namespace SoundboardYourFriends.Update
                 {
                     if (ex.Message.Contains("rate limit exceeded"))
                     {
-                        LogAgent.WriteLine($"Github Api rate limit exceeded for this hour{Environment.NewLine}");
+                        LoggingAgent.WriteLine($"Github Api rate limit exceeded for this hour{Environment.NewLine}");
                     }
                     else
                     {
-                        LogAgent.WriteLine($"Could not retrieve release info{Environment.NewLine}");
+                        LoggingAgent.WriteLine($"Could not retrieve release info{Environment.NewLine}");
                         throw ex;
                     }
                 }
@@ -65,12 +65,12 @@ namespace SoundboardYourFriends.Update
                     webClient.DownloadProgressChanged += (sender, e) =>
                     {
                         double percentComplete = ((double)e.BytesReceived / (double)e.TotalBytesToReceive) * 100.0;
-                        LogAgent.Write($"\rDownload progress: {Math.Round(percentComplete, 1)}%");
+                        LoggingAgent.Write($"\rDownload progress: {Math.Round(percentComplete, 1)}%");
                     };
 
                     webClient.DownloadFileCompleted += (sender, e) =>
                     {
-                        LogAgent.WriteLine($"{Environment.NewLine}Download complete.");
+                        LoggingAgent.WriteLine($"{Environment.NewLine}Download complete.");
                         UpdateComplete?.Invoke(null, EventArgs.Empty);
                     };
 
@@ -81,7 +81,7 @@ namespace SoundboardYourFriends.Update
                 }
                 catch (Exception ex)
                 {
-                    LogAgent.WriteLine($"Could not update application.{Environment.NewLine}");
+                    LoggingAgent.WriteLine($"Could not update application.{Environment.NewLine}");
                     throw ex;
                 }
             }
