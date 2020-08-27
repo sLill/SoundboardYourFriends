@@ -56,7 +56,7 @@ namespace SoundboardYourFriends.Update
         #endregion CheckForUpdates
 
         #region UpdateApplicationAsync
-        public static void UpdateApplicationAsync(Release updateInformation)
+        public static void UpdateApplicationAsync(Release updateInformation, string localFilepath)
         {
             using (var webClient = new WebClient())
             {
@@ -75,7 +75,7 @@ namespace SoundboardYourFriends.Update
                     };
 
                     string executableDownloadUrl = updateInformation.Assets.First(asset => asset.Name.Contains("SoundboardYourFriends.exe")).BrowserDownloadUrl;
-                    string filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SoundboardYourFriends.exe");
+                    string filePath = Path.Combine(localFilepath);
 
                     webClient.DownloadFileAsync(new Uri(executableDownloadUrl), filePath);
                 }

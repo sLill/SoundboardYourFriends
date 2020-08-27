@@ -5,7 +5,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>update</AssemblyName>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
