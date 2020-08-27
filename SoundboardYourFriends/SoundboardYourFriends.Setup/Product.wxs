@@ -20,8 +20,8 @@
     <UIRef Id="WixUI_InstallDir"/>
 
     <!--Application Icon-->
-    <!--<Icon Id="AppIcon" SourceFile="$(var.SampleApp.ProjectDir)app.ico"/>
-    <Property Id="ARPPRODUCTION" Value="AppIcon"/>-->
+    <Icon Id="AppIcon" SourceFile="$(var.SolutionDir)SoundboardYourFriends/SoundboardYourFriendsIcon.ico"/>
+    <Property Id="ARPPRODUCTION" Value="AppIcon"/>
 
     <!--Custom Actions-->
     <Binary Id ="CustomActions" src="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.CA.dll"/>
