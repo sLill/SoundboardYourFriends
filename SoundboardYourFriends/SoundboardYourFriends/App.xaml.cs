@@ -19,12 +19,12 @@ namespace SoundboardYourFriends
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (!e.Args.ToList().Contains("-u") && !IsDebug)
-            {
-                // Close this application and run the updater first
-                Process.Start("update.exe", Assembly.GetExecutingAssembly().GetName().Version.ToString());
-                Environment.Exit(0);
-            }
+            //if (!e.Args.ToList().Contains("-u") && !IsDebug)
+            //{
+            //    // Close this application and run the updater first
+            //    Process.Start("update.exe", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            //    Environment.Exit(0);
+            //}
         }
     }
 }
