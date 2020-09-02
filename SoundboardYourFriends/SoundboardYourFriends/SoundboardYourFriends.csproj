@@ -6,8 +6,8 @@
     <UseWPF>true</UseWPF>
     <PackageLicenseFile>License.rtf</PackageLicenseFile>
     <ApplicationIcon>SoundboardYourFriendsIcon.ico</ApplicationIcon>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
     <PackageIcon>SoundboardYourFriendsIcon.ico</PackageIcon>
     <RepositoryUrl>https://github.com/sLill/SoundboardYourFriends</RepositoryUrl>
   </PropertyGroup>
