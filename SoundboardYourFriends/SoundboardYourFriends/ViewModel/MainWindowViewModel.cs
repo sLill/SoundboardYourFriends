@@ -432,7 +432,10 @@ namespace SoundboardYourFriends.ViewModel
             // File name
             if (Path.GetFileNameWithoutExtension(soundboardSample.FilePath) != soundboardSample.Name)
             {
-                string newFilePath = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, soundboardSample.GroupName, $"{soundboardSample.Name}.wav");
+                string targetDirectory = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, soundboardSample.GroupName);
+                string newFilePath = Path.Combine(targetDirectory, $"{soundboardSample.Name}.wav");
+
+                Directory.CreateDirectory(targetDirectory);
                 File.Move(soundboardSample.FilePath, newFilePath);
 
                 soundboardSample.FilePath = newFilePath;
