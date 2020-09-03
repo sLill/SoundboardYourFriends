@@ -194,32 +194,76 @@ namespace SoundboardYourFriends.Core
         #endregion StopAudioCapture
 
         #region TrimFile
-        public static void TrimFile(string filePath, double beginTime, double endTime)
+        //public static void TrimFile(string filePath, double beginTime, double endTime)
+        //{
+        //    byte[] audioInputBuffer;
+        //    using (var waveFileReader = new WaveFileReader(filePath))
+        //    {
+        //        //double beginTimeAsPercent = beginTime / GetFileAudioDuration(filePath).TotalSeconds;
+        //        //double endTimeAsPercent = endTime / GetFileAudioDuration(filePath).TotalSeconds;
+
+        //        ////var fileInfo = new FileInfo(filePath);
+
+        //        //int beginByteIndex = (int)(waveFileReader.Length * beginTimeAsPercent);
+        //        //int endByteIndex = (int)(waveFileReader.Length * endTimeAsPercent);
+
+        //        //// Round to the nearest block
+        //        //beginByteIndex = (int)((double)beginByteIndex / (double)waveFileReader.BlockAlign) * waveFileReader.BlockAlign;
+        //        //endByteIndex = (int)Math.Round((double)endByteIndex / (double)waveFileReader.BlockAlign, MidpointRounding.AwayFromZero) * waveFileReader.BlockAlign;
+
+        //        //// Pad end byte to avoid excess trimming
+        //        //endByteIndex = (int)(endByteIndex + waveFileReader.BlockAlign > waveFileReader.Length - 1 ? waveFileReader.Length - 1 : endByteIndex + waveFileReader.BlockAlign);
+
+        //        //audioInputBuffer = new byte[endByteIndex - beginByteIndex];
+        //        waveFileReader.CurrentTime = new TimeSpan(0,0,0,(int)beginTime * 1000);
+        //        waveFileReader.
+
+        //        waveFileReader.Seek(beginByteIndex, SeekOrigin.Begin);
+        //        waveFileReader.Read(audioInputBuffer, 0, audioInputBuffer.Length);
+        //    }
+
+        //    using (var waveFileWriter = new WaveFileWriter(filePath, WasapiLoopbackCapture.WaveFormat))
+        //    {
+        //        waveFileWriter.Write(audioInputBuffer, 0, audioInputBuffer.Length);
+        //    }
+        //}
+        #endregion TrimFile
+
+        #region TrimFile
+        public static void TrimFile(string filepath, TimeSpan beginTime, TimeSpan endTime)
         {
-            byte[] audioInputBuffer;
-            using (var waveFileReader = new WaveFileReader(filePath))
+
+            List<byte> inputBuffer = new List<byte>();
+            using (WaveFileReader reader = new WaveFileReader(filepath))
             {
-                double beginTimeAsPercent = beginTime / GetFileAudioDuration(filePath).TotalSeconds;
-                double endTimeAsPercent = endTime / GetFileAudioDuration(filePath).TotalSeconds;
+                using (WaveFileWriter writer = new WaveFileWriter(filepath, reader.WaveFormat))
+                {
+                    int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
 
-                var fileInfo = new FileInfo(filePath);
+                    int startByte = (int)beginTime.TotalMilliseconds * bytesPerMillisecond;
+                    startByte = startByte - startByte % reader.WaveFormat.BlockAlign;
 
-                int beginByteIndex = (int)(fileInfo.Length * beginTimeAsPercent);
-                int endByteIndex = (int)(fileInfo.Length * endTimeAsPercent);
+                    int endByte = (int)endTime.TotalMilliseconds * bytesPerMillisecond;
+                    endByte = endByte - endByte % reader.WaveFormat.BlockAlign;
 
-                // Round to the nearest block
-                beginByteIndex = (int)Math.Round((double)beginByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign;
-                endByteIndex = (int)Math.Round((double)endByteIndex / waveFileReader.BlockAlign) * waveFileReader.BlockAlign - 8;
+                    reader.Position = startByte;
+                    byte[] buffer = new byte[1024];
 
-                audioInputBuffer = new byte[endByteIndex - beginByteIndex];
+                    while (reader.Position < endByte)
+                    {
+                        int bytesRequired = (int)(endByte - reader.Position);
+                        if (bytesRequired > 0)
+                        {
+                            int bytesToRead = Math.Min(bytesRequired, buffer.Length);
+                            int bytesRead = reader.Read(buffer, 0, bytesToRead);
 
-                waveFileReader.Seek(beginByteIndex, SeekOrigin.Begin);
-                waveFileReader.Read(audioInputBuffer, 0, audioInputBuffer.Length);
-            }
-
-            using (var waveFileWriter = new WaveFileWriter(filePath, WasapiLoopbackCapture.WaveFormat))
-            {
-                waveFileWriter.Write(audioInputBuffer, 0, audioInputBuffer.Length);
+                            if (bytesRead > 0)
+                            {
+                                writer.Write(buffer, 0, bytesRead);
+                            }
+                        }
+                    }
+                }
             }
         }
         #endregion TrimFile

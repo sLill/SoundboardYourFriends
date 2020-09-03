@@ -421,7 +421,7 @@ namespace SoundboardYourFriends.ViewModel
             // File length
             if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
             {
-                AudioAgent.TrimFile(soundboardSample.FilePath, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+                AudioAgent.TrimFile(soundboardSample.FilePath, new TimeSpan(0, 0, (int)soundboardSample.FileTimeLowerValue), new TimeSpan(0, 0, (int)soundboardSample.FileTimeUpperValue));
 
                 soundboardSample.FileTimeMin = 0;
                 soundboardSample.FileTimeMax = AudioAgent.GetFileAudioDuration(soundboardSample.FilePath).Seconds;
