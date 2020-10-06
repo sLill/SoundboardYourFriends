@@ -13,10 +13,10 @@
 	- Right-click the VBCABLE Input device and select Properties
 	- Go to the Advanced tab and set the quality to match your headphone quality
 4. On the Recording tab
-	- <h4>Right-click your default microphone device</h4> 
+	- <b>Right-click your default microphone device</b> 
 	- Select properties and check the 'Listen to this device' box
 	- Under the 'Playback through this device' dropdown, select the VBCABLE device 
-	- <h4>Right-click the VBCABLE output device</h4>
+	- <b>Right-click the VBCABLE output device</b>
 	- Select Properties
 	- Go to the Advanced tab and set the quality to match your microphone quality (typically 1 Channel 44800/44100)
 5. Set VBCABLE as the input device in Steam/Discord etc.
