@@ -1,5 +1,5 @@
 # SoundboardYourFriends
-SoundboardYourFriends continuosly stores the last 20 seconds of user audio into a buffer in memory until the user presses the "Record" hotkey- In which case the entire buffer is written to a replayable audio file. <br/>
+SoundboardYourFriends continuosly stores the last 20 seconds of user audio into a buffer in memory until the user presses the Record hotkey <img src="https://i.imgur.com/clb0yUN.png" width="20"/> - In which case the entire buffer is written to a replayable audio file. <br/>
 
 Buffer size, file locations, hotkey modifiers and more can be changed in the application settings <img src="https://i.imgur.com/xFbGoPV.png" width="20"/>
 
