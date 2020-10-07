@@ -1,11 +1,11 @@
 # SoundboardYourFriends
-SoundboardYourFriends continuosly stores the last 20 seconds of user audio into a buffer in memory until the user presses the Record hotkey <img src="https://i.imgur.com/clb0yUN.png" width="20"/> - In which case the entire buffer is written to a replayable audio file. <br/>
+SoundboardYourFriends continuously stores the last 20 seconds of user audio into a audio buffer in memory. When the Record hotkey <img src="https://i.imgur.com/clb0yUN.png" width="18"/> is pressed, all audio within the buffer is written to a replayable audio file. <br/>
 
-Buffer size, file locations, hotkey modifiers and more can be changed in the application settings <img src="https://i.imgur.com/xFbGoPV.png" width="20"/>
+Buffer size, file locations, hotkey modifiers and more can be changed in the application settings <img src="https://i.imgur.com/xFbGoPV.png" width="18"/>
 
-The gray playback button <img src="https://i.imgur.com/MNAFpTI.png" width="20"/> indicates playback to local <b>Output Devices</b> to allow for playback/editing that other users cannot hear. (Only applies to output devices that were selected with the Local property checked)
+The gray playback button <img src="https://i.imgur.com/MNAFpTI.png" width="18"/> indicates playback to local <b>Output Devices</b> to allow for playback/editing that other users cannot hear. (Only applies to output devices that were selected with the Local property checked)
 
-The blue playback button <img src="https://i.imgur.com/MXLZi1N.png" width="20"/> indicates global playback to all <b>Output Devices</b>
+The blue playback button <img src="https://i.imgur.com/MXLZi1N.png" width="18"/> indicates global playback to all <b>Output Devices</b>
 
 <h2>TO INSTALL</h2>
 
