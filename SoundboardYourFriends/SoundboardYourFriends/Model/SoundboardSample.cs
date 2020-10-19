@@ -126,7 +126,7 @@ namespace SoundboardYourFriends.Model
         private string _hotkeyDisplay;
         public string HotkeyDisplay
         {
-            get { return $"{ApplicationConfiguration.GlobalKeyModifer} + {_hotkeyDisplay}"; }
+            get { return $"{ApplicationConfiguration.SampleKeyModifier} + {_hotkeyDisplay}"; }
             set
             {
                 _hotkeyDisplay = value;

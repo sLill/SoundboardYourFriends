@@ -9,26 +9,31 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Member Variables..
 
         #region Properties..
-        #region DeviceAverageBytesPerSecond
-        private int _deviceAverageBytesPerSecond = AudioAgent.WasapiLoopbackCapture?.WaveFormat.AverageBytesPerSecond ?? 0;
-        public int DeviceAverageBytesPerSecond
+        #region RecordKeyModifier
+        private KeyModifier _recordKeyModifier;
+        public KeyModifier RecordKeyModifier
         {
-            get { return _deviceAverageBytesPerSecond; }
-        }
-        #endregion DeviceAverageBytesPerSecond
-
-        #region GlobalKeyModifier
-        private KeyModifier _globalKeyModifier;
-        public KeyModifier GlobalKeyModifier
-        {
-            get { return _globalKeyModifier; }
+            get { return _recordKeyModifier; }
             set
             {
-                _globalKeyModifier = value;
+                _recordKeyModifier = value;
                 RaisePropertyChanged();
             }
         }
-        #endregion GlobalKeyModifier
+        #endregion RecordKeyModifier
+
+        #region SampleKeyModifier
+        private KeyModifier _sampleKeyModifier;
+        public KeyModifier SampleKeyModifier
+        {
+            get { return _sampleKeyModifier; }
+            set
+            {
+                _sampleKeyModifier = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion SampleKeyModifier
 
         #region SoundboardSampleDirectory
         private string _soundboardSampleDirectory;
@@ -55,6 +60,19 @@ namespace SoundboardYourFriends.ViewModel
             }
         }
         #endregion ByteSampleSize
+
+        #region SoundboardSampleSeconds
+        private int _soundboardSampleSeconds;
+        public int SoundboardSampleSeconds
+        {
+            get { return _soundboardSampleSeconds; }
+            set
+            {
+                _soundboardSampleSeconds = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion SoundboardSampleSeconds
         #endregion Properties..
 
         #region Constructors..
@@ -70,18 +88,20 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadApplicationSettings
         private void LoadApplicationSettings()
         {
-            GlobalKeyModifier = ApplicationConfiguration.GlobalKeyModifer;
+            RecordKeyModifier = ApplicationConfiguration.RecordKeyModifer;
+            SampleKeyModifier = ApplicationConfiguration.SampleKeyModifier;
             SoundboardSampleDirectory = ApplicationConfiguration.SoundboardSampleDirectory;
-            ByteSampleSize = ApplicationConfiguration.ByteSampleSize;
+            SoundboardSampleSeconds = ApplicationConfiguration.SoundboardSampleSeconds;
         }
         #endregion LoadApplicationSettings
 
         #region Save
         public void Save()
         {
-            ApplicationConfiguration.GlobalKeyModifer = GlobalKeyModifier;
+            ApplicationConfiguration.RecordKeyModifer = RecordKeyModifier;
+            ApplicationConfiguration.SampleKeyModifier = SampleKeyModifier;
             ApplicationConfiguration.SoundboardSampleDirectory = SoundboardSampleDirectory;
-            ApplicationConfiguration.ByteSampleSize = ByteSampleSize;
+            ApplicationConfiguration.SoundboardSampleSeconds = SoundboardSampleSeconds;
         }
         #endregion Save
         #endregion Methods..

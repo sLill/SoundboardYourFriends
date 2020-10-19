@@ -1,4 +1,7 @@
 ﻿using NAudio.Wave;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Core.Windows;
 using SoundboardYourFriends.Model;
 using System;
@@ -7,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Xps;
@@ -16,53 +20,62 @@ namespace SoundboardYourFriends
     public static class ApplicationConfiguration
     {
         #region Member Variables..
+        private const string CONFIG_FILEPATH = "config.json";
+
+        private const string RECORD_HOTKEY = "RECORD_HOTKEY";
+        private const string RECORD_HOTKEY_MODIFIER = "RECORD_HOTKEY_MODIFIER";   
+        private const string SAMPLE_DIRECTORY = "SAMPLE_DIRECTORY";
+        private const string SAMPLE_HOTKEY_MODIFIER = "SAMPLE_HOTKEY_MODIFIER";
+        private const string SAMPLE_LENGTH = "SAMPLE_LENGTH";
+        private const string AUDIO_CAPTURE_DEVICES = "AUDIO_CAPTURE_DEVICES";
+        private const string AUDIO_OUTPUT_DEVICES = "AUDIO_OUTPUT_DEVICES";
         #endregion Member Variables..
 
         #region Properties..
-        #region ByteSampleSize
-        private static int _byteSampleSize;
-        public static int ByteSampleSize
+        #region SoundboardSampleSeconds
+        private static int _soundboardSampleSeconds = 20;
+        public static int SoundboardSampleSeconds
         {
-            get { return _byteSampleSize; }
-            set { _byteSampleSize = value; }
+            get { return _soundboardSampleSeconds; }
+            set { _soundboardSampleSeconds = value; }
         }
-        #endregion ByteSampleSize
+        #endregion SoundboardSampleSeconds
 
-        #region DefaultCaptureDeviceIds
-        private static IEnumerable<Guid> _defaultCaptureDeviceIds;
-        public static IEnumerable<Guid> DefaultCaptureDeviceIds
+        #region AudioCaptureDevices
+        private static IEnumerable<AudioCaptureDevice> _audioCaptureDevices;
+        public static IEnumerable<AudioCaptureDevice> AudioCaptureDevices
         {
-            get { return _defaultCaptureDeviceIds; }
-            set { _defaultCaptureDeviceIds = value; }
+            get { return _audioCaptureDevices; }
+            set { _audioCaptureDevices = value; }
         }
-        #endregion DefaultCaptureDeviceIds
+        #endregion AudioCaptureDevices
 
-        #region DefaultOutputDeviceIds
-        private static IEnumerable<Guid> _defaultOutputDeviceIds;
-        public static IEnumerable<Guid> DefaultOutputDeviceIds
+        #region AudioOutputDevices
+        private static IEnumerable<AudioOutputDevice> _audioOutputDevices;
+        public static IEnumerable<AudioOutputDevice> AudioOutputDevices
         {
-            get { return _defaultOutputDeviceIds; }
-            set { _defaultOutputDeviceIds = value; }
+            get { return _audioOutputDevices; }
+            set { _audioOutputDevices = value; }
         }
-        #endregion DefaultOutputDeviceIds
+        #endregion AudioOutputDevices
 
-        #region OutputDevicePlaybackTypeCollection
-        private static Dictionary<Guid, PlaybackType> _outputDevicePlaybackCollection;
-        public static Dictionary<Guid, PlaybackType> OutputDevicePlaybackTypeCollection 
+        #region RecordKeyModifer
+        private static KeyModifier _recordKeyModifier = KeyModifier.None;
+        public static KeyModifier RecordKeyModifer
         {
-            get { return _outputDevicePlaybackCollection; }
-            set { _outputDevicePlaybackCollection = value; }
+            get { return _recordKeyModifier; }
+            set { _recordKeyModifier = value; }
         }
-        #endregion OutputDevicePlaybackTypeCollection
+        #endregion RecordKeyModifer
 
-        #region GlobalKeyModifer
-        private static KeyModifier _globalKeyModifier = KeyModifier.None;
-        public static KeyModifier GlobalKeyModifer
+        #region SampleKeyModifier
+        private static KeyModifier _sampleKeyModifier = KeyModifier.None;
+        public static KeyModifier SampleKeyModifier
         {
-            get { return _globalKeyModifier; }
-            set { _globalKeyModifier = value; }
+            get { return _sampleKeyModifier; }
+            set { _sampleKeyModifier = value; }
         }
-        #endregion GlobalKeyModifer
+        #endregion SampleKeyModifier
 
         #region RecordHotkey
         private static Key _recordHotkey = Key.None;
@@ -74,7 +87,7 @@ namespace SoundboardYourFriends
         #endregion RecordHotkey
 
         #region SoundboardSampleDirectory
-        private static string _soundboardSampleDirectory;
+        private static string _soundboardSampleDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples");
         public static string SoundboardSampleDirectory
         {
             get { return _soundboardSampleDirectory; }
@@ -97,102 +110,140 @@ namespace SoundboardYourFriends
         #endregion Constructors..
 
         #region Methods..
-        #region GetSoundboardSampleDirectory
-        private static string GetSoundboardSampleDirectory()
-        {
-            string soundboardSampleDirectory = string.IsNullOrEmpty(Properties.Settings.Default.SoundboardSampleDirectory)
-                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"SoundboardYourFriendsAudioSamples")
-                : Properties.Settings.Default.SoundboardSampleDirectory;
-
-            return soundboardSampleDirectory;
-        }
-        #endregion GetSoundboardSampleDirectory
-
         #region ImportUserSettings
         public static void ImportUserSettings()
         {
-            // Audio Capture DeviceIds
-            DefaultCaptureDeviceIds = new List<Guid>();
-            Properties.Settings.Default.CaptureDeviceIds?.Cast<string>().ToList().ForEach(captureDeviceIdString =>
+            if (File.Exists(CONFIG_FILEPATH))
             {
-                ((List<Guid>)DefaultCaptureDeviceIds).Add(Guid.Parse(captureDeviceIdString));
-            });
+                //JObject jsonObject = JObject.Parse(File.ReadAllText(CONFIG_FILEPATH));
 
-            // Audio Output DeviceIds
-            DefaultOutputDeviceIds = new List<Guid>();
-            Properties.Settings.Default.OutputDeviceIds?.Cast<string>().ToList().ForEach(outputDeviceIdString =>
-            {
-                ((List<Guid>)DefaultOutputDeviceIds).Add(Guid.Parse(outputDeviceIdString));
-            });
+                //// Audio Capture Devices
+                //AudioCaptureDevices = new List<CaptureDevice>();
+                //Properties.Settings.Default.CaptureDeviceIds?.Cast<string>().ToList().ForEach(captureDeviceIdString =>
+                //{
+                //    ((List<Guid>)AudioCaptureDevices).Add(Guid.Parse(captureDeviceIdString));
+                //});
 
-            // Soundboard Sample Directory
-            SoundboardSampleDirectory = GetSoundboardSampleDirectory();
+                //// Audio Output Devices
+                //AudioOutputDevices = new List<OutputDevice>();
+                //Properties.Settings.Default.OutputDeviceIds?.Cast<string>().ToList().ForEach(outputDeviceIdString =>
+                //{
+                //    ((List<Guid>)AudioOutputDevices).Add(Guid.Parse(outputDeviceIdString));
+                //});
 
-            // Record Hotkey
-            Enum.TryParse(typeof(Key), Properties.Settings.Default.RecordHotKey, out object hotkey);
-            hotkey = hotkey ?? Key.None;
-            RecordHotkey = (Key)hotkey;
+                //// Soundboard Sample Directory
+                //SoundboardSampleDirectory = Properties.Settings.Default.SoundboardSampleDirectory;
 
-            // Global Key Modifier
-            Enum.TryParse(typeof(KeyModifier), Properties.Settings.Default.GlobalKeyModifier, out object keyModifer);
-            keyModifer = keyModifer ?? KeyModifier.None;
-            GlobalKeyModifer = (KeyModifier)keyModifer;
+                //// Record Hotkey
+                //Enum.TryParse(typeof(Key), Properties.Settings.Default.RecordHotKey, out object hotkey);
+                //hotkey = hotkey ?? Key.None;
+                //RecordHotkey = (Key)hotkey;
 
-            // Byte sample size
-            ByteSampleSize = Properties.Settings.Default.ByteSampleSize;
+                //// Global Key Modifier
+                //Enum.TryParse(typeof(KeyModifier), Properties.Settings.Default.GlobalKeyModifier, out object keyModifer);
+                //keyModifer = keyModifer ?? KeyModifier.None;
+                //RecordKeyModifer = (KeyModifier)keyModifer;
 
-            // Output device playback type
-            OutputDevicePlaybackTypeCollection = new Dictionary<Guid, PlaybackType>();
-            Properties.Settings.Default.OutputDevicePlaybackTypeCollection?.Cast<string>().ToList().ForEach(outputDevicePlaybackType =>
-            {
-                try
-                {
-                    Guid deviceId = Guid.Parse(outputDevicePlaybackType.Split(',')[0]);
-                    PlaybackType playbackType = (PlaybackType)Enum.Parse(typeof(PlaybackType), outputDevicePlaybackType.Split(',')[1]);
-                    OutputDevicePlaybackTypeCollection[deviceId] = playbackType;
-                }
-                catch { }
-            });
+                //// Soundboard sample size (seconds)
+                ////SoundboardSampleSeconds = Properties.Settings.Default.;
+
+                //// Output device playback type
+                //OutputDevicePlaybackTypeCollection = new Dictionary<Guid, PlaybackScope>();
+                //Properties.Settings.Default.OutputDevicePlaybackTypeCollection?.Cast<string>().ToList().ForEach(outputDevicePlaybackType =>
+                //{
+                //    try
+                //    {
+                //        Guid deviceId = Guid.Parse(outputDevicePlaybackType.Split(',')[0]);
+                //        PlaybackScope playbackType = (PlaybackScope)Enum.Parse(typeof(PlaybackScope), outputDevicePlaybackType.Split(',')[1]);
+                //        OutputDevicePlaybackTypeCollection[deviceId] = playbackType;
+                //    }
+                //    catch { }
+                //});
+            }
         }
         #endregion ImportUserSettings
 
         #region SaveUserSettings
         public static void SaveUserSettings()
         {
-            // Audio Capture DeviceIds
-            Properties.Settings.Default.CaptureDeviceIds = new StringCollection();
-            DefaultCaptureDeviceIds.ToList().ForEach(captureDeviceId =>
+            using (var streamWriter = new StreamWriter(CONFIG_FILEPATH))
+            using (var jsonWriter = new JsonTextWriter(streamWriter))
             {
-                Properties.Settings.Default.CaptureDeviceIds.Add(captureDeviceId.ToString());
-            });
+                try
+                {
+                    jsonWriter.CloseOutput = true;
+                    jsonWriter.AutoCompleteOnClose = true;
 
-            // Audio Output DeviceIds
-            Properties.Settings.Default.OutputDeviceIds = new StringCollection();
-            DefaultOutputDeviceIds.ToList().ForEach(outputDeviceId =>
-            {
-                Properties.Settings.Default.OutputDeviceIds.Add(outputDeviceId.ToString());
-            });
+                    // StartOfFile
+                    jsonWriter.WriteStartObject();
 
-            // Soundboard Sample Directory
-            Properties.Settings.Default.SoundboardSampleDirectory = SoundboardSampleDirectory;
+                    // Record Hotkey
+                    jsonWriter.WritePropertyName(RECORD_HOTKEY);
+                    jsonWriter.WriteValue(RecordHotkey);
 
-            // Record Hotkey
-            Properties.Settings.Default.RecordHotKey = RecordHotkey.ToString();
+                    // Record Hotkey Modifier
+                    jsonWriter.WritePropertyName(RECORD_HOTKEY_MODIFIER);
+                    jsonWriter.WriteValue(RecordKeyModifer);
 
-            // Global modifier
-            Properties.Settings.Default.GlobalKeyModifier = GlobalKeyModifer.ToString();
+                    // Soundboard Sample Directory
+                    jsonWriter.WritePropertyName(SAMPLE_DIRECTORY);
+                    jsonWriter.WriteValue(SoundboardSampleDirectory);
 
-            // Byte sample size
-            Properties.Settings.Default.ByteSampleSize = ByteSampleSize;
+                    // Soundboard Sample Key Modifier
+                    jsonWriter.WritePropertyName(SAMPLE_HOTKEY_MODIFIER);
+                    jsonWriter.WriteValue(SampleKeyModifier);
 
-            // Output device playback settings
-            Properties.Settings.Default.OutputDevicePlaybackTypeCollection = new StringCollection();
-            OutputDevicePlaybackTypeCollection.Cast<KeyValuePair<Guid, PlaybackType>>().ToList().ForEach(outputDevicePlaybackType =>
-            {
-                Properties.Settings.Default.OutputDevicePlaybackTypeCollection.Add(string.Join(",", outputDevicePlaybackType.Key.ToString(), outputDevicePlaybackType.Value.ToString()));
-            });
+                    // Soundboard Sample Length (Seconds)
+                    jsonWriter.WritePropertyName(SAMPLE_LENGTH);
+                    jsonWriter.WriteValue(SoundboardSampleSeconds);
 
-            Properties.Settings.Default.Save();
+                    // Audio Capture Devices
+                    jsonWriter.WritePropertyName(AUDIO_CAPTURE_DEVICES);
+                    jsonWriter.WriteStartArray();
+                    
+                    AudioCaptureDevices.ToList().ForEach(captureDevice =>
+                    {
+                        jsonWriter.WriteStartObject();
+                        
+                        // Device Id
+                        jsonWriter.WritePropertyName("DEVICE_ID");
+                        jsonWriter.WriteValue(captureDevice.DeviceId);
+                        
+                        jsonWriter.WriteEndObject();
+                    });
+
+                    jsonWriter.WriteEndArray();
+
+                    // Audio Output Devices
+                    jsonWriter.WritePropertyName(AUDIO_OUTPUT_DEVICES);
+                    jsonWriter.WriteStartArray();
+
+                    AudioOutputDevices.ToList().ForEach(outputDevice =>
+                    {
+                        jsonWriter.WriteStartObject();
+                        
+                        // Device Id
+                        jsonWriter.WritePropertyName("DEVICE_ID");
+                        jsonWriter.WriteValue(outputDevice.DeviceId);
+
+                        // Playback Scope
+                        jsonWriter.WritePropertyName("PLAYBACK_SCOPE");
+                        jsonWriter.WriteValue(outputDevice.PlaybackScope);
+
+                        jsonWriter.WriteEndObject();
+                    });
+
+                    jsonWriter.WriteEndArray();
+
+                    // EndOfFile
+                    jsonWriter.WriteEndObject();
+                }
+                catch { }
+                finally
+                {
+                    jsonWriter.Close();
+                }
+            }
         }
         #endregion SaveUserSettings
         #endregion Methods..

@@ -25,7 +25,7 @@
             <RowDefinition Height="26"/>
             <RowDefinition Height="26"/>
             <RowDefinition Height="26"/>
-            <RowDefinition Height="46"/>
+            <RowDefinition Height="26"/>
             <RowDefinition Height="22"/>
             <RowDefinition Height="26*"/>
             <RowDefinition Height="8"/>
@@ -61,8 +61,8 @@
                 <TextBlock FontSize="11" VerticalAlignment="Center" Text="Record Hotkey Modifier"/>
             </Label>
         </DockPanel>
-        <DockPanel Grid.Row="3" Grid.Column="2" Width="200" Margin="5,0,0,0" HorizontalAlignment="Left">
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,2,0,2" FontSize="11" SelectedValue="{Binding GlobalKeyModifier}" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
+        <DockPanel Grid.Row="3" Grid.Column="2" Width="200" Margin="4,0,0,0" HorizontalAlignment="Left">
+            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,2,0,2" FontSize="11" SelectedValue="{Binding RecordKeyModifier}" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
         </DockPanel>
 
         <!--Row 4-->
@@ -71,31 +71,32 @@
                 <TextBlock FontSize="11" VerticalAlignment="Center" Text="Playback Hotkey Modifier"/>
             </Label>
         </DockPanel>
+        <DockPanel Grid.Row="4" Grid.Column="2" Width="200" Margin="4,0,0,0" HorizontalAlignment="Left">
+            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,2,0,2" FontSize="11" SelectedValue="{Binding SampleKeyModifier}" ItemsSource="{Binding Source={StaticResource KeyModifierEnum}}"/>
+        </DockPanel>
 
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1">
             <Label HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Sample Size"/>
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Sample Size (Seconds)"/>
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="5" Grid.Column="2" Margin="5,0,0,0">
-            <TextBox FontSize="11" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding ByteSampleSize}"/>
-            <Label HorizontalAlignment="Left" Margin="1,0,0,0" VerticalAlignment="Center">
-                <TextBlock FontSize="11" VerticalAlignment="Center" Text="bytes"/>
+            <TextBox FontSize="11" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding SoundboardSampleSeconds}"/>
+        </DockPanel>
+
+        <!--Row 6-->
+        <DockPanel Grid.Row="6" Grid.Column="1">
+            <Label HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Sample Size (bytes)"/>
             </Label>
         </DockPanel>
+        <DockPanel Grid.Row="6" Grid.Column="2" Margin="5,0,0,0">
+            <TextBox FontSize="11" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding ByteSampleSize}" IsEnabled="False"/>
+        </DockPanel>
         
-        <!--Row 6-->
-        <DockPanel Grid.Row="6" Grid.Column="2" Margin="0,-5,0,0">
-            <Label HorizontalAlignment="Left" Margin="0" Width="auto">
-                <TextBlock FontSize="11"  Text="Your current capturing device averages"/>
-            </Label>
-            <Label HorizontalAlignment="Left" Margin="-2,0,-2,0" Width="auto">
-                    <TextBlock FontSize="11" FontWeight="Bold" Text="{Binding DeviceAverageBytesPerSecond}"/>
-                </Label>
-                <Label HorizontalAlignment="Left" Margin="0" Width="auto">
-                    <TextBlock FontSize="11" Text="bytes/second"/>
-                </Label>
+        <!--Row 7-->
+        <DockPanel Grid.Row="7" Grid.Column="2" Margin="0,-5,0,0">
         </DockPanel>
 
         <!--Row 8-->

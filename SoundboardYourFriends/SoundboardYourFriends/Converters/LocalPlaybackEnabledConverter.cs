@@ -10,12 +10,12 @@ namespace SoundboardYourFriends.Converters
         #region Methods..
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (PlaybackType)value == PlaybackType.Local;
+            return (PlaybackScope)value == PlaybackScope.Local;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? PlaybackType.Local : PlaybackType.Global;
+            return (bool)value ? PlaybackScope.Local : PlaybackScope.Global;
         }
         #endregion Methods..
     }

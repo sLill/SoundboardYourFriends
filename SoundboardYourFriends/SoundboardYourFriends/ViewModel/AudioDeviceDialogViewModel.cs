@@ -9,12 +9,12 @@ namespace SoundboardYourFriends.ViewModel
     public class AudioDeviceDialogViewModel : ObservableObject
     {
         #region Member Variables..
-        private ObservableCollection<AudioDevice> _audioDevices;
+        private ObservableCollection<AudioDeviceBase> _audioDevices;
         #endregion Member Variables..
 
         #region Properties..
         #region AudioDevices
-        public ObservableCollection<AudioDevice> AudioDevices
+        public ObservableCollection<AudioDeviceBase> AudioDevices
         {
             get { return _audioDevices; }
             private set
@@ -35,7 +35,7 @@ namespace SoundboardYourFriends.ViewModel
         public AudioDeviceDialogViewModel(AudioDeviceType audioDeviceType)
         {
             AudioDeviceType = audioDeviceType;
-            AudioDevices = new ObservableCollection<AudioDevice>(AudioAgent.GetWindowsAudioDevices());
+            AudioDevices = new ObservableCollection<AudioDeviceBase>(AudioAgent.GetWindowsAudioDevices());
         }
         #endregion AudioDeviceDialogViewModel
         #endregion Constructors..

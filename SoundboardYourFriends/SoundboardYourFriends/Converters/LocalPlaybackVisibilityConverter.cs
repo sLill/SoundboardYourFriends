@@ -10,7 +10,7 @@ namespace SoundboardYourFriends.Converters
         #region Methods..
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (PlaybackType)value >= PlaybackType.Local ? Visibility.Visible : Visibility.Hidden;
+            return (PlaybackScope)value >= PlaybackScope.Local ? Visibility.Visible : Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

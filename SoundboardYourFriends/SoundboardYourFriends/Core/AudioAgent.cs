@@ -44,7 +44,7 @@ namespace SoundboardYourFriends.Core
         #endregion Event Handlers..
 
         #region BeginAudioPlayback
-        public static void BeginAudioPlayback(string filePath, AudioDevice audioDevice, double beginTime, double endTime)
+        public static void BeginAudioPlayback(string filePath, AudioOutputDevice audioOutputDevice, double beginTime, double endTime)
         {
             AudioFileReader audioFileReader = new AudioFileReader(filePath);
             MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
@@ -58,8 +58,8 @@ namespace SoundboardYourFriends.Core
 
             mixer.AddMixerInput(offsetSampleProvider);
 
-            audioDevice.InitializeAndPlay(mixer);
-            audioDevice.PlaybackStopped += (sender, e) =>
+            audioOutputDevice.InitializeAndPlay(mixer);
+            audioOutputDevice.PlaybackStopped += (sender, e) =>
             {
                 //audioFileReader.Close();
                 audioFileReader.Dispose();
@@ -68,7 +68,7 @@ namespace SoundboardYourFriends.Core
         #endregion BeginAudioPlayback
 
         #region BeginAudioCapture
-        public static void BeginAudioCapture(AudioDevice audioDevice)
+        public static void BeginAudioCapture(AudioCaptureDevice audioCaptureDevice)
         {
             StopAudioCapture();
 
@@ -76,15 +76,18 @@ namespace SoundboardYourFriends.Core
             // Larger multiplier also means dumping and copying to a new parent buffer less frequently at the cost of using a larger chunk of virtual memory
             // ex. If multiplier is 4, the audio buffer for a single soundboard sample will takeup 25% of the larger buffer
             int audioBufferMultiplier = 5;
-            int audioBufferMax = ApplicationConfiguration.ByteSampleSize * audioBufferMultiplier;
 
-            WasapiLoopbackCapture = new WasapiLoopbackCapture(audioDevice.MMDeviceInstance);
+            WasapiLoopbackCapture = new WasapiLoopbackCapture(audioCaptureDevice.MMDeviceInstance);
+
+            int audioSampleSize = ApplicationConfiguration.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
+            int audioBufferMax = audioSampleSize * audioBufferMultiplier;
+
             WasapiLoopbackCapture.DataAvailable += (sender, e) =>
             {
                     // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
                     if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
                 {
-                    List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize);
+                    List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize);
                     _audioByteBuffer.Clear();
                     _audioByteBuffer.AddRange(retainedBytes);
                 }
@@ -129,9 +132,9 @@ namespace SoundboardYourFriends.Core
         #endregion GetFileAudioDuration
 
         #region GetWindowsAudioDevices
-        public static IEnumerable<AudioDevice> GetWindowsAudioDevices()
+        public static IEnumerable<AudioDeviceBase> GetWindowsAudioDevices()
         {
-            var audioDevices = new List<AudioDevice>();
+            var audioDevices = new List<AudioDeviceBase>();
 
             Dictionary<Guid, MMDevice> systemMMDeviceCollection = new Dictionary<Guid, MMDevice>();
             using (var deviceEnumerator = new MMDeviceEnumerator())
@@ -156,7 +159,7 @@ namespace SoundboardYourFriends.Core
             {
                 var mmDeviceInstance = systemMMDeviceCollection.ContainsKey(audioDevice.DriverGuid) ? systemMMDeviceCollection[audioDevice.DriverGuid] : null;
 
-                audioDevices.Add(new AudioDevice(audioDevice.DriverGuid)
+                audioDevices.Add(new AudioDeviceBase(audioDevice.DriverGuid)
                 {
                     FriendlyName = audioDevice.Description,
                     MMDeviceInstance = mmDeviceInstance,
@@ -169,7 +172,7 @@ namespace SoundboardYourFriends.Core
         #endregion GetWindowsAudioDevices
 
         #region StopAudioPlayback
-        public static void StopAudioPlayback(List<AudioDevice> audioDeviceCollection)
+        public static void StopAudioPlayback(List<AudioOutputDevice> audioDeviceCollection)
         {
             audioDeviceCollection.ForEach(audioDevice =>
             {
@@ -251,7 +254,8 @@ namespace SoundboardYourFriends.Core
 
                 using (WaveFileWriter waveFileWriter = new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
                 {
-                    var bytesToWrite = ApplicationConfiguration.ByteSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - ApplicationConfiguration.ByteSampleSize, ApplicationConfiguration.ByteSampleSize).ToArray();
+                    int audioSampleSize = ApplicationConfiguration.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
+                    var bytesToWrite = audioSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize).ToArray();
                     waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);
                 }
 

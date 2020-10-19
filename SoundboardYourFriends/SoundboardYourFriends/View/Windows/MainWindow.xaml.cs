@@ -98,7 +98,7 @@ namespace SoundboardYourFriends.View.Windows
         private void btnPlayButtonGlobal_Click(object sender, EventArgs e)
         {
             var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
-            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackType.Global);
+            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackScope.Global);
         }
         #endregion btnPlayButtonGlobal_Clicked
 
@@ -106,7 +106,7 @@ namespace SoundboardYourFriends.View.Windows
         private void btnPlayButtonLocal_Click(object sender, EventArgs e)
         {
             var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
-            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackType.Local);
+            _mainWindowViewModel.PlayAudioSample(soundboardSample, PlaybackScope.Local);
         }
         #endregion btnPlayButtonLocal_Clicked
 
