@@ -58,7 +58,6 @@ namespace SoundboardYourFriends.ViewModel
             set
             {
                 _selectedCaptureDevicesCollection = value;
-                ApplicationConfiguration.AudioCaptureDevices = value.Select(x => x.DeviceId);
                 BeginAudioCapture();
                 
                 RaisePropertyChanged();
@@ -74,8 +73,7 @@ namespace SoundboardYourFriends.ViewModel
             set
             {
                 _selectedOutputDevicesCollection = value;
-                ApplicationConfiguration.AudioOutputDevices = value.Select(x => x.DeviceId);
-                ApplicationConfiguration.OutputDevicePlaybackTypeCollection = value.ToDictionary(x => x.DeviceId, x => x.PlaybackType);
+                ApplicationConfiguration.AudioOutputDevices = value;
 
                 RaisePropertyChanged();
             }
@@ -287,18 +285,18 @@ namespace SoundboardYourFriends.ViewModel
             if (ApplicationConfiguration.AudioCaptureDevices.Any())
             {
                 var activeCaptureDevices = from activeDevice in ActiveAudioDevices
-                                           join audioDeviceId in ApplicationConfiguration.AudioCaptureDevices
+                                           join audioDeviceId in ApplicationConfiguration.AudioCaptureDevices.Select(x => x.DeviceId)
                                               on activeDevice.DeviceId equals audioDeviceId
                                            select activeDevice;
 
-                SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(activeCaptureDevices);
+                SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>((IEnumerable<AudioCaptureDevice>)activeCaptureDevices);
             }
 
             // Output Devices
             if (ApplicationConfiguration.AudioOutputDevices.Any())
             {
                 var activeOutputDevices = from activeDevice in ActiveAudioDevices
-                                          join audioDeviceId in ApplicationConfiguration.AudioOutputDevices
+                                          join audioDeviceId in ApplicationConfiguration.AudioOutputDevices.Select(x => x.DeviceId)
                                              on activeDevice.DeviceId equals audioDeviceId
                                           select activeDevice;
 
@@ -311,7 +309,7 @@ namespace SoundboardYourFriends.ViewModel
                     catch { }
                 });
 
-                SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(activeOutputDevices);
+                SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(IEnumerable<AudioOutputDevice>)activeOutputDevices);
             }
         }
         #endregion LoadAudioDevices
