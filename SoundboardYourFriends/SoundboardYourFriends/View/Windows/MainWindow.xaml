@@ -109,7 +109,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Margin="0">
-                                        <Image VerticalAlignment="Center" Source="/Resources/LocalAudioIndicator.png" Height="10" Width="10"  Visibility="{Binding PlaybackType, Converter={StaticResource LocalPlaybackVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
+                                        <Image VerticalAlignment="Center" Source="/Resources/LocalAudioIndicator.png" Height="10" Width="10"  Visibility="{Binding PlaybackScope, Converter={StaticResource LocalPlaybackVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -118,7 +118,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Margin="-13,0,0,0">
-                                        <Image VerticalAlignment="Center" Source="/Resources/GlobalAudioIndicator.png" Height="10" Width="10" Visibility="{Binding PlaybackType, Converter={StaticResource GlobalPlaybackVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
+                                        <Image VerticalAlignment="Center" Source="/Resources/GlobalAudioIndicator.png" Height="10" Width="10" Visibility="{Binding PlaybackScope, Converter={StaticResource GlobalPlaybackVisibilityConverter}}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}" />
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

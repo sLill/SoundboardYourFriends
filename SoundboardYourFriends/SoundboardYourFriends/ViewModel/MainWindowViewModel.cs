@@ -41,7 +41,7 @@ namespace SoundboardYourFriends.ViewModel
         private string _recordHotKeyDisplay = "Unassigned";
         public string RecordHotkeyDisplay
         {
-            get { return $"{ApplicationConfiguration.RecordKeyModifer} + {_recordHotKeyDisplay}"; }
+            get { return $"{ApplicationConfiguration.Instance.RecordKeyModifer} + {_recordHotKeyDisplay}"; }
             set
             {
                 _recordHotKeyDisplay = value;
@@ -58,8 +58,9 @@ namespace SoundboardYourFriends.ViewModel
             set
             {
                 _selectedCaptureDevicesCollection = value;
+                ApplicationConfiguration.Instance.AudioCaptureDevices = value;
+                
                 BeginAudioCapture();
-
                 RaisePropertyChanged();
             }
         }
@@ -73,7 +74,7 @@ namespace SoundboardYourFriends.ViewModel
             set
             {
                 _selectedOutputDevicesCollection = value;
-                ApplicationConfiguration.AudioOutputDevices = value;
+                ApplicationConfiguration.Instance.AudioOutputDevices = value;
 
                 RaisePropertyChanged();
             }
@@ -176,7 +177,7 @@ namespace SoundboardYourFriends.ViewModel
             AudioAgent.StopAudioCapture();
             UnregisterHotKeysAndHooks();
 
-            ApplicationConfiguration.RecordHotkey = RecordHotkey.Value;
+            ApplicationConfiguration.Instance.RecordHotkey = RecordHotkey.Value;
             SoundboardSampleCollection.ToList().ForEach(x => x.SaveMetadataProperties());
         }
         #endregion OnWindowClosing
@@ -268,7 +269,7 @@ namespace SoundboardYourFriends.ViewModel
         #region Initialize
         public void Initialize()
         {
-            ApplicationConfiguration.ImportUserSettings();
+            ApplicationConfiguration.Instance.ImportUserSettings();
 
             LoadAudioSamples();
             LoadConfig();
@@ -282,25 +283,25 @@ namespace SoundboardYourFriends.ViewModel
             var ActiveAudioDevices = AudioAgent.GetWindowsAudioDevices().ToList();
 
             // Capture Devices
-            if (ApplicationConfiguration.AudioCaptureDevices?.Any() ?? false)
+            if (ApplicationConfiguration.Instance.AudioCaptureDevices?.Any() ?? false)
             {
                 var activeCaptureDevices = from activeDevice in ActiveAudioDevices
-                                           join audioDeviceId in ApplicationConfiguration.AudioCaptureDevices.Select(x => x.DeviceId)
+                                           join audioDeviceId in ApplicationConfiguration.Instance.AudioCaptureDevices.Select(x => x.DeviceId)
                                               on activeDevice.DeviceId equals audioDeviceId
-                                           select activeDevice;
+                                           select new AudioCaptureDevice(activeDevice);
 
-                SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>((IEnumerable<AudioCaptureDevice>)activeCaptureDevices);
+                SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(activeCaptureDevices);
             }
 
             // Output Devices
-            if (ApplicationConfiguration.AudioOutputDevices?.Any() ?? false)
+            if (ApplicationConfiguration.Instance.AudioOutputDevices?.Any() ?? false)
             {
-                var activeOutputDevices = from activeDevice in ActiveAudioDevices
-                                          join audioDeviceId in ApplicationConfiguration.AudioOutputDevices.Select(x => x.DeviceId)
+                var activeOutputDevices = (from activeDevice in ActiveAudioDevices
+                                          join audioDeviceId in ApplicationConfiguration.Instance.AudioOutputDevices.Select(x => x.DeviceId)
                                              on activeDevice.DeviceId equals audioDeviceId
-                                          select activeDevice;
+                                          select new AudioOutputDevice(activeDevice));
 
-                SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>((IEnumerable<AudioOutputDevice>)activeOutputDevices);
+                SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(activeOutputDevices);
             }
         }
         #endregion LoadAudioDevices
@@ -308,11 +309,11 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadAudioSamples
         public void LoadAudioSamples()
         {
-            if (Directory.Exists(ApplicationConfiguration.SoundboardSampleDirectory))
+            if (Directory.Exists(ApplicationConfiguration.Instance.SoundboardSampleDirectory))
             {
-                foreach (string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
+                foreach (string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.Instance.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
                 {
-                    string relativePath = Path.GetRelativePath(ApplicationConfiguration.SoundboardSampleDirectory, audioSamplePath);
+                    string relativePath = Path.GetRelativePath(ApplicationConfiguration.Instance.SoundboardSampleDirectory, audioSamplePath);
                     string[] directorySplit = relativePath.Split('\\');
                     double totalSeconds = AudioAgent.GetFileAudioDuration(audioSamplePath).TotalSeconds;
 
@@ -364,9 +365,9 @@ namespace SoundboardYourFriends.ViewModel
         #region RegisterHotKeysAndHooks
         public void RegisterHotKeysAndHooks()
         {
-            if (RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey))
+            if (RegisterRecordHotKey(ApplicationConfiguration.Instance.RecordHotkey))
             {
-                RecordHotkey = ApplicationConfiguration.RecordHotkey;
+                RecordHotkey = ApplicationConfiguration.Instance.RecordHotkey;
             }
 
             SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
@@ -386,7 +387,7 @@ namespace SoundboardYourFriends.ViewModel
         #region RegisterSoundboardSampleHotKey
         public void RegisterSoundboardSampleHotKey(Key key, int keyId)
         {
-            WindowsApi.RegisterHotKey(WindowHandle, key, keyId, ApplicationConfiguration.SampleKeyModifier);
+            WindowsApi.RegisterHotKey(WindowHandle, key, keyId, ApplicationConfiguration.Instance.SampleKeyModifier);
         }
         #endregion RegisterSoundboardSampleHotKey
 
@@ -396,7 +397,7 @@ namespace SoundboardYourFriends.ViewModel
             bool registerResult = true;
 
             WindowsApi.UnregisterHotkey(WindowHandle, _recordHotkeyId);
-            if (WindowsApi.RegisterHotKey(WindowHandle, key, _recordHotkeyId, ApplicationConfiguration.RecordKeyModifer))
+            if (WindowsApi.RegisterHotKey(WindowHandle, key, _recordHotkeyId, ApplicationConfiguration.Instance.RecordKeyModifer))
             {
                 RecordHotkey = key;
             }
@@ -422,7 +423,7 @@ namespace SoundboardYourFriends.ViewModel
             // File name
             if (Path.GetFileNameWithoutExtension(soundboardSample.FilePath) != soundboardSample.Name)
             {
-                string targetDirectory = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, soundboardSample.GroupName);
+                string targetDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, soundboardSample.GroupName);
                 string newFilePath = Path.Combine(targetDirectory, $"{soundboardSample.Name}.wav");
 
                 Directory.CreateDirectory(targetDirectory);
@@ -445,7 +446,7 @@ namespace SoundboardYourFriends.ViewModel
                     {
                         if (audioCaptureDeviceDialog.ShowDialog().Value)
                         {
-                            SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(audioCaptureDeviceDialog.SelectedAudioCaptureDevices.Cast<AudioCaptureDevice>());
+                            SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(audioCaptureDeviceDialog.SelectedAudioCaptureDevices);
                         }
                     }
                     break;
@@ -454,7 +455,7 @@ namespace SoundboardYourFriends.ViewModel
                     {
                         if (audioOutputDeviceDialog.ShowDialog().Value)
                         {
-                            SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(audioOutputDeviceDialog.SelectedAudioOutputDevices.Cast<AudioOutputDevice>());
+                            SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(audioOutputDeviceDialog.SelectedAudioOutputDevices);
                         }
                     }
                     break;

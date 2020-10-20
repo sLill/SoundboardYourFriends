@@ -45,9 +45,7 @@ namespace SoundboardYourFriends.View.Windows
 
         #region Dispose
         public void Dispose()
-        {
-
-        }
+        { }
         #endregion Dispose
         #endregion Methods..
     }

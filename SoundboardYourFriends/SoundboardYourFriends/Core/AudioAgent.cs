@@ -77,27 +77,30 @@ namespace SoundboardYourFriends.Core
             // ex. If multiplier is 4, the audio buffer for a single soundboard sample will takeup 25% of the larger buffer
             int audioBufferMultiplier = 5;
 
-            WasapiLoopbackCapture = new WasapiLoopbackCapture(audioCaptureDevice.MMDeviceInstance);
-
-            int audioSampleSize = ApplicationConfiguration.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
-            int audioBufferMax = audioSampleSize * audioBufferMultiplier;
-
-            WasapiLoopbackCapture.DataAvailable += (sender, e) =>
+            if (audioCaptureDevice.MMDeviceInstance != null)
             {
-                    // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
-                    if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
+                WasapiLoopbackCapture = new WasapiLoopbackCapture(audioCaptureDevice.MMDeviceInstance);
+
+                int audioSampleSize = ApplicationConfiguration.Instance.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
+                int audioBufferMax = audioSampleSize * audioBufferMultiplier;
+
+                WasapiLoopbackCapture.DataAvailable += (sender, e) =>
                 {
-                    List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize);
-                    _audioByteBuffer.Clear();
-                    _audioByteBuffer.AddRange(retainedBytes);
-                }
+                // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
+                if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
+                    {
+                        List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize);
+                        _audioByteBuffer.Clear();
+                        _audioByteBuffer.AddRange(retainedBytes);
+                    }
 
-                byte[] capturedBytes = new byte[e.BytesRecorded];
-                Array.Copy(e.Buffer, 0, capturedBytes, 0, e.BytesRecorded);
-                _audioByteBuffer.AddRange(capturedBytes);
-            };
+                    byte[] capturedBytes = new byte[e.BytesRecorded];
+                    Array.Copy(e.Buffer, 0, capturedBytes, 0, e.BytesRecorded);
+                    _audioByteBuffer.AddRange(capturedBytes);
+                };
 
-            WasapiLoopbackCapture.StartRecording();
+                WasapiLoopbackCapture.StartRecording();
+            }
         }
         #endregion BeginAudioCapture
 
@@ -247,14 +250,14 @@ namespace SoundboardYourFriends.Core
         {
             if (WasapiLoopbackCapture != null)
             {
-                Directory.CreateDirectory(ApplicationConfiguration.SoundboardSampleDirectory);
+                Directory.CreateDirectory(ApplicationConfiguration.Instance.SoundboardSampleDirectory);
 
                 string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
-                string fileNameFull = Path.Combine(ApplicationConfiguration.SoundboardSampleDirectory, fileName);
+                string fileNameFull = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, fileName);
 
                 using (WaveFileWriter waveFileWriter = new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
                 {
-                    int audioSampleSize = ApplicationConfiguration.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
+                    int audioSampleSize = ApplicationConfiguration.Instance.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
                     var bytesToWrite = audioSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize).ToArray();
                     waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);
                 }

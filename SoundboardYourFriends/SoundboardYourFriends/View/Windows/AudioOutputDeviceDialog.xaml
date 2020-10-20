@@ -51,7 +51,7 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox Name="cbLocal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding PlaybackType, Converter={StaticResource LocalPlaybackEnabledConverter}}"/>
+                                    <CheckBox Name="cbLocal" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding PlaybackScope, Converter={StaticResource LocalPlaybackEnabledConverter}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

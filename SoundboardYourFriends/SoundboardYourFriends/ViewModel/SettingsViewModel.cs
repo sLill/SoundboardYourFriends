@@ -88,20 +88,20 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadApplicationSettings
         private void LoadApplicationSettings()
         {
-            RecordKeyModifier = ApplicationConfiguration.RecordKeyModifer;
-            SampleKeyModifier = ApplicationConfiguration.SampleKeyModifier;
-            SoundboardSampleDirectory = ApplicationConfiguration.SoundboardSampleDirectory;
-            SoundboardSampleSeconds = ApplicationConfiguration.SoundboardSampleSeconds;
+            RecordKeyModifier = ApplicationConfiguration.Instance.RecordKeyModifer;
+            SampleKeyModifier = ApplicationConfiguration.Instance.SampleKeyModifier;
+            SoundboardSampleDirectory = ApplicationConfiguration.Instance.SoundboardSampleDirectory;
+            SoundboardSampleSeconds = ApplicationConfiguration.Instance.SoundboardSampleSeconds;
         }
         #endregion LoadApplicationSettings
 
         #region Save
         public void Save()
         {
-            ApplicationConfiguration.RecordKeyModifer = RecordKeyModifier;
-            ApplicationConfiguration.SampleKeyModifier = SampleKeyModifier;
-            ApplicationConfiguration.SoundboardSampleDirectory = SoundboardSampleDirectory;
-            ApplicationConfiguration.SoundboardSampleSeconds = SoundboardSampleSeconds;
+            ApplicationConfiguration.Instance.RecordKeyModifer = RecordKeyModifier;
+            ApplicationConfiguration.Instance.SampleKeyModifier = SampleKeyModifier;
+            ApplicationConfiguration.Instance.SoundboardSampleDirectory = SoundboardSampleDirectory;
+            ApplicationConfiguration.Instance.SoundboardSampleSeconds = SoundboardSampleSeconds;
         }
         #endregion Save
         #endregion Methods..

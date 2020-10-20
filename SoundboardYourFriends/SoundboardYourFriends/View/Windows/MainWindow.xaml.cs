@@ -161,7 +161,7 @@ namespace SoundboardYourFriends.View.Windows
                     x.Hotkey = x.Hotkey;
                 });
 
-                _mainWindowViewModel.RegisterRecordHotKey(ApplicationConfiguration.RecordHotkey);
+                _mainWindowViewModel.RegisterRecordHotKey(ApplicationConfiguration.Instance.RecordHotkey);
 
                 // Re-intialize capture device
                 if (_mainWindowViewModel.SelectedCaptureDevicesCollection.Any())
