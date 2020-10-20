@@ -300,16 +300,7 @@ namespace SoundboardYourFriends.ViewModel
                                              on activeDevice.DeviceId equals audioDeviceId
                                           select activeDevice;
 
-                activeOutputDevices.ToList().ForEach(activeDevice =>
-                {
-                    try
-                    {
-                        activeDevice.PlaybackType = ApplicationConfiguration.OutputDevicePlaybackTypeCollection[activeDevice.DeviceId];
-                    }
-                    catch { }
-                });
-
-                SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(IEnumerable<AudioOutputDevice>)activeOutputDevices);
+                SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>((IEnumerable<AudioOutputDevice>)activeOutputDevices);
             }
         }
         #endregion LoadAudioDevices
