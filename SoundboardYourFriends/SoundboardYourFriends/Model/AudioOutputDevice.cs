@@ -45,6 +45,11 @@ namespace SoundboardYourFriends.Model
         public AudioOutputDevice(Guid deviceId) 
             : base(deviceId) { }
         #endregion AudioOutputDevice
+
+        #region AudioOutputDevice
+        public AudioOutputDevice(AudioDeviceBase audioDeviceBase)
+            : base(audioDeviceBase) { }
+        #endregion AudioOutputDevice
         #endregion Constructors..
 
         #region Methods..

@@ -34,6 +34,15 @@ namespace SoundboardYourFriends.Model
         }
         #endregion AudioPeak
 
+        #region DeviceActive
+        private bool _deviceActive;
+        public bool DeviceActive
+        {
+            get { return _deviceActive; }
+            set { _deviceActive = value; }
+        }
+        #endregion DeviceActive
+
         #region DeviceId
         private Guid _deviceId;
         public Guid DeviceId
@@ -71,6 +80,19 @@ namespace SoundboardYourFriends.Model
         public AudioDeviceBase(Guid deviceId)
         {
             DeviceId = deviceId;
+            Initialize();
+        }
+        #endregion AudioDevice
+
+        #region AudioDevice
+        public AudioDeviceBase(AudioDeviceBase audioDeviceBase)
+        {
+            AudioMeterInformation = audioDeviceBase.AudioMeterInformation;
+            AudioPeak = audioDeviceBase.AudioPeak;
+            DeviceId = audioDeviceBase.DeviceId;
+            FriendlyName = audioDeviceBase.FriendlyName;
+            MMDeviceInstance = audioDeviceBase.MMDeviceInstance;
+
             Initialize();
         }
         #endregion AudioDevice

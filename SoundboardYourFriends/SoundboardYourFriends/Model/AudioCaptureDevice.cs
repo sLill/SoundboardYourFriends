@@ -17,6 +17,11 @@ namespace SoundboardYourFriends.Model
         public AudioCaptureDevice(Guid deviceId)
             : base(deviceId) { }
         #endregion AudioCaptureDevice
+
+        #region AudioCaptureDevice
+        public AudioCaptureDevice(AudioDeviceBase audioDeviceBase)
+            : base(audioDeviceBase) { }
+        #endregion AudioCaptureDevice
         #endregion Constructors..
 
         #region Methods..

@@ -59,7 +59,7 @@ namespace SoundboardYourFriends.ViewModel
             {
                 _selectedCaptureDevicesCollection = value;
                 BeginAudioCapture();
-                
+
                 RaisePropertyChanged();
             }
         }
@@ -137,7 +137,7 @@ namespace SoundboardYourFriends.ViewModel
 
             SelectedOutputDevicesCollection.ToList().ForEach(outputDevice =>
             {
-                outputDevice.AudioPeak = (int)(outputDevice.AudioMeterInformation.MasterPeakValue * 100);
+                outputDevice.AudioPeak = (int)(outputDevice.AudioMeterInformation?.MasterPeakValue ?? 0 * 100);
             });
         }
         #endregion OnAudioMeterTimerElapsed
@@ -269,7 +269,7 @@ namespace SoundboardYourFriends.ViewModel
         public void Initialize()
         {
             ApplicationConfiguration.ImportUserSettings();
-            
+
             LoadAudioSamples();
             LoadConfig();
             BeginAudioCapture();
@@ -282,7 +282,7 @@ namespace SoundboardYourFriends.ViewModel
             var ActiveAudioDevices = AudioAgent.GetWindowsAudioDevices().ToList();
 
             // Capture Devices
-            if (ApplicationConfiguration.AudioCaptureDevices.Any())
+            if (ApplicationConfiguration.AudioCaptureDevices?.Any() ?? false)
             {
                 var activeCaptureDevices = from activeDevice in ActiveAudioDevices
                                            join audioDeviceId in ApplicationConfiguration.AudioCaptureDevices.Select(x => x.DeviceId)
@@ -293,7 +293,7 @@ namespace SoundboardYourFriends.ViewModel
             }
 
             // Output Devices
-            if (ApplicationConfiguration.AudioOutputDevices.Any())
+            if (ApplicationConfiguration.AudioOutputDevices?.Any() ?? false)
             {
                 var activeOutputDevices = from activeDevice in ActiveAudioDevices
                                           join audioDeviceId in ApplicationConfiguration.AudioOutputDevices.Select(x => x.DeviceId)
@@ -438,18 +438,26 @@ namespace SoundboardYourFriends.ViewModel
         #region SetAudioDevices
         public void SetAudioDevices(AudioDeviceType audioDeviceType)
         {
-            using (AudioDeviceDialog audioDeviceDialog = new AudioDeviceDialog(audioDeviceType))
+            switch (audioDeviceType)
             {
-                if (audioDeviceDialog.ShowDialog().Value)
-                    switch (audioDeviceType)
+                case AudioDeviceType.Capture:
+                    using (AudioCaptureDeviceDialog audioCaptureDeviceDialog = new AudioCaptureDeviceDialog(SelectedCaptureDevicesCollection))
                     {
-                        case AudioDeviceType.Capture:
-                            SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>((IEnumerable<AudioCaptureDevice>) audioDeviceDialog.SelectedAudioDevices);
-                            break;
-                        case AudioDeviceType.Render:
-                            SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>((IEnumerable<AudioOutputDevice>) audioDeviceDialog.SelectedAudioDevices);
-                            break;
+                        if (audioCaptureDeviceDialog.ShowDialog().Value)
+                        {
+                            SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(audioCaptureDeviceDialog.SelectedAudioCaptureDevices.Cast<AudioCaptureDevice>());
+                        }
                     }
+                    break;
+                case AudioDeviceType.Render:
+                    using (AudioOutputDeviceDialog audioOutputDeviceDialog = new AudioOutputDeviceDialog(SelectedOutputDevicesCollection))
+                    {
+                        if (audioOutputDeviceDialog.ShowDialog().Value)
+                        {
+                            SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(audioOutputDeviceDialog.SelectedAudioOutputDevices.Cast<AudioOutputDevice>());
+                        }
+                    }
+                    break;
             }
         }
         #endregion SetAudioDevices
