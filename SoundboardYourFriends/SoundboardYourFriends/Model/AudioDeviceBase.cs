@@ -89,6 +89,7 @@ namespace SoundboardYourFriends.Model
         {
             AudioMeterInformation = audioDeviceBase.AudioMeterInformation;
             AudioPeak = audioDeviceBase.AudioPeak;
+            DeviceActive = audioDeviceBase.DeviceActive;
             DeviceId = audioDeviceBase.DeviceId;
             FriendlyName = audioDeviceBase.FriendlyName;
             MMDeviceInstance = audioDeviceBase.MMDeviceInstance;

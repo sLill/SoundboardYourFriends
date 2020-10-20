@@ -280,13 +280,13 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadAudioDevices
         private void LoadAudioDevices()
         {
-            var ActiveAudioDevices = AudioAgent.GetWindowsAudioDevices().ToList();
+            var activeWindowsAudioDevices = AudioAgent.GetWindowsAudioDevices().ToList();
 
             // Capture Devices
             if (ApplicationConfiguration.Instance.AudioCaptureDevices?.Any() ?? false)
             {
-                var activeCaptureDevices = from activeDevice in ActiveAudioDevices
-                                           join audioDeviceId in ApplicationConfiguration.Instance.AudioCaptureDevices.Select(x => x.DeviceId)
+                var activeCaptureDevices = from activeDevice in activeWindowsAudioDevices
+                                             join audioDeviceId in ApplicationConfiguration.Instance.AudioCaptureDevices.Select(x => x.DeviceId)
                                               on activeDevice.DeviceId equals audioDeviceId
                                            select new AudioCaptureDevice(activeDevice);
 
@@ -296,10 +296,10 @@ namespace SoundboardYourFriends.ViewModel
             // Output Devices
             if (ApplicationConfiguration.Instance.AudioOutputDevices?.Any() ?? false)
             {
-                var activeOutputDevices = (from activeDevice in ActiveAudioDevices
+                var activeOutputDevices = from activeDevice in activeWindowsAudioDevices
                                           join audioDeviceId in ApplicationConfiguration.Instance.AudioOutputDevices.Select(x => x.DeviceId)
-                                             on activeDevice.DeviceId equals audioDeviceId
-                                          select new AudioOutputDevice(activeDevice));
+                                              on activeDevice.DeviceId equals audioDeviceId
+                                           select new AudioOutputDevice(activeDevice) { PlaybackScope = ApplicationConfiguration.Instance.AudioOutputDevices.First(x => x.DeviceId == activeDevice.DeviceId).PlaybackScope };
 
                 SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(activeOutputDevices);
             }
@@ -412,7 +412,7 @@ namespace SoundboardYourFriends.ViewModel
             // File length
             if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
             {
-                AudioAgent.TrimFile(soundboardSample.FilePath, new TimeSpan(0, 0, (int)soundboardSample.FileTimeLowerValue), new TimeSpan(0, 0, (int)soundboardSample.FileTimeUpperValue));
+                AudioAgent.TrimFile(soundboardSample.FilePath, soundboardSample.FileTimeLowerValue * 1000, soundboardSample.FileTimeUpperValue * 1000);
 
                 soundboardSample.FileTimeMin = 0;
                 soundboardSample.FileTimeMax = AudioAgent.GetFileAudioDuration(soundboardSample.FilePath).Seconds;

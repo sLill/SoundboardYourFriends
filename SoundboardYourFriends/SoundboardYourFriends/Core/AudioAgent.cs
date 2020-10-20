@@ -201,7 +201,7 @@ namespace SoundboardYourFriends.Core
         #endregion StopAudioCapture
 
         #region TrimFile
-        public static void TrimFile(string filepath, TimeSpan beginTime, TimeSpan endTime)
+        public static void TrimFile(string filepath, double beginTimeMilliseconds, double endTimeMilliseconds)
         {
             List<byte> inputBuffer = new List<byte>();
             WaveFormat waveFormat = null;
@@ -212,10 +212,10 @@ namespace SoundboardYourFriends.Core
 
                 int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
 
-                int startByte = (int)beginTime.TotalMilliseconds * bytesPerMillisecond;
+                int startByte = (int)beginTimeMilliseconds * bytesPerMillisecond;
                 startByte = startByte - startByte % reader.WaveFormat.BlockAlign;
 
-                int endByte = (int)endTime.TotalMilliseconds * bytesPerMillisecond;
+                int endByte = (int)endTimeMilliseconds * bytesPerMillisecond;
                 endByte = endByte - endByte % reader.WaveFormat.BlockAlign;
 
                 reader.Position = startByte;

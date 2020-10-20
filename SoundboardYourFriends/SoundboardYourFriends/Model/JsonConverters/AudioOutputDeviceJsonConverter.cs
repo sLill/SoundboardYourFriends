@@ -50,7 +50,7 @@ namespace SoundboardYourFriends.Model.JsonConverters
                         reader.Read();
                         var playbackScope = (PlaybackScope)Enum.Parse(typeof(PlaybackScope), (string)reader.Value);
 
-                        deviceCollection.Add(new AudioOutputDevice(deviceId) { PlaybackScope = playbackScope });
+                    deviceCollection.Add(new AudioOutputDevice(deviceId) { PlaybackScope = playbackScope, DeviceActive = true }); ;
                     }
                     else
                     {

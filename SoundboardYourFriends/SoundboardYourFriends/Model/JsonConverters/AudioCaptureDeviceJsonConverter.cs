@@ -41,7 +41,7 @@ namespace SoundboardYourFriends.Model.JsonConverters
 
                         // DeviceId
                         var deviceId = Guid.Parse((string)reader.Value);
-                        deviceCollection.Add(new AudioCaptureDevice(deviceId));
+                    deviceCollection.Add(new AudioCaptureDevice(deviceId) { DeviceActive = true }); ;
                     }
                     else
                     {

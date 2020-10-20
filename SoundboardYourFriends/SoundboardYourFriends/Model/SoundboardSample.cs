@@ -35,6 +35,9 @@ namespace SoundboardYourFriends.Model
         #endregion FilePath
 
         #region FileTimeMax
+        /// <summary>
+        /// Seconds
+        /// </summary>
         private double _fileTimeMax = 0;
         public double FileTimeMax
         {
@@ -48,6 +51,9 @@ namespace SoundboardYourFriends.Model
         #endregion FileTimeMax
 
         #region FileTimeMin
+        /// <summary>
+        /// Seconds
+        /// </summary>
         private double _fileTimeMin = 0;
         public double FileTimeMin
         {
@@ -61,6 +67,9 @@ namespace SoundboardYourFriends.Model
         #endregion FileTimeMin
 
         #region FileTimeUpperValue
+        /// <summary>
+        /// Seconds
+        /// </summary>
         private double _fileTimeUpperValue = 0;
         public double FileTimeUpperValue
         {
@@ -74,6 +83,9 @@ namespace SoundboardYourFriends.Model
         #endregion FileTimeUpperValue
 
         #region FileTimeLowerValue
+        /// <summary>
+        /// Seconds
+        /// </summary>
         private double _fileTimeLowerValue = 0;
         public double FileTimeLowerValue
         {
