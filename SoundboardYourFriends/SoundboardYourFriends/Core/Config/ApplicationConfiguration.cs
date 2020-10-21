@@ -14,7 +14,7 @@ namespace SoundboardYourFriends
     public class ApplicationConfiguration
     {
         #region Member Variables..
-        private const string SETTINGS_FILEPATH = "settings.json";
+        private string _localAppDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         private const string RECORD_HOTKEY = "RECORD_HOTKEY";
         private const string RECORD_HOTKEY_MODIFIER = "RECORD_HOTKEY_MODIFIER";   
@@ -23,6 +23,10 @@ namespace SoundboardYourFriends
         private const string SAMPLE_LENGTH = "SAMPLE_LENGTH";
         private const string AUDIO_CAPTURE_DEVICES = "AUDIO_CAPTURE_DEVICES";
         private const string AUDIO_OUTPUT_DEVICES = "AUDIO_OUTPUT_DEVICES";
+
+        private string ApplicationSettingsDirectory => Path.Combine(_localAppDataDirectory, "SoundboardYourFriends");
+
+        private string SettingsFilePath => Path.Combine(ApplicationSettingsDirectory, "settings.json");
         #endregion Member Variables..
 
         #region Properties..
@@ -122,13 +126,13 @@ namespace SoundboardYourFriends
         #region ImportUserSettings
         public void ImportUserSettings()
         {
-            if (File.Exists(SETTINGS_FILEPATH))
+            if (File.Exists(SettingsFilePath))
             {
                 var jsonSerializerSettings = new JsonSerializerSettings();
                 jsonSerializerSettings.Converters.Add(new AudioOutputDeviceJsonConverter());
                 jsonSerializerSettings.Converters.Add(new AudioCaptureDeviceJsonConverter());
 
-                var applicationConfigurationFromFile = JsonConvert.DeserializeObject<ApplicationConfiguration>(File.ReadAllText(SETTINGS_FILEPATH), jsonSerializerSettings);
+                var applicationConfigurationFromFile = JsonConvert.DeserializeObject<ApplicationConfiguration>(File.ReadAllText(SettingsFilePath), jsonSerializerSettings);
                 ApplicationConfiguration.Instance = applicationConfigurationFromFile;
             }
         }
@@ -142,7 +146,13 @@ namespace SoundboardYourFriends
             jsonSerializerSettings.Converters.Add(new AudioCaptureDeviceJsonConverter()); 
 
             string settingsJson = JsonConvert.SerializeObject(ApplicationConfiguration.Instance, Formatting.Indented, jsonSerializerSettings);
-            File.WriteAllText(SETTINGS_FILEPATH, settingsJson);
+
+            if (!Directory.Exists(ApplicationSettingsDirectory))
+            {
+                Directory.CreateDirectory(ApplicationSettingsDirectory);
+            }
+
+            File.WriteAllText(SettingsFilePath, settingsJson);
         }
         #endregion SaveUserSettings
         #endregion Methods..
