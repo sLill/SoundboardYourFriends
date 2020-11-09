@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace SoundboardYourFriends.View.Windows
 {
@@ -36,6 +37,9 @@ namespace SoundboardYourFriends.View.Windows
         public MainWindow()
         {
             InitializeComponent();
+
+            LinearGradientBrush gradientBrush = new LinearGradientBrush(Color.FromRgb(60, 208, 228), Color.FromRgb(6, 77, 166), new Point(0.5, 0), new Point(0.5, 1));
+            Background = gradientBrush;
 
             _mainWindowViewModel = new MainWindowViewModel();
             DataContext = _mainWindowViewModel;

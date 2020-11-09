@@ -11,15 +11,56 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Visibility" Value="Collapsed" />
-        </Style>
+
+        <!--Converters-->
         <converters:VolumeToOpacityConverter x:Key="VolumeToOpacityConverter"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:LocalPlaybackVisibilityConverter x:Key="LocalPlaybackVisibilityConverter"/>
         <converters:GlobalPlaybackVisibilityConverter x:Key="GlobalPlaybackVisibilityConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
+
+        <!--Styles-->
+        <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
+        <Style x:Key="buttonBorderRounded" TargetType="{x:Type Border}">
+            <Setter Property="BorderBrush" Value="LightCyan"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+
+        <Style x:Key="buttonRoundCorner" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1,1,1,1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="4" BorderBrush="Transparent" BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Right"
+                                          VerticalAlignment="Center"
+                                          TextElement.FontWeight="Bold">
+                                </ContentPresenter>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="LightCyan"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="controlBackcolor"  Color="#d5f8ff"/>
     </Window.Resources>
 
     <Grid>
@@ -41,26 +82,24 @@
 
         <!--Row 1-->
         <DockPanel Grid.Row="1" Grid.Column="1">
-            <Button Name="btnListeningDevices" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" PreviewMouseLeftButtonUp="btnListeningDevices_MouseUp">
-                <StackPanel>
-                    <Image Source="/Resources/SettingsGear.png"/>
-                </StackPanel>
-            </Button>
+                <Button Name="btnListeningDevices" Style="{StaticResource buttonRoundCorner}" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnListeningDevices_MouseUp">
+                    <Image Source="/Resources/SettingsGear.png" />
+                </Button>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top">
                 <TextBlock FontSize="12" TextDecorations="Underline">Capturing Devices</TextBlock>
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="2">
-            <Button Name="btnSettings" Height="24" Width="24" BorderThickness="0" HorizontalAlignment="Right" Margin="0,0,0,0" PreviewMouseLeftButtonUp="btnSettings_MouseUp">
-                <StackPanel>
-                    <Image Source="/Resources/SettingsGear.png"/>
-                </StackPanel>
+            <!--<Border Style="{StaticResource buttonBorderRounded}" Width="21" Height="21" HorizontalAlignment="Right">-->
+            <Button Name="btnSettings" Style="{StaticResource buttonRoundCorner}" Width="24" BorderThickness="0" Background="{StaticResource controlBackcolor}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,0,0" PreviewMouseLeftButtonUp="btnSettings_MouseUp">
+                <Image Source="/Resources/SettingsGear.png"/>
             </Button>
+            <!--</Border>-->
         </DockPanel>
 
         <!--Row 2-->
         <DockPanel  Grid.Row="2" Grid.Column="1">
-            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="13,-5,300,0" BorderThickness="0">
+            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="13,-5,300,0" BorderThickness="0" Background="Transparent">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn>
@@ -79,11 +118,9 @@
 
         <!--Row 3-->
         <DockPanel Grid.Row="3" Grid.Column="1" >
-            <Button Name="btnOutputDevices" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" PreviewMouseLeftButtonUp="btnOutputDevices_MouseUp">
-                <StackPanel>
+                <Button Name="btnOutputDevices" Style="{StaticResource buttonRoundCorner}"  Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnOutputDevices_MouseUp">
                     <Image Source="/Resources/SettingsGear.png"/>
-                </StackPanel>
-            </Button>
+                </Button>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top">
                 <TextBlock FontSize="12" TextDecorations="Underline">Output Devices</TextBlock>
             </Label>
@@ -93,16 +130,14 @@
             <Label DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0,0,0">
                 <TextBlock FontSize="12" VerticalAlignment="Center">"Record"</TextBlock>
             </Label>
-            <Button Name="btnRecordButton" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" PreviewMouseLeftButtonUp="btnRecord_PreviewMouseButtonDown">
-                <StackPanel>
+                <Button Name="btnRecordButton" Style="{StaticResource buttonRoundCorner}" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnRecord_PreviewMouseButtonDown">
                     <Image Source="/Resources/RecordButton.png"/>
-                </StackPanel>
-            </Button>
+                </Button>
         </DockPanel>
 
         <!--Row 4-->
         <DockPanel Grid.Row="4" Grid.Column="1">
-            <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="-5,-5,300,0" BorderThickness="0">
+            <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="-5,-5,300,0" BorderThickness="0" Background="Transparent">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn Width="auto">
@@ -139,42 +174,43 @@
 
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
-            <ListView Margin="0,10,0,0" Name="lstSoundboardSamples" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
+            <Border Margin="0,10,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="LightCyan" >
+                <ListView Name="lstSoundboardSamples" Background="#dffaff" BorderThickness="0" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
 
-                <!--View-->
-                <ListView.View>
-                    <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
-                        <GridViewColumn>
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <DockPanel>
-                                        <TextBox Text="{Binding Name}" BorderThickness="0" VerticalAlignment="Center"></TextBox>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                    <!--View-->
+                    <ListView.View>
+                        <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DockPanel>
+                                            <TextBox Text="{Binding Name}" BorderThickness="0" VerticalAlignment="Center" Background="Transparent"></TextBox>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
 
-                        <!--Local/Global Play, Stop and Trackbar controls-->
-                        <GridViewColumn>
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <DockPanel Name="pnlMediaPanel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
-                                        <Button Name="btnPlayButtonLocal" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Click="btnPlayButtonLocal_Click">
-                                            <StackPanel Background="Transparent">
-                                                <Image Source="/Resources/PlayButtonGray.png" Height="20" Width="20"/>
-                                            </StackPanel>
-                                        </Button>
-                                        <Button Name="btnPlayButtonGlobal" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Click="btnPlayButtonGlobal_Click">
-                                            <StackPanel Background="Transparent">
-                                                <Image Source="/Resources/PlayButton.png" Height="20" Width="20"/>
-                                            </StackPanel>
-                                        </Button>
-                                        <Button Name="btnStopButton" VerticalAlignment="Center" BorderThickness="0" Margin="0,0,0,0" Background="Transparent" Click="btnStopButton_Click">
-                                            <StackPanel Background="Transparent">
-                                                <Image Source="/Resources/StopButton.png" Height="20" Width="20"/>
-                                            </StackPanel>
-                                        </Button>
-                                        <userControls:RangeSlider x:Name="mediaPlaybackSlider" 
+                            <!--Local/Global Play, Stop and Trackbar controls-->
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Name="pnlMediaPanel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                                            <Button Name="btnPlayButtonLocal" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Click="btnPlayButtonLocal_Click">
+                                                <StackPanel Background="Transparent">
+                                                    <Image Source="/Resources/PlayButtonGray.png" Height="20" Width="20"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Name="btnPlayButtonGlobal" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Click="btnPlayButtonGlobal_Click">
+                                                <StackPanel Background="Transparent">
+                                                    <Image Source="/Resources/PlayButton.png" Height="20" Width="20"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Name="btnStopButton" VerticalAlignment="Center" BorderThickness="0" Margin="0,0,0,0" Background="Transparent" Click="btnStopButton_Click">
+                                                <StackPanel Background="Transparent">
+                                                    <Image Source="/Resources/StopButton.png" Height="20" Width="20"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <userControls:RangeSlider x:Name="mediaPlaybackSlider" 
                                                                   VerticalAlignment="Center" 
                                                                   Margin="5,0,0,0" 
                                                                   Width="200" 
@@ -184,71 +220,72 @@
                                                                   UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" 
                                                                   LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}"
                                                                   PlaybackCursorValue="{Binding PlaybackCursorValue}"></userControls:RangeSlider>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
 
-                        <!--Hotkey-->
-                        <GridViewColumn>
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <DockPanel VerticalAlignment="Center" Width="175" Margin="15,0,0,0">
-                                        <TextBlock VerticalAlignment="Center" Text="Shortcut"/>
-                                        <Border VerticalAlignment="Center" BorderThickness="0.5" BorderBrush="Black" Opacity="0.7" Margin="6,2,0,0">
-                                            <TextBlock VerticalAlignment="Center" Name="txtPlaybackHotkey" Text="{Binding HotkeyDisplay}" Margin="1,0,0,0" PreviewMouseLeftButtonDown="txtPlaybackHotkey_PreviewMouseLeftButtonDown"/>
-                                        </Border>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                            <!--Hotkey-->
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DockPanel VerticalAlignment="Center" Width="175" Margin="15,0,0,0">
+                                            <TextBlock VerticalAlignment="Center" Text="Shortcut"/>
+                                            <Border VerticalAlignment="Center" BorderThickness="0.5" BorderBrush="Black" Opacity="0.7" Margin="6,2,0,0">
+                                                <TextBlock VerticalAlignment="Center" Name="txtPlaybackHotkey" Text="{Binding HotkeyDisplay}" Margin="1,0,0,0" PreviewMouseLeftButtonDown="txtPlaybackHotkey_PreviewMouseLeftButtonDown"/>
+                                            </Border>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
 
-                        <!--Save/Delete-->
-                        <GridViewColumn>
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <DockPanel IsEnabled="{Binding FileLocked, Converter={StaticResource InverseBooleanConverter}}" Opacity="{Binding FileLocked, Converter={StaticResource BoolToOpacityConverter}}" Name="pnlMediaPanel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25,0,0,0">
-                                        <Button Name="btnSave" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Margin="3,0,0,0" Click="btnSave_Click">
-                                            <StackPanel Background="Transparent">
-                                                <Image Source="/Resources/SaveButtonGray.png" Height="20" Width="20"/>
-                                            </StackPanel>
-                                        </Button>
-                                        <Button Name="btnDelete" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0" Background="Transparent" Click="btnDelete_Click">
-                                            <StackPanel Background="Transparent">
-                                                <Image Source="/Resources/DeleteButton.png" Height="20" Width="20"/>
-                                            </StackPanel>
-                                        </Button>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
+                            <!--Save/Delete-->
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DockPanel IsEnabled="{Binding FileLocked, Converter={StaticResource InverseBooleanConverter}}" Opacity="{Binding FileLocked, Converter={StaticResource BoolToOpacityConverter}}" Name="pnlMediaPanel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25,0,0,0">
+                                            <Button Name="btnSave" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Margin="3,0,0,0" Click="btnSave_Click">
+                                                <StackPanel Background="Transparent">
+                                                    <Image Source="/Resources/SaveButtonGray.png" Height="20" Width="20"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Name="btnDelete" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0" Margin="2,0,0,0" Background="Transparent" Click="btnDelete_Click">
+                                                <StackPanel Background="Transparent">
+                                                    <Image Source="/Resources/DeleteButton.png" Height="20" Width="20"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
 
-                <ListView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.ContainerStyle>
-                            <Style TargetType="{x:Type GroupItem}">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate>
-                                            <Expander IsExpanded="False">
-                                                <Expander.Header>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Name}" FontWeight="DemiBold" Foreground="DarkSlateGray" FontSize="14" VerticalAlignment="Center" />
-                                                    </StackPanel>
-                                                </Expander.Header>
-                                                <ItemsPresenter Margin="10,0,0,0"/>
-                                            </Expander>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </GroupStyle.ContainerStyle>
-                    </GroupStyle>
-                </ListView.GroupStyle>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Expander IsExpanded="False">
+                                                    <Expander.Header>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding Name}" FontWeight="DemiBold" Foreground="DarkSlateGray" FontSize="14" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </Expander.Header>
+                                                    <ItemsPresenter Margin="10,0,0,0"/>
+                                                </Expander>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
 
-            </ListView>
+                </ListView>
+            </Border>
         </DockPanel>
     </Grid>
 </Window>
