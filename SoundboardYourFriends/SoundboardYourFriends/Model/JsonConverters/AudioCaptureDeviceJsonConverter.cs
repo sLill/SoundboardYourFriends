@@ -11,6 +11,8 @@ namespace SoundboardYourFriends.Model.JsonConverters
 {
     public class AudioCaptureDeviceJsonConverter : JsonConverter<IEnumerable<AudioCaptureDevice>>
     {
+        #region Methods..
+        #region WriteJson
         public override void WriteJson(JsonWriter writer, [AllowNull] IEnumerable<AudioCaptureDevice> value, JsonSerializer serializer)
         {
             writer.WriteStartArray();
@@ -28,29 +30,36 @@ namespace SoundboardYourFriends.Model.JsonConverters
 
             writer.WriteEndArray();
         }
+        #endregion WriteJson
 
+        #region ReadJson
         public override IEnumerable<AudioCaptureDevice> ReadJson(JsonReader reader, Type objectType, [AllowNull] IEnumerable<AudioCaptureDevice> existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var deviceCollection = new List<AudioCaptureDevice>();
 
+            if (reader.TokenType != JsonToken.None)
+            {
                 while (reader.TokenType != JsonToken.EndArray)
                 {
-                    if ((string)reader.Value == "DeviceId")
+                    if (reader.Value?.ToString() == "DeviceId")
                     {
                         reader.Read();
 
                         // DeviceId
                         var deviceId = Guid.Parse((string)reader.Value);
-                    deviceCollection.Add(new AudioCaptureDevice(deviceId) { DeviceActive = true }); ;
+                        deviceCollection.Add(new AudioCaptureDevice(deviceId) { DeviceActive = true }); ;
                     }
                     else
                     {
                         reader.Read();
                     }
                 }
+            } 
+            #endregion ReadJson
 
             existingValue = deviceCollection;
             return existingValue;
-        }
+        } 
+        #endregion Methods..
     }
 }

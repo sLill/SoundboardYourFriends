@@ -113,14 +113,14 @@ namespace SoundboardYourFriends.View.Windows
         #region btnListeningDevices_MouseUp
         private void btnListeningDevices_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            _mainWindowViewModel.SetAudioDevices(AudioDeviceType.Capture);
+            _mainWindowViewModel.SetSelectedAudioDevices(AudioDeviceType.Capture);
         }
         #endregion btnListeningDevices_MouseUp
 
         #region btnOutputDevices_MouseUp
         private void btnOutputDevices_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            _mainWindowViewModel.SetAudioDevices(AudioDeviceType.Render);
+            _mainWindowViewModel.SetSelectedAudioDevices(AudioDeviceType.Render);
         }
         #endregion btnOutputDevices_MouseUp
 
@@ -198,6 +198,7 @@ namespace SoundboardYourFriends.View.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var windowInteropHelper = new WindowInteropHelper(this);
+
             IntPtr windowHandle = windowInteropHelper.Handle;
             _mainWindowViewModel.WindowHandle = windowHandle;
 

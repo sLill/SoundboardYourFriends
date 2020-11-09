@@ -127,7 +127,7 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Constructors..
 
         #region Methods..
-        #region Events..
+        #region Event Handlers..
         #region OnAudioMeterTimerElapsed
         private void OnAudioMeterTimerElapsed(object sender, EventArgs e)
         {
@@ -181,7 +181,7 @@ namespace SoundboardYourFriends.ViewModel
             SoundboardSampleCollection.ToList().ForEach(x => x.SaveMetadataProperties());
         }
         #endregion OnWindowClosing
-        #endregion Events..
+        #endregion Event Handlers..
 
         #region BeginAudioCapture
         public void BeginAudioCapture()
@@ -199,7 +199,7 @@ namespace SoundboardYourFriends.ViewModel
         public async Task DeleteSampleAsync(SoundboardSample soundboardSample)
         {
             // Recursively try to acquire file lock. This can sometimes take a few seconds to release after 
-            // a audio playback event has ended
+            // an audio playback event has ended
             bool success = false;
             while (!success)
             {
@@ -436,8 +436,8 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion SaveSample
 
-        #region SetAudioDevices
-        public void SetAudioDevices(AudioDeviceType audioDeviceType)
+        #region SetSelectedAudioDevices
+        public void SetSelectedAudioDevices(AudioDeviceType audioDeviceType)
         {
             switch (audioDeviceType)
             {
@@ -461,7 +461,7 @@ namespace SoundboardYourFriends.ViewModel
                     break;
             }
         }
-        #endregion SetAudioDevices
+        #endregion SetSelectedAudioDevices
 
         #region SetEvents
         private void SetEvents()

@@ -10,6 +10,8 @@ namespace SoundboardYourFriends.Model.JsonConverters
 {
     public class AudioOutputDeviceJsonConverter : JsonConverter<IEnumerable<AudioOutputDevice>>
     {
+        #region Methods..
+        #region WriteJson
         public override void WriteJson(JsonWriter writer, [AllowNull] IEnumerable<AudioOutputDevice> value, JsonSerializer serializer)
         {
             writer.WriteStartArray();
@@ -31,14 +33,18 @@ namespace SoundboardYourFriends.Model.JsonConverters
 
             writer.WriteEndArray();
         }
+        #endregion WriteJson
 
+        #region ReadJson
         public override IEnumerable<AudioOutputDevice> ReadJson(JsonReader reader, Type objectType, [AllowNull] IEnumerable<AudioOutputDevice> existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var deviceCollection = new List<AudioOutputDevice>();
 
+            if (reader.TokenType != JsonToken.None)
+            {
                 while (reader.TokenType != JsonToken.EndArray)
                 {
-                    if ((string)reader.Value == "DeviceId")
+                    if (reader.Value?.ToString() == "DeviceId")
                     {
                         reader.Read();
 
@@ -50,16 +56,19 @@ namespace SoundboardYourFriends.Model.JsonConverters
                         reader.Read();
                         var playbackScope = (PlaybackScope)Enum.Parse(typeof(PlaybackScope), (string)reader.Value);
 
-                    deviceCollection.Add(new AudioOutputDevice(deviceId) { PlaybackScope = playbackScope, DeviceActive = true }); ;
+                        deviceCollection.Add(new AudioOutputDevice(deviceId) { PlaybackScope = playbackScope, DeviceActive = true });
                     }
                     else
                     {
                         reader.Read();
                     }
                 }
+            }
 
             existingValue = deviceCollection;
             return existingValue;
-        }
+        }  
+        #endregion ReadJson
+        #endregion Methods..
     }
 }

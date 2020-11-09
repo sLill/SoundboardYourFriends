@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace SoundboardYourFriends.Converters
+namespace SoundboardYourFriends.Core.Converters
 { 
     public class BoolToOpacityConverter : IValueConverter
     {

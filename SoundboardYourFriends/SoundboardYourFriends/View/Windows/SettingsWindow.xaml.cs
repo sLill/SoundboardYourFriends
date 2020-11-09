@@ -6,7 +6,7 @@ namespace SoundboardYourFriends.View.Windows
     public partial class SettingsWindow : Window
     {
         #region Member Variables..
-        SettingsViewModel _settingsViewModel;
+        SettingsWindowViewModel _settingsWindowViewModel;
         #endregion Member Variables..
 
         #region Properties..
@@ -18,8 +18,8 @@ namespace SoundboardYourFriends.View.Windows
         {
             InitializeComponent();
 
-            _settingsViewModel = new SettingsViewModel();
-            DataContext = _settingsViewModel;
+            _settingsWindowViewModel = new SettingsWindowViewModel();
+            DataContext = _settingsWindowViewModel;
         }
         #endregion SettingsWindow
         #endregion Constructors..
@@ -36,7 +36,7 @@ namespace SoundboardYourFriends.View.Windows
         #region btnSave_Click
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            _settingsViewModel.Save();
+            _settingsWindowViewModel.Save();
             this.DialogResult = true;
 
             this.Close();

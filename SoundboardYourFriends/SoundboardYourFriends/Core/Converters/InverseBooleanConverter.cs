@@ -1,15 +1,16 @@
-﻿using System;
+using NAudio.Wave;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace SoundboardYourFriends.Converters
+namespace SoundboardYourFriends.Core.Converters
 {
-    public class VolumeToOpacityConverter : IValueConverter
+    public class InverseBooleanConverter : IValueConverter
     {
         #region Methods..
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (int)value > 0 ? 1.0 : 0.6;
+            return !(bool)value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

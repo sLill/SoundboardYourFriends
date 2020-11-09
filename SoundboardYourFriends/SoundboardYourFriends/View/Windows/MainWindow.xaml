@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
-        xmlns:converters="clr-namespace:SoundboardYourFriends.Converters"
+        xmlns:converters="clr-namespace:SoundboardYourFriends.Core.Converters"
         xmlns:userControls="clr-namespace:SoundboardYourFriends.View.UserControls"
         mc:Ignorable="d"
         Title="Soundboard Your Friends" Height="550" Width="900" Loaded="Window_Loaded"

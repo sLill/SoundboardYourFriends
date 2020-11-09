@@ -3,7 +3,7 @@ using SoundboardYourFriends.Core.Windows;
 
 namespace SoundboardYourFriends.ViewModel
 {
-    public class SettingsViewModel : ObservableObject
+    public class SettingsWindowViewModel : ObservableObject
     {
         #region Member Variables..
         #endregion Member Variables..
@@ -76,12 +76,12 @@ namespace SoundboardYourFriends.ViewModel
         #endregion Properties..
 
         #region Constructors..
-        #region SettingsViewModel
-        public SettingsViewModel()
+        #region SettingsWindowViewModel
+        public SettingsWindowViewModel()
         {
             LoadApplicationSettings();
         }
-        #endregion SettingsViewModel
+        #endregion SettingsWindowViewModel
         #endregion Constructors..
 
         #region Methods..

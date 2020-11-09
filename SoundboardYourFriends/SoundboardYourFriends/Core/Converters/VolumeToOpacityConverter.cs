@@ -1,16 +1,15 @@
-﻿using System;
+using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 
-namespace SoundboardYourFriends.Converters
+namespace SoundboardYourFriends.Core.Converters
 {
-    public class LocalPlaybackVisibilityConverter : IValueConverter
+    public class VolumeToOpacityConverter : IValueConverter
     {
         #region Methods..
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (PlaybackScope)value >= PlaybackScope.Local ? Visibility.Visible : Visibility.Hidden;
+            return (int)value > 0 ? 1.0 : 0.6;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
