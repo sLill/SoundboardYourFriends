@@ -25,6 +25,10 @@
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
 
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="#6dc4f6"/>
+        </Style>
+
         <Style x:Key="buttonBorderRounded" TargetType="{x:Type Border}">
             <Setter Property="BorderBrush" Value="LightCyan"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -34,7 +38,7 @@
         <Style x:Key="buttonRoundCorner" TargetType="{x:Type Button}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="1,1,1,1"/>
+            <Setter Property="Padding" Value="1"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -83,30 +87,28 @@
         <!--Row 1-->
         <DockPanel Grid.Row="1" Grid.Column="1">
                 <Button Name="btnListeningDevices" Style="{StaticResource buttonRoundCorner}" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnListeningDevices_MouseUp">
-                    <Image Source="/Resources/SettingsGear.png" />
-                </Button>
+                    <Image Source="/Resources/SettingsGear.png"/>
+            </Button>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top">
-                <TextBlock FontSize="12" TextDecorations="Underline">Capturing Devices</TextBlock>
+                <TextBlock FontSize="13" FontWeight="SemiBold">Capture Devices</TextBlock>
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="2">
-            <!--<Border Style="{StaticResource buttonBorderRounded}" Width="21" Height="21" HorizontalAlignment="Right">-->
             <Button Name="btnSettings" Style="{StaticResource buttonRoundCorner}" Width="24" BorderThickness="0" Background="{StaticResource controlBackcolor}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,0,0" PreviewMouseLeftButtonUp="btnSettings_MouseUp">
                 <Image Source="/Resources/SettingsGear.png"/>
             </Button>
-            <!--</Border>-->
         </DockPanel>
 
         <!--Row 2-->
         <DockPanel  Grid.Row="2" Grid.Column="1">
-            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="13,-5,300,0" BorderThickness="0" Background="Transparent">
+            <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="-5,-5,300,0" BorderThickness="0" Background="Transparent">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <DockPanel Name="pnlInputAudioScope" Margin="10,0,0,0">
-                                        <TextBlock Text="{Binding FriendlyName}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
+                                    <DockPanel Name="pnlInputAudioScope" Margin="28,0,0,0">
+                                        <TextBlock Text="{Binding FriendlyName}" Foreground="White" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -119,16 +121,16 @@
         <!--Row 3-->
         <DockPanel Grid.Row="3" Grid.Column="1" >
                 <Button Name="btnOutputDevices" Style="{StaticResource buttonRoundCorner}"  Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnOutputDevices_MouseUp">
-                    <Image Source="/Resources/SettingsGear.png"/>
+                <Image Source="/Resources/SettingsGear.png"/>
                 </Button>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top">
-                <TextBlock FontSize="12" TextDecorations="Underline">Output Devices</TextBlock>
+                <TextBlock FontSize="13" FontWeight="SemiBold">Output Devices</TextBlock>
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="2" VerticalAlignment="Bottom">
-            <TextBox Margin="5,2,2,0" DockPanel.Dock="Right" Width="140" BorderThickness="1" VerticalAlignment="Center" IsReadOnly="True" Opacity="0.7" Text="{Binding RecordHotkeyDisplay}"></TextBox>
+            <TextBox Margin="5,2,2,0" DockPanel.Dock="Right" Width="140" BorderThickness="1" VerticalAlignment="Center" Foreground="Gray" IsReadOnly="True" Opacity="0.7" Text="{Binding RecordHotkeyDisplay}"></TextBox>
             <Label DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0,0,0">
-                <TextBlock FontSize="12" VerticalAlignment="Center">"Record"</TextBlock>
+                <TextBlock FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center">"Record"</TextBlock>
             </Label>
                 <Button Name="btnRecordButton" Style="{StaticResource buttonRoundCorner}" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnRecord_PreviewMouseButtonDown">
                     <Image Source="/Resources/RecordButton.png"/>
@@ -162,7 +164,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <DockPanel Name="pnlOutputAudioScope" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="-5,0,0,0">
-                                        <TextBlock Text="{Binding FriendlyName}" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
+                                        <TextBlock Text="{Binding FriendlyName}" Foreground="White" Opacity="{Binding AudioPeak, Converter={StaticResource VolumeToOpacityConverter}}"/>
                                     </DockPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -174,8 +176,8 @@
 
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
-            <Border Margin="0,10,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="LightCyan" >
-                <ListView Name="lstSoundboardSamples" Background="#dffaff" BorderThickness="0" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
+            <Border Margin="0,10,0,0" CornerRadius="5" BorderThickness="2" BorderBrush="LightCyan" >
+                <ListView Name="lstSoundboardSamples" Background="#666666" BorderThickness="0" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
 
                     <!--View-->
                     <ListView.View>
@@ -184,7 +186,7 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <DockPanel>
-                                            <TextBox Text="{Binding Name}" BorderThickness="0" VerticalAlignment="Center" Background="Transparent"></TextBox>
+                                            <TextBox Text="{Binding Name}" Foreground="White" BorderThickness="0" VerticalAlignment="Center" Background="Transparent"></TextBox>
                                         </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -219,7 +221,7 @@
                                                                   Minimum="{Binding FileTimeMin}" 
                                                                   UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" 
                                                                   LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}"
-                                                                  PlaybackCursorValue="{Binding PlaybackCursorValue}"></userControls:RangeSlider>
+                                                                  PlaybackCursorValue="{Binding PlaybackCursorValue}" Foreground="White"></userControls:RangeSlider>
                                         </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -232,7 +234,7 @@
                                         <DockPanel VerticalAlignment="Center" Width="175" Margin="15,0,0,0">
                                             <TextBlock VerticalAlignment="Center" Text="Shortcut"/>
                                             <Border VerticalAlignment="Center" BorderThickness="0.5" BorderBrush="Black" Opacity="0.7" Margin="6,2,0,0">
-                                                <TextBlock VerticalAlignment="Center" Name="txtPlaybackHotkey" Text="{Binding HotkeyDisplay}" Margin="1,0,0,0" PreviewMouseLeftButtonDown="txtPlaybackHotkey_PreviewMouseLeftButtonDown"/>
+                                                <TextBlock VerticalAlignment="Center" Name="txtPlaybackHotkey" Text="{Binding HotkeyDisplay}" Foreground="White" Margin="1,0,0,0" PreviewMouseLeftButtonDown="txtPlaybackHotkey_PreviewMouseLeftButtonDown"/>
                                             </Border>
                                         </DockPanel>
                                     </DataTemplate>
@@ -271,7 +273,7 @@
                                                 <Expander IsExpanded="False">
                                                     <Expander.Header>
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="{Binding Name}" FontWeight="DemiBold" Foreground="DarkSlateGray" FontSize="14" VerticalAlignment="Center" />
+                                                            <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="DemiBold" FontSize="14" VerticalAlignment="Center" />
                                                         </StackPanel>
                                                     </Expander.Header>
                                                     <ItemsPresenter Margin="10,0,0,0"/>

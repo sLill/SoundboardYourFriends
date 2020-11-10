@@ -25,6 +25,7 @@
     <None Remove="Resources\RecordButton.png" />
     <None Remove="Resources\SaveButton.png" />
     <None Remove="Resources\SaveButtonGray.png" />
+    <None Remove="Resources\SettingsCog.png" />
     <None Remove="Resources\SettingsGear.png" />
     <None Remove="Resources\StopButton.png" />
     <None Include="Resources\License.rtf">
@@ -70,13 +71,13 @@
     <Resource Include="Resources\SaveButtonGray.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\SettingsGear.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\RecordButton.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\SettingsGear.png" />
     <Resource Include="Resources\StopButton.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

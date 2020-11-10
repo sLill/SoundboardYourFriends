@@ -38,7 +38,7 @@ namespace SoundboardYourFriends.View.Windows
         {
             InitializeComponent();
 
-            LinearGradientBrush gradientBrush = new LinearGradientBrush(Color.FromRgb(60, 208, 228), Color.FromRgb(6, 77, 166), new Point(0.5, 0), new Point(0.5, 1));
+            LinearGradientBrush gradientBrush = new LinearGradientBrush(Color.FromRgb(120, 120, 120), Color.FromRgb(0, 0, 0), new Point(0.5, 0), new Point(0.5, 1));
             Background = gradientBrush;
 
             _mainWindowViewModel = new MainWindowViewModel();
