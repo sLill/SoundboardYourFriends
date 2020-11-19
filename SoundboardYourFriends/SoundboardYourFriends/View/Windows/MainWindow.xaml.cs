@@ -210,6 +210,8 @@ namespace SoundboardYourFriends.View.Windows
             this.Closing += _mainWindowViewModel.OnWindowClosing;
 
             InitializeControls();
+
+            ApplicationLogger.Log("MainWindow loaded");
         }
         #endregion Window_Loaded
 

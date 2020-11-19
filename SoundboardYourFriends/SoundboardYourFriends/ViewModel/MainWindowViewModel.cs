@@ -186,11 +186,18 @@ namespace SoundboardYourFriends.ViewModel
         #region BeginAudioCapture
         public void BeginAudioCapture()
         {
-            AudioAgent.StopAudioCapture();
-
-            if (SelectedCaptureDevicesCollection.Any())
+            try
             {
-                AudioAgent.BeginAudioCapture(SelectedCaptureDevicesCollection.First());
+                AudioAgent.StopAudioCapture();
+
+                if (SelectedCaptureDevicesCollection.Any())
+                {
+                    AudioAgent.BeginAudioCapture(SelectedCaptureDevicesCollection.First());
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion BeginAudioCapture
@@ -280,28 +287,35 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadAudioDevices
         private void LoadAudioDevices()
         {
-            var activeWindowsAudioDevices = AudioAgent.GetWindowsAudioDevices().ToList();
-
-            // Capture Devices
-            if (ApplicationConfiguration.Instance.AudioCaptureDevices?.Any() ?? false)
+            try
             {
-                var activeCaptureDevices = from activeDevice in activeWindowsAudioDevices
-                                             join audioDeviceId in ApplicationConfiguration.Instance.AudioCaptureDevices.Select(x => x.DeviceId)
-                                              on activeDevice.DeviceId equals audioDeviceId
-                                           select new AudioCaptureDevice(activeDevice);
+                var activeWindowsAudioDevices = AudioAgent.GetWindowsAudioDevices().ToList();
 
-                SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(activeCaptureDevices);
+                // Capture Devices
+                if (ApplicationConfiguration.Instance.AudioCaptureDevices?.Any() ?? false)
+                {
+                    var activeCaptureDevices = from activeDevice in activeWindowsAudioDevices
+                                               join audioDeviceId in ApplicationConfiguration.Instance.AudioCaptureDevices.Select(x => x.DeviceId)
+                                                on activeDevice.DeviceId equals audioDeviceId
+                                               select new AudioCaptureDevice(activeDevice);
+
+                    SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(activeCaptureDevices);
+                }
+
+                // Output Devices
+                if (ApplicationConfiguration.Instance.AudioOutputDevices?.Any() ?? false)
+                {
+                    var activeOutputDevices = from activeDevice in activeWindowsAudioDevices
+                                              join audioDeviceId in ApplicationConfiguration.Instance.AudioOutputDevices.Select(x => x.DeviceId)
+                                                  on activeDevice.DeviceId equals audioDeviceId
+                                              select new AudioOutputDevice(activeDevice) { PlaybackScope = ApplicationConfiguration.Instance.AudioOutputDevices.First(x => x.DeviceId == activeDevice.DeviceId).PlaybackScope };
+
+                    SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(activeOutputDevices);
+                }
             }
-
-            // Output Devices
-            if (ApplicationConfiguration.Instance.AudioOutputDevices?.Any() ?? false)
+            catch (Exception ex)
             {
-                var activeOutputDevices = from activeDevice in activeWindowsAudioDevices
-                                          join audioDeviceId in ApplicationConfiguration.Instance.AudioOutputDevices.Select(x => x.DeviceId)
-                                              on activeDevice.DeviceId equals audioDeviceId
-                                           select new AudioOutputDevice(activeDevice) { PlaybackScope = ApplicationConfiguration.Instance.AudioOutputDevices.First(x => x.DeviceId == activeDevice.DeviceId).PlaybackScope };
-
-                SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(activeOutputDevices);
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion LoadAudioDevices
@@ -309,30 +323,37 @@ namespace SoundboardYourFriends.ViewModel
         #region LoadAudioSamples
         public void LoadAudioSamples()
         {
-            if (Directory.Exists(ApplicationConfiguration.Instance.SoundboardSampleDirectory))
+            try
             {
-                foreach (string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.Instance.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
+                if (Directory.Exists(ApplicationConfiguration.Instance.SoundboardSampleDirectory))
                 {
-                    string relativePath = Path.GetRelativePath(ApplicationConfiguration.Instance.SoundboardSampleDirectory, audioSamplePath);
-                    string[] directorySplit = relativePath.Split('\\');
-                    double totalSeconds = AudioAgent.GetFileAudioDuration(audioSamplePath).TotalSeconds;
-
-                    string groupName = "Ungrouped";
-                    if (directorySplit.Length > 1)
+                    foreach (string audioSamplePath in Directory.GetFiles(ApplicationConfiguration.Instance.SoundboardSampleDirectory, "*", SearchOption.AllDirectories))
                     {
-                        groupName = directorySplit[0];
+                        string relativePath = Path.GetRelativePath(ApplicationConfiguration.Instance.SoundboardSampleDirectory, audioSamplePath);
+                        string[] directorySplit = relativePath.Split('\\');
+                        double totalSeconds = AudioAgent.GetFileAudioDuration(audioSamplePath).TotalSeconds;
+
+                        string groupName = "Ungrouped";
+                        if (directorySplit.Length > 1)
+                        {
+                            groupName = directorySplit[0];
+                        }
+
+                        _soundboardSampleCollection.Add(new SoundboardSample(audioSamplePath)
+                        {
+                            GroupName = groupName,
+                            FileTimeMax = totalSeconds,
+                            FileTimeMin = 0,
+                            FileTimeUpperValue = totalSeconds,
+                            FileTimeLowerValue = 0,
+                            HotkeyId = _soundboardSampleCollection.Count
+                        });
                     }
-
-                    _soundboardSampleCollection.Add(new SoundboardSample(audioSamplePath)
-                    {
-                        GroupName = groupName,
-                        FileTimeMax = totalSeconds,
-                        FileTimeMin = 0,
-                        FileTimeUpperValue = totalSeconds,
-                        FileTimeLowerValue = 0,
-                        HotkeyId = _soundboardSampleCollection.Count
-                    });
                 }
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion LoadAudioSamples
@@ -365,22 +386,29 @@ namespace SoundboardYourFriends.ViewModel
         #region RegisterHotKeysAndHooks
         public void RegisterHotKeysAndHooks()
         {
-            if (RegisterRecordHotKey(ApplicationConfiguration.Instance.RecordHotkey))
+            try
             {
-                RecordHotkey = ApplicationConfiguration.Instance.RecordHotkey;
-            }
-
-            SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
-            {
-                if (soundboardSample.Hotkey != Key.None)
+                if (RegisterRecordHotKey(ApplicationConfiguration.Instance.RecordHotkey))
                 {
-                    RegisterSoundboardSampleHotKey(soundboardSample.Hotkey, soundboardSample.HotkeyId);
+                    RecordHotkey = ApplicationConfiguration.Instance.RecordHotkey;
                 }
-            });
 
-            // Hooks
-            _hwndSource = HwndSource.FromHwnd(WindowHandle);
-            _hwndSource.AddHook(HwndHook);
+                SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
+                {
+                    if (soundboardSample.Hotkey != Key.None)
+                    {
+                        RegisterSoundboardSampleHotKey(soundboardSample.Hotkey, soundboardSample.HotkeyId);
+                    }
+                });
+
+                // Hooks
+                _hwndSource = HwndSource.FromHwnd(WindowHandle);
+                _hwndSource.AddHook(HwndHook);
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion RegisterHotKeysAndHooks
 

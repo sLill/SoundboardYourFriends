@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SoundboardYourFriends.Core;
 using SoundboardYourFriends.Core.Windows;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.Model.JsonConverters;
@@ -125,14 +126,21 @@ namespace SoundboardYourFriends
         #region ImportUserSettings
         public void ImportUserSettings()
         {
-            if (File.Exists(SettingsFilePath))
+            try
             {
-                var jsonSerializerSettings = new JsonSerializerSettings();
-                jsonSerializerSettings.Converters.Add(new AudioOutputDeviceJsonConverter());
-                jsonSerializerSettings.Converters.Add(new AudioCaptureDeviceJsonConverter());
+                if (File.Exists(SettingsFilePath))
+                {
+                    var jsonSerializerSettings = new JsonSerializerSettings();
+                    jsonSerializerSettings.Converters.Add(new AudioOutputDeviceJsonConverter());
+                    jsonSerializerSettings.Converters.Add(new AudioCaptureDeviceJsonConverter());
 
-                var applicationConfigurationFromFile = JsonConvert.DeserializeObject<ApplicationConfiguration>(File.ReadAllText(SettingsFilePath), jsonSerializerSettings);
-                ApplicationConfiguration.Instance = applicationConfigurationFromFile;
+                    var applicationConfigurationFromFile = JsonConvert.DeserializeObject<ApplicationConfiguration>(File.ReadAllText(SettingsFilePath), jsonSerializerSettings);
+                    ApplicationConfiguration.Instance = applicationConfigurationFromFile;
+                }
+            } 
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion ImportUserSettings
