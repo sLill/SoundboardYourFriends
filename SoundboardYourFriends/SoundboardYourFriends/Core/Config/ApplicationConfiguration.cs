@@ -98,7 +98,6 @@ namespace SoundboardYourFriends
         }
         #endregion SoundboardSampleDirectory
 
-
         #region SoundboardSampleSeconds
         private int _soundboardSampleSeconds = 20;
         public int SoundboardSampleSeconds
