@@ -31,12 +31,6 @@ namespace SoundboardYourFriends.Core
         #endregion EventHandlers/Delegates
 
         #region Constructors..
-        #region AudioAgent
-        static AudioAgent()
-        {
-
-        }
-        #endregion AudioAgent
         #endregion Constructors..
 
         #region Methods..
@@ -46,60 +40,74 @@ namespace SoundboardYourFriends.Core
         #region BeginAudioPlayback
         public static void BeginAudioPlayback(string filePath, AudioOutputDevice audioOutputDevice, double beginTime, double endTime)
         {
-            AudioFileReader audioFileReader = new AudioFileReader(filePath);
-            MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
-
-            VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
-            ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
-
-            OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
-            offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
-            offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
-
-            mixer.AddMixerInput(offsetSampleProvider);
-
-            audioOutputDevice.InitializeAndPlay(mixer);
-            audioOutputDevice.PlaybackStopped += (sender, e) =>
+            try
             {
+                AudioFileReader audioFileReader = new AudioFileReader(filePath);
+                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
+
+                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
+                ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
+
+                OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
+                offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
+                offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
+
+                mixer.AddMixerInput(offsetSampleProvider);
+
+                audioOutputDevice.InitializeAndPlay(mixer);
+                audioOutputDevice.PlaybackStopped += (sender, e) =>
+                {
                 //audioFileReader.Close();
                 audioFileReader.Dispose();
-            };
+                };
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion BeginAudioPlayback
 
         #region BeginAudioCapture
         public static void BeginAudioCapture(AudioCaptureDevice audioCaptureDevice)
         {
-            StopAudioCapture();
-
-            // Determines the audio buffer size in relation to the parent buffer. Bigger multiplier = smaller proportion. 
-            // Larger multiplier also means dumping and copying to a new parent buffer less frequently at the cost of using a larger chunk of virtual memory
-            // ex. If multiplier is 4, the audio buffer for a single soundboard sample will takeup 25% of the larger buffer
-            int audioBufferMultiplier = 5;
-
-            if (audioCaptureDevice.MMDeviceInstance != null)
+            try
             {
-                WasapiLoopbackCapture = new WasapiLoopbackCapture(audioCaptureDevice.MMDeviceInstance);
+                StopAudioCapture();
 
-                int audioSampleSize = ApplicationConfiguration.Instance.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
-                int audioBufferMax = audioSampleSize * audioBufferMultiplier;
+                // Determines the audio buffer size in relation to the parent buffer. Bigger multiplier = smaller proportion. 
+                // Larger multiplier also means dumping and copying to a new parent buffer less frequently at the cost of using a larger chunk of virtual memory
+                // ex. If multiplier is 4, the audio buffer for a single soundboard sample will takeup 25% of the larger buffer
+                int audioBufferMultiplier = 5;
 
-                WasapiLoopbackCapture.DataAvailable += (sender, e) =>
+                if (audioCaptureDevice.MMDeviceInstance != null)
                 {
-                // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
-                if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
+                    WasapiLoopbackCapture = new WasapiLoopbackCapture(audioCaptureDevice.MMDeviceInstance);
+
+                    int audioSampleSize = ApplicationConfiguration.Instance.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
+                    int audioBufferMax = audioSampleSize * audioBufferMultiplier;
+
+                    WasapiLoopbackCapture.DataAvailable += (sender, e) =>
                     {
-                        List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize);
-                        _audioByteBuffer.Clear();
-                        _audioByteBuffer.AddRange(retainedBytes);
-                    }
+                    // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
+                    if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
+                        {
+                            List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize);
+                            _audioByteBuffer.Clear();
+                            _audioByteBuffer.AddRange(retainedBytes);
+                        }
 
-                    byte[] capturedBytes = new byte[e.BytesRecorded];
-                    Array.Copy(e.Buffer, 0, capturedBytes, 0, e.BytesRecorded);
-                    _audioByteBuffer.AddRange(capturedBytes);
-                };
+                        byte[] capturedBytes = new byte[e.BytesRecorded];
+                        Array.Copy(e.Buffer, 0, capturedBytes, 0, e.BytesRecorded);
+                        _audioByteBuffer.AddRange(capturedBytes);
+                    };
 
-                WasapiLoopbackCapture.StartRecording();
+                    WasapiLoopbackCapture.StartRecording();
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion BeginAudioCapture
@@ -123,11 +131,18 @@ namespace SoundboardYourFriends.Core
         {
             TimeSpan result = TimeSpan.Zero;
 
-            using (var shell = ShellObject.FromParsingName(filePath))
+            try
             {
-                IShellProperty mediaDurationProperty = shell.Properties.System.Media.Duration;
-                var mediaDurationPropertyValue = (ulong)mediaDurationProperty.ValueAsObject;
-                result = TimeSpan.FromTicks((long)mediaDurationPropertyValue);
+                using (var shell = ShellObject.FromParsingName(filePath))
+                {
+                    IShellProperty mediaDurationProperty = shell.Properties.System.Media.Duration;
+                    var mediaDurationPropertyValue = (ulong)mediaDurationProperty.ValueAsObject;
+                    result = TimeSpan.FromTicks((long)mediaDurationPropertyValue);
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
 
             return result;
@@ -139,36 +154,43 @@ namespace SoundboardYourFriends.Core
         {
             var audioDevices = new List<AudioDeviceBase>();
 
-            Dictionary<Guid, MMDevice> systemMMDeviceCollection = new Dictionary<Guid, MMDevice>();
-            using (var deviceEnumerator = new MMDeviceEnumerator())
+            try
             {
-                foreach (var device in deviceEnumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active))
+                Dictionary<Guid, MMDevice> systemMMDeviceCollection = new Dictionary<Guid, MMDevice>();
+                using (var deviceEnumerator = new MMDeviceEnumerator())
                 {
-                    try
+                    foreach (var device in deviceEnumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active))
                     {
-                        var deviceIdString = device.Properties[WindowsDevicePropertyKeys.PKEY_AudioEndpoint_GUID.ToNAudioPropertyKey()]?.Value.ToString();
+                        try
+                        {
+                            var deviceIdString = device.Properties[WindowsDevicePropertyKeys.PKEY_AudioEndpoint_GUID.ToNAudioPropertyKey()]?.Value.ToString();
 
-                        Regex guidRegex = new Regex(@"{(?<Guid>.{8}-.{4}-.{4}-.{4}-.{12})}");
-                        deviceIdString = guidRegex.Match(deviceIdString).Groups["Guid"].Value;
-                        Guid deviceId = Guid.Parse(deviceIdString);
+                            Regex guidRegex = new Regex(@"{(?<Guid>.{8}-.{4}-.{4}-.{4}-.{12})}");
+                            deviceIdString = guidRegex.Match(deviceIdString).Groups["Guid"].Value;
+                            Guid deviceId = Guid.Parse(deviceIdString);
 
-                        systemMMDeviceCollection[deviceId] = device;
+                            systemMMDeviceCollection[deviceId] = device;
+                        }
+                        catch { }
                     }
-                    catch { }
                 }
-            }
 
-            DirectSound.GetDevices().ForEach(audioDevice =>
-            {
-                var mmDeviceInstance = systemMMDeviceCollection.ContainsKey(audioDevice.DriverGuid) ? systemMMDeviceCollection[audioDevice.DriverGuid] : null;
-
-                audioDevices.Add(new AudioDeviceBase(audioDevice.DriverGuid)
+                DirectSound.GetDevices().ForEach(audioDevice =>
                 {
-                    FriendlyName = audioDevice.Description,
-                    MMDeviceInstance = mmDeviceInstance,
-                    AudioMeterInformation = mmDeviceInstance?.AudioMeterInformation
+                    var mmDeviceInstance = systemMMDeviceCollection.ContainsKey(audioDevice.DriverGuid) ? systemMMDeviceCollection[audioDevice.DriverGuid] : null;
+
+                    audioDevices.Add(new AudioDeviceBase(audioDevice.DriverGuid)
+                    {
+                        FriendlyName = audioDevice.Description,
+                        MMDeviceInstance = mmDeviceInstance,
+                        AudioMeterInformation = mmDeviceInstance?.AudioMeterInformation
+                    });
                 });
-            });
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
 
             return audioDevices;
         }
@@ -203,44 +225,51 @@ namespace SoundboardYourFriends.Core
         #region TrimFile
         public static void TrimFile(string filepath, double beginTimeMilliseconds, double endTimeMilliseconds)
         {
-            List<byte> inputBuffer = new List<byte>();
-            WaveFormat waveFormat = null;
-
-            using (WaveFileReader reader = new WaveFileReader(filepath))
+            try
             {
-                waveFormat = reader.WaveFormat;
+                List<byte> inputBuffer = new List<byte>();
+                WaveFormat waveFormat = null;
 
-                int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
-
-                int startByte = (int)beginTimeMilliseconds * bytesPerMillisecond;
-                startByte = startByte - startByte % reader.WaveFormat.BlockAlign;
-
-                int endByte = (int)endTimeMilliseconds * bytesPerMillisecond;
-                endByte = endByte - endByte % reader.WaveFormat.BlockAlign;
-
-                reader.Position = startByte;
-                byte[] buffer = new byte[1024];
-
-                while (reader.Position < endByte)
+                using (WaveFileReader reader = new WaveFileReader(filepath))
                 {
-                    int bytesRequired = (int)(endByte - reader.Position);
-                    if (bytesRequired > 0)
-                    {
-                        int bytesToRead = Math.Min(bytesRequired, buffer.Length);
-                        int bytesRead = reader.Read(buffer, 0, bytesToRead);
+                    waveFormat = reader.WaveFormat;
 
-                        if (bytesRead > 0)
+                    int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
+
+                    int startByte = (int)beginTimeMilliseconds * bytesPerMillisecond;
+                    startByte = startByte - startByte % reader.WaveFormat.BlockAlign;
+
+                    int endByte = (int)endTimeMilliseconds * bytesPerMillisecond;
+                    endByte = endByte - endByte % reader.WaveFormat.BlockAlign;
+
+                    reader.Position = startByte;
+                    byte[] buffer = new byte[1024];
+
+                    while (reader.Position < endByte)
+                    {
+                        int bytesRequired = (int)(endByte - reader.Position);
+                        if (bytesRequired > 0)
                         {
-                            inputBuffer.AddRange(buffer.ToList().GetRange(0, bytesRead));
+                            int bytesToRead = Math.Min(bytesRequired, buffer.Length);
+                            int bytesRead = reader.Read(buffer, 0, bytesToRead);
+
+                            if (bytesRead > 0)
+                            {
+                                inputBuffer.AddRange(buffer.ToList().GetRange(0, bytesRead));
+                            }
                         }
                     }
+
                 }
 
+                using (WaveFileWriter writer = new WaveFileWriter(filepath, waveFormat))
+                {
+                    writer.Write(inputBuffer.ToArray(), 0, inputBuffer.Count);
+                }
             }
-
-            using (WaveFileWriter writer = new WaveFileWriter(filepath, waveFormat))
+            catch (Exception ex)
             {
-                writer.Write(inputBuffer.ToArray(), 0, inputBuffer.Count);
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion TrimFile
@@ -248,22 +277,29 @@ namespace SoundboardYourFriends.Core
         #region WriteAudioBufferToFile
         public static void WriteAudioBufferToFile()
         {
-            if (WasapiLoopbackCapture != null)
+            try
             {
-                Directory.CreateDirectory(ApplicationConfiguration.Instance.SoundboardSampleDirectory);
-
-                string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
-                string fileNameFull = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, fileName);
-
-                using (WaveFileWriter waveFileWriter = new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
+                if (WasapiLoopbackCapture != null)
                 {
-                    int audioSampleSize = ApplicationConfiguration.Instance.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
-                    var bytesToWrite = audioSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize).ToArray();
-                    waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);
-                }
+                    Directory.CreateDirectory(ApplicationConfiguration.Instance.SoundboardSampleDirectory);
 
-                _audioByteBuffer.Clear();
-                AudioAgent.FileWritten?.Invoke(fileNameFull, EventArgs.Empty);
+                    string fileName = $"AudioSample_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav";
+                    string fileNameFull = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, fileName);
+
+                    using (WaveFileWriter waveFileWriter = new WaveFileWriter(fileNameFull, WasapiLoopbackCapture.WaveFormat))
+                    {
+                        int audioSampleSize = ApplicationConfiguration.Instance.SoundboardSampleSeconds * WasapiLoopbackCapture.WaveFormat.AverageBytesPerSecond;
+                        var bytesToWrite = audioSampleSize > _audioByteBuffer.Count ? _audioByteBuffer.ToArray() : _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize).ToArray();
+                        waveFileWriter.Write(bytesToWrite, 0, bytesToWrite.Length);
+                    }
+
+                    _audioByteBuffer.Clear();
+                    AudioAgent.FileWritten?.Invoke(fileNameFull, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion WriteAudioBufferToFile

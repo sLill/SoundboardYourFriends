@@ -59,7 +59,7 @@ namespace SoundboardYourFriends.ViewModel
             {
                 _selectedCaptureDevicesCollection = value;
                 ApplicationConfiguration.Instance.AudioCaptureDevices = value;
-                
+
                 BeginAudioCapture();
                 RaisePropertyChanged();
             }
@@ -131,35 +131,49 @@ namespace SoundboardYourFriends.ViewModel
         #region OnAudioMeterTimerElapsed
         private void OnAudioMeterTimerElapsed(object sender, EventArgs e)
         {
-            if (SelectedCaptureDevicesCollection.Any())
+            try
             {
-                SelectedCaptureDevicesCollection[0].AudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
-            }
+                if (SelectedCaptureDevicesCollection.Any())
+                {
+                    SelectedCaptureDevicesCollection[0].AudioPeak = (int)(WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice().AudioMeterInformation.MasterPeakValue * 100);
+                }
 
-            SelectedOutputDevicesCollection.ToList().ForEach(outputDevice =>
+                SelectedOutputDevicesCollection.ToList().ForEach(outputDevice =>
+                {
+                    outputDevice.AudioPeak = (int)(outputDevice.AudioMeterInformation?.MasterPeakValue ?? 0 * 100);
+                });
+            }
+            catch (Exception ex)
             {
-                outputDevice.AudioPeak = (int)(outputDevice.AudioMeterInformation?.MasterPeakValue ?? 0 * 100);
-            });
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion OnAudioMeterTimerElapsed
 
         #region OnFileWritten
         public void OnFileWritten(object sender, EventArgs e)
         {
-            string filePath = sender as string;
-            double totalSeconds = AudioAgent.GetFileAudioDuration(filePath).TotalSeconds;
-
-            SoundboardSample NewSoundboardSample = new SoundboardSample(filePath)
+            try
             {
-                GroupName = "Ungrouped",
-                FileTimeMax = totalSeconds,
-                FileTimeMin = 0,
-                FileTimeUpperValue = totalSeconds,
-                FileTimeLowerValue = 0,
-                HotkeyId = SoundboardSampleCollection.Count
-            };
+                string filePath = sender as string;
+                double totalSeconds = AudioAgent.GetFileAudioDuration(filePath).TotalSeconds;
 
-            SoundboardSampleCollection.Add(NewSoundboardSample);
+                SoundboardSample NewSoundboardSample = new SoundboardSample(filePath)
+                {
+                    GroupName = "Ungrouped",
+                    FileTimeMax = totalSeconds,
+                    FileTimeMin = 0,
+                    FileTimeUpperValue = totalSeconds,
+                    FileTimeLowerValue = 0,
+                    HotkeyId = SoundboardSampleCollection.Count
+                };
+
+                SoundboardSampleCollection.Add(NewSoundboardSample);
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion OnFileWritten
 
@@ -205,23 +219,30 @@ namespace SoundboardYourFriends.ViewModel
         #region DeleteSampleAsync
         public async Task DeleteSampleAsync(SoundboardSample soundboardSample)
         {
-            // Recursively try to acquire file lock. This can sometimes take a few seconds to release after 
-            // an audio playback event has ended
-            bool success = false;
-            while (!success)
+            try
             {
-                try
+                // Recursively try to acquire file lock. This can sometimes take a few seconds to release after 
+                // an audio playback event has ended
+                bool success = false;
+                while (!success)
                 {
-                    AudioAgent.StopAudioPlayback(SelectedOutputDevicesCollection.ToList());
-                    File.Delete(soundboardSample.FilePath);
-                    SoundboardSampleCollection.Remove(soundboardSample);
+                    try
+                    {
+                        AudioAgent.StopAudioPlayback(SelectedOutputDevicesCollection.ToList());
+                        File.Delete(soundboardSample.FilePath);
+                        SoundboardSampleCollection.Remove(soundboardSample);
 
-                    success = true;
+                        success = true;
+                    }
+                    catch
+                    {
+                        await Task.Delay(500);
+                    }
                 }
-                catch
-                {
-                    await Task.Delay(500);
-                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion DeleteSampleAsync
@@ -369,17 +390,24 @@ namespace SoundboardYourFriends.ViewModel
         #region PlayAudioSample
         public void PlayAudioSample(SoundboardSample soundboardSample, PlaybackScope playbackScope)
         {
-            var outputDevices = SelectedOutputDevicesCollection.Where(x => x.PlaybackScope >= playbackScope).ToList();
-            if (outputDevices.Any())
+            try
             {
-                outputDevices[0].PlaybackStopped += OnAudioPlaybackStopped;
-                soundboardSample.StartPlaybackTimer();
-            }
+                var outputDevices = SelectedOutputDevicesCollection.Where(x => x.PlaybackScope >= playbackScope).ToList();
+                if (outputDevices.Any())
+                {
+                    outputDevices[0].PlaybackStopped += OnAudioPlaybackStopped;
+                    soundboardSample.StartPlaybackTimer();
+                }
 
-            outputDevices.ForEach(outputDevice =>
+                outputDevices.ForEach(outputDevice =>
+                {
+                    AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, outputDevice, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+                });
+            }
+            catch (Exception ex)
             {
-                AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, outputDevice, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
-            });
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion PlayAudioSample
 
@@ -437,56 +465,70 @@ namespace SoundboardYourFriends.ViewModel
         #region SaveSample
         public void SaveSample(SoundboardSample soundboardSample)
         {
-            // File length
-            if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
+            try
             {
-                AudioAgent.TrimFile(soundboardSample.FilePath, soundboardSample.FileTimeLowerValue * 1000, soundboardSample.FileTimeUpperValue * 1000);
+                // File length
+                if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
+                {
+                    AudioAgent.TrimFile(soundboardSample.FilePath, soundboardSample.FileTimeLowerValue * 1000, soundboardSample.FileTimeUpperValue * 1000);
 
-                soundboardSample.FileTimeMin = 0;
-                soundboardSample.FileTimeMax = AudioAgent.GetFileAudioDuration(soundboardSample.FilePath).Seconds;
-                soundboardSample.FileTimeLowerValue = 0;
-                soundboardSample.FileTimeUpperValue = soundboardSample.FileTimeMax;
+                    soundboardSample.FileTimeMin = 0;
+                    soundboardSample.FileTimeMax = AudioAgent.GetFileAudioDuration(soundboardSample.FilePath).Seconds;
+                    soundboardSample.FileTimeLowerValue = 0;
+                    soundboardSample.FileTimeUpperValue = soundboardSample.FileTimeMax;
+                }
+
+                // File name
+                if (Path.GetFileNameWithoutExtension(soundboardSample.FilePath) != soundboardSample.Name)
+                {
+                    string targetDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, soundboardSample.GroupName);
+                    string newFilePath = Path.Combine(targetDirectory, $"{soundboardSample.Name}.wav");
+
+                    Directory.CreateDirectory(targetDirectory);
+                    File.Move(soundboardSample.FilePath, newFilePath);
+
+                    soundboardSample.FilePath = newFilePath;
+                }
+
+                soundboardSample.SaveMetadataProperties();
             }
-
-            // File name
-            if (Path.GetFileNameWithoutExtension(soundboardSample.FilePath) != soundboardSample.Name)
+            catch (Exception ex)
             {
-                string targetDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, soundboardSample.GroupName);
-                string newFilePath = Path.Combine(targetDirectory, $"{soundboardSample.Name}.wav");
-
-                Directory.CreateDirectory(targetDirectory);
-                File.Move(soundboardSample.FilePath, newFilePath);
-
-                soundboardSample.FilePath = newFilePath;
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
-
-            soundboardSample.SaveMetadataProperties();
         }
         #endregion SaveSample
 
         #region SetSelectedAudioDevices
         public void SetSelectedAudioDevices(AudioDeviceType audioDeviceType)
         {
-            switch (audioDeviceType)
+            try
             {
-                case AudioDeviceType.Capture:
-                    using (AudioCaptureDeviceDialog audioCaptureDeviceDialog = new AudioCaptureDeviceDialog(SelectedCaptureDevicesCollection))
-                    {
-                        if (audioCaptureDeviceDialog.ShowDialog().Value)
+                switch (audioDeviceType)
+                {
+                    case AudioDeviceType.Capture:
+                        using (AudioCaptureDeviceDialog audioCaptureDeviceDialog = new AudioCaptureDeviceDialog(SelectedCaptureDevicesCollection))
                         {
-                            SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(audioCaptureDeviceDialog.SelectedAudioCaptureDevices);
+                            if (audioCaptureDeviceDialog.ShowDialog().Value)
+                            {
+                                SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(audioCaptureDeviceDialog.SelectedAudioCaptureDevices);
+                            }
                         }
-                    }
-                    break;
-                case AudioDeviceType.Render:
-                    using (AudioOutputDeviceDialog audioOutputDeviceDialog = new AudioOutputDeviceDialog(SelectedOutputDevicesCollection))
-                    {
-                        if (audioOutputDeviceDialog.ShowDialog().Value)
+                        break;
+                    case AudioDeviceType.Render:
+                        using (AudioOutputDeviceDialog audioOutputDeviceDialog = new AudioOutputDeviceDialog(SelectedOutputDevicesCollection))
                         {
-                            SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(audioOutputDeviceDialog.SelectedAudioOutputDevices);
+                            if (audioOutputDeviceDialog.ShowDialog().Value)
+                            {
+                                SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(audioOutputDeviceDialog.SelectedAudioOutputDevices);
+                            }
                         }
-                    }
-                    break;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
         #endregion SetSelectedAudioDevices
@@ -494,13 +536,20 @@ namespace SoundboardYourFriends.ViewModel
         #region SetEvents
         private void SetEvents()
         {
-            AudioAgent.FileWritten += OnFileWritten;
+            try
+            {
+                AudioAgent.FileWritten += OnFileWritten;
 
-            // Audio Meter Polling Rate
-            var audioMeterUpdateTimer = new System.Timers.Timer(100);
-            audioMeterUpdateTimer.Start();
+                // Audio Meter Polling Rate
+                var audioMeterUpdateTimer = new System.Timers.Timer(100);
+                audioMeterUpdateTimer.Start();
 
-            audioMeterUpdateTimer.Elapsed += OnAudioMeterTimerElapsed;
+                audioMeterUpdateTimer.Elapsed += OnAudioMeterTimerElapsed;
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion SetEvents
 

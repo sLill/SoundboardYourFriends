@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using SoundboardYourFriends.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -15,20 +16,27 @@ namespace SoundboardYourFriends.Model.JsonConverters
         #region WriteJson
         public override void WriteJson(JsonWriter writer, [AllowNull] IEnumerable<AudioCaptureDevice> value, JsonSerializer serializer)
         {
-            writer.WriteStartArray();
-
-            value?.ToList().ForEach(device =>
+            try
             {
-                writer.WriteStartObject();
+                writer.WriteStartArray();
+
+                value?.ToList().ForEach(device =>
+                {
+                    writer.WriteStartObject();
 
                 // Device Id
                 writer.WritePropertyName("DeviceId");
-                writer.WriteValue(device.DeviceId);
+                    writer.WriteValue(device.DeviceId);
 
-                writer.WriteEndObject();
-            });
+                    writer.WriteEndObject();
+                });
 
-            writer.WriteEndArray();
+                writer.WriteEndArray();
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion WriteJson
 
@@ -37,29 +45,37 @@ namespace SoundboardYourFriends.Model.JsonConverters
         {
             var deviceCollection = new List<AudioCaptureDevice>();
 
-            if (reader.TokenType != JsonToken.None)
+            try
             {
-                while (reader.TokenType != JsonToken.EndArray)
+                if (reader.TokenType != JsonToken.None)
                 {
-                    if (reader.Value?.ToString() == "DeviceId")
+                    while (reader.TokenType != JsonToken.EndArray)
                     {
-                        reader.Read();
+                        if (reader.Value?.ToString() == "DeviceId")
+                        {
+                            reader.Read();
 
-                        // DeviceId
-                        var deviceId = Guid.Parse((string)reader.Value);
-                        deviceCollection.Add(new AudioCaptureDevice(deviceId) { DeviceActive = true }); ;
-                    }
-                    else
-                    {
-                        reader.Read();
+                            // DeviceId
+                            var deviceId = Guid.Parse((string)reader.Value);
+                            deviceCollection.Add(new AudioCaptureDevice(deviceId) { DeviceActive = true }); ;
+                        }
+                        else
+                        {
+                            reader.Read();
+                        }
                     }
                 }
-            } 
-            #endregion ReadJson
 
-            existingValue = deviceCollection;
+                existingValue = deviceCollection;
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
+
             return existingValue;
-        } 
+        }
+        #endregion ReadJson
         #endregion Methods..
     }
 }

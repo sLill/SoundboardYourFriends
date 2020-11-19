@@ -215,52 +215,66 @@ namespace SoundboardYourFriends.Model
         #region InitializePropertiesFromMetaData
         private void InitializePropertiesFromMetaData()
         {
-            // Pull custom metadata properties from the file. Generate them if this is a new file and none are found
-            OleDocumentProperties documentProperties = new OleDocumentProperties();
-            documentProperties.Open(this.FilePath, false, dsoFileOpenOptions.dsoOptionDefault);
-
-            var FileCustomPropertyCollection = documentProperties.CustomProperties.Cast<CustomProperty>()
-                .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x);
-
-            if (!FileCustomPropertyCollection.Any())
+            try
             {
-                FileUniqueId = Guid.NewGuid();
-                documentProperties.CustomProperties.Add("SoundboardSample_FileUniqueIdentifier", FileUniqueId.ToString());
+                // Pull custom metadata properties from the file. Generate them if this is a new file and none are found
+                OleDocumentProperties documentProperties = new OleDocumentProperties();
+                documentProperties.Open(this.FilePath, false, dsoFileOpenOptions.dsoOptionDefault);
 
-                Hotkey = Key.None;
-                documentProperties.CustomProperties.Add("SoundboardSample_Hotkey", Hotkey.ToString());
+                var FileCustomPropertyCollection = documentProperties.CustomProperties.Cast<CustomProperty>()
+                    .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x);
 
-                documentProperties.Save();
+                if (!FileCustomPropertyCollection.Any())
+                {
+                    FileUniqueId = Guid.NewGuid();
+                    documentProperties.CustomProperties.Add("SoundboardSample_FileUniqueIdentifier", FileUniqueId.ToString());
+
+                    Hotkey = Key.None;
+                    documentProperties.CustomProperties.Add("SoundboardSample_Hotkey", Hotkey.ToString());
+
+                    documentProperties.Save();
+                }
+                else
+                {
+                    FileUniqueId = Guid.Parse((string)FileCustomPropertyCollection["SoundboardSample_FileUniqueIdentifier"].get_Value());
+                    Enum.TryParse(typeof(Key), (string)FileCustomPropertyCollection["SoundboardSample_Hotkey"].get_Value(), out object hotkey);
+
+                    hotkey = hotkey ?? Key.None;
+                    Hotkey = (Key)hotkey;
+                }
+
+                documentProperties.Close();
             }
-            else
+            catch (Exception ex)
             {
-                FileUniqueId = Guid.Parse((string)FileCustomPropertyCollection["SoundboardSample_FileUniqueIdentifier"].get_Value());
-                Enum.TryParse(typeof(Key), (string)FileCustomPropertyCollection["SoundboardSample_Hotkey"].get_Value(), out object hotkey);
-
-                hotkey = hotkey ?? Key.None;
-                Hotkey = (Key)hotkey;
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
-
-            documentProperties.Close();
         }
         #endregion InitializePropertiesFromMetaData
 
         #region SaveMetadataProperties
         public void SaveMetadataProperties()
         {
-            OleDocumentProperties documentProperties = new OleDocumentProperties();
-            documentProperties.Open(this.FilePath, false, dsoFileOpenOptions.dsoOptionDefault);
-
-            var FileCustomPropertyCollection = documentProperties.CustomProperties.Cast<CustomProperty>()
-                .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x);
-
-            if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_Hotkey"))
+            try
             {
-                FileCustomPropertyCollection["SoundboardSample_Hotkey"].set_Value(Hotkey.ToString());
-            }
+                OleDocumentProperties documentProperties = new OleDocumentProperties();
+                documentProperties.Open(this.FilePath, false, dsoFileOpenOptions.dsoOptionDefault);
 
-            documentProperties.Save();
-            documentProperties.Close();
+                var FileCustomPropertyCollection = documentProperties.CustomProperties.Cast<CustomProperty>()
+                    .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x);
+
+                if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_Hotkey"))
+                {
+                    FileCustomPropertyCollection["SoundboardSample_Hotkey"].set_Value(Hotkey.ToString());
+                }
+
+                documentProperties.Save();
+                documentProperties.Close();
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion SaveMetadataProperties
 

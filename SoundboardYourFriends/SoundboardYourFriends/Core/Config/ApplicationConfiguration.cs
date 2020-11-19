@@ -148,18 +148,25 @@ namespace SoundboardYourFriends
         #region SaveUserSettings
         public void SaveUserSettings()
         {
-            var jsonSerializerSettings = new JsonSerializerSettings();
-            jsonSerializerSettings.Converters.Add(new AudioOutputDeviceJsonConverter()); 
-            jsonSerializerSettings.Converters.Add(new AudioCaptureDeviceJsonConverter()); 
-
-            string settingsJson = JsonConvert.SerializeObject(ApplicationConfiguration.Instance, Formatting.Indented, jsonSerializerSettings);
-
-            if (!Directory.Exists(ApplicationSettingsDirectory))
+            try
             {
-                Directory.CreateDirectory(ApplicationSettingsDirectory);
-            }
+                var jsonSerializerSettings = new JsonSerializerSettings();
+                jsonSerializerSettings.Converters.Add(new AudioOutputDeviceJsonConverter());
+                jsonSerializerSettings.Converters.Add(new AudioCaptureDeviceJsonConverter());
 
-            File.WriteAllText(SettingsFilePath, settingsJson);
+                string settingsJson = JsonConvert.SerializeObject(ApplicationConfiguration.Instance, Formatting.Indented, jsonSerializerSettings);
+
+                if (!Directory.Exists(ApplicationSettingsDirectory))
+                {
+                    Directory.CreateDirectory(ApplicationSettingsDirectory);
+                }
+
+                File.WriteAllText(SettingsFilePath, settingsJson);
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion SaveUserSettings
         #endregion Methods..

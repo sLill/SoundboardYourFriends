@@ -201,15 +201,22 @@ namespace SoundboardYourFriends.View.Windows
         #region Window_Loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var windowInteropHelper = new WindowInteropHelper(this);
+            try
+            {
+                var windowInteropHelper = new WindowInteropHelper(this);
 
-            IntPtr windowHandle = windowInteropHelper.Handle;
-            _mainWindowViewModel.WindowHandle = windowHandle;
+                IntPtr windowHandle = windowInteropHelper.Handle;
+                _mainWindowViewModel.WindowHandle = windowHandle;
 
-            _mainWindowViewModel.Initialize();
-            this.Closing += _mainWindowViewModel.OnWindowClosing;
+                _mainWindowViewModel.Initialize();
+                this.Closing += _mainWindowViewModel.OnWindowClosing;
 
-            InitializeControls();
+                InitializeControls();
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
 
             ApplicationLogger.Log("MainWindow loaded");
         }
@@ -227,9 +234,16 @@ namespace SoundboardYourFriends.View.Windows
         #region InitializeControls
         private void InitializeControls()
         {
-            CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
-            collectionView.GroupDescriptions.Add(groupDescription);
+            try
+            {
+                CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
+                PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
+                collectionView.GroupDescriptions.Add(groupDescription);
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Log(ex.Message, ex.StackTrace);
+            }
         }
         #endregion InitializeControls
         #endregion Methods..

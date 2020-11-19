@@ -112,8 +112,7 @@ namespace SoundboardYourFriends.Model
         #endregion Dispose
 
         #region Initialize
-        public virtual void Initialize()
-        { }
+        public virtual void Initialize() { }
         #endregion Initialize 
         #endregion Methods..
     }
