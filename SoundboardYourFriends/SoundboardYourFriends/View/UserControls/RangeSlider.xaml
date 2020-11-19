@@ -111,8 +111,8 @@
                 Template="{StaticResource simpleSlider}"
                 Margin="10,0,0,0"
                 VerticalAlignment="Center"/>
-        <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="5,0,0,0" Content="{Binding LowerValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}"/>
-        <Label Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0">-</Label>
-        <Label Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0" Content="{Binding UpperValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}"/>
+        <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="5,0,0,0" Content="{Binding LowerValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}" Foreground="White"/>
+        <Label Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0" Foreground="White">-</Label>
+        <Label Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0" Content="{Binding UpperValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}" Foreground="White"/>
     </Grid>
 </UserControl>
