@@ -216,6 +216,19 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion BeginAudioCapture
 
+        #region ClearAllSoundboardSampleHotkeys
+        public void ClearAllSoundboardSampleHotkeys()
+        {
+            SoundboardSampleCollection.ToList().ForEach(soundboardSample => 
+            {
+                soundboardSample.Hotkey = Key.None;
+                UnregisterSoundboardSampleHotKey(soundboardSample.HotkeyId);
+
+                SaveSample(soundboardSample);
+            });
+        }
+        #endregion ClearAllSoundboardSampleHotkeys
+
         #region DeleteSampleAsync
         public async Task DeleteSampleAsync(SoundboardSample soundboardSample)
         {

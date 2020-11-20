@@ -138,6 +138,17 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion btnRecord_PreviewMouseButtonDown
 
+        #region btnResetShortcuts_PreviewMouseLeftButtonUp
+        private void btnResetShortcuts_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure?", "Clear all shortcuts", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                _mainWindowViewModel.ClearAllSoundboardSampleHotkeys();
+
+            }
+        } 
+        #endregion btnResetShortcuts_PreviewMouseLeftButtonUp
+
         #region btnSave_Click
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {

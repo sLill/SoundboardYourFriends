@@ -173,6 +173,11 @@
                 </ListView.View>
             </ListView>
         </DockPanel>
+        <DockPanel Grid.Row="4" Grid.Column="2" Margin="0,0,2,0">
+            <Button Name="btnResetShortcuts" Style="{StaticResource buttonRoundCorner}" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnResetShortcuts_PreviewMouseLeftButtonUp">
+                <Image Source="/Resources/ResetArrow.png" ToolTip="Clear shortcuts"/>
+            </Button>
+        </DockPanel>
 
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,0">

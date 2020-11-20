@@ -29,6 +29,7 @@
     <None Remove="Resources\PlayButton.png" />
     <None Remove="Resources\PlayButtonGray.png" />
     <None Remove="Resources\RecordButton.png" />
+    <None Remove="Resources\ResetArrow.png" />
     <None Remove="Resources\SaveButton.png" />
     <None Remove="Resources\SaveButtonGray.png" />
     <None Remove="Resources\SettingsCog.png" />
@@ -66,6 +67,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\PlayButtonGray.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\ResetArrow.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\SaveButton.png">
