@@ -209,6 +209,14 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion txtPlaybackHotkey_PreviewMouseLeftButtonDown
 
+        private void txtRecord_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.KeyDown -= OnRegisterRecordKeyPressed;
+            this.KeyDown += OnRegisterRecordKeyPressed;
+
+            _mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
+        }
+
         #region Window_Loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

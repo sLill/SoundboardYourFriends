@@ -102,6 +102,21 @@
         <!--Row 2-->
         <DockPanel  Grid.Row="2" Grid.Column="1">
             <ListView Name="lstListeningDevices" ItemsSource="{Binding SelectedCaptureDevicesCollection}" Margin="-5,-5,300,0" BorderThickness="0" Background="Transparent">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="Transparent"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="Transparent"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn>
@@ -128,7 +143,7 @@
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="2" VerticalAlignment="Bottom">
-            <TextBox Margin="5,2,2,0" DockPanel.Dock="Right" Width="140" BorderThickness="1" VerticalAlignment="Center" Foreground="Gray" IsReadOnly="True" Opacity="0.7" Text="{Binding RecordHotkeyDisplay}"></TextBox>
+            <TextBox x:Name="txtRecord" Margin="5,2,2,0" DockPanel.Dock="Right" Width="140" BorderThickness="1" VerticalAlignment="Center" Foreground="Gray" IsReadOnly="True" Opacity="0.7" Text="{Binding RecordHotkeyDisplay}" PreviewMouseLeftButtonDown="txtRecord_PreviewMouseLeftButtonDown"></TextBox>
             <Label DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0,0,0">
                 <TextBlock FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center">"Record"</TextBlock>
             </Label>
@@ -140,6 +155,21 @@
         <!--Row 4-->
         <DockPanel Grid.Row="4" Grid.Column="1">
             <ListView Name="lstOutputDevices" ItemsSource="{Binding SelectedOutputDevicesCollection}" Margin="-5,-5,300,0" BorderThickness="0" Background="Transparent">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="Transparent"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="Transparent"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
                         <GridViewColumn Width="auto">
