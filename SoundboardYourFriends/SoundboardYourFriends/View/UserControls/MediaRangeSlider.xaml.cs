@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace SoundboardYourFriends.View.UserControls
 {
-    public partial class RangeSlider : UserControl
+    public partial class MediaRangeSlider : UserControl
     {
         #region Member Variables..
         #endregion Member Variables..
@@ -17,7 +17,7 @@ namespace SoundboardYourFriends.View.UserControls
             set { SetValue(PlaybackCursorValueProperty, value); }
         }
 
-        public static DependencyProperty PlaybackCursorValueProperty = DependencyProperty.Register("PlaybackCursorValue", typeof(double), typeof(RangeSlider),
+        public static DependencyProperty PlaybackCursorValueProperty = DependencyProperty.Register("PlaybackCursorValue", typeof(double), typeof(MediaRangeSlider),
             new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         #endregion PlaybackCursorValue
 
@@ -28,7 +28,7 @@ namespace SoundboardYourFriends.View.UserControls
             set { SetValue(MinimumProperty, value); }
         }
 
-        public static DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(double), typeof(RangeSlider), new UIPropertyMetadata(0d));
+        public static DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(double), typeof(MediaRangeSlider), new UIPropertyMetadata(0d));
         #endregion Minimum
 
         #region LowerValue
@@ -38,7 +38,7 @@ namespace SoundboardYourFriends.View.UserControls
             set { SetValue(LowerValueProperty, value); }
         }
 
-        public static DependencyProperty LowerValueProperty = DependencyProperty.Register("LowerValue", typeof(double), typeof(RangeSlider),
+        public static DependencyProperty LowerValueProperty = DependencyProperty.Register("LowerValue", typeof(double), typeof(MediaRangeSlider),
             new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         #endregion LowerValue
 
@@ -49,7 +49,7 @@ namespace SoundboardYourFriends.View.UserControls
             set { SetValue(UpperValueProperty, value); }
         }
 
-        public static DependencyProperty UpperValueProperty = DependencyProperty.Register("UpperValue", typeof(double), typeof(RangeSlider),
+        public static DependencyProperty UpperValueProperty = DependencyProperty.Register("UpperValue", typeof(double), typeof(MediaRangeSlider),
             new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         #endregion UpperValue
 
@@ -60,7 +60,7 @@ namespace SoundboardYourFriends.View.UserControls
             set { SetValue(MaximumProperty, value); }
         }
 
-        public static DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(double), typeof(RangeSlider), new UIPropertyMetadata(0d));
+        public static DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(double), typeof(MediaRangeSlider), new UIPropertyMetadata(0d));
         #endregion Maximum
         #endregion Properties..
 
@@ -69,13 +69,13 @@ namespace SoundboardYourFriends.View.UserControls
         #endregion Event Handlers..
 
         #region Constructors..
-        #region RangeSlider
-        public RangeSlider()
+        #region MediaRangeSlider
+        public MediaRangeSlider()
         {
             InitializeComponent();
             this.Loaded += Slider_Loaded;
         }
-        #endregion RangeSlider
+        #endregion MediaRangeSlider
         #endregion Constructors..
 
         #region Methods..

@@ -414,7 +414,7 @@ namespace SoundboardYourFriends.ViewModel
 
                 outputDevices.ForEach(outputDevice =>
                 {
-                    AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, outputDevice, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+                    AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, outputDevice, soundboardSample.Volume, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
                 });
             }
             catch (Exception ex)

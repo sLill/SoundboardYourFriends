@@ -38,14 +38,14 @@ namespace SoundboardYourFriends.Core
         #endregion Event Handlers..
 
         #region BeginAudioPlayback
-        public static void BeginAudioPlayback(string filePath, AudioOutputDevice audioOutputDevice, double beginTime, double endTime)
+        public static void BeginAudioPlayback(string filePath, AudioOutputDevice audioOutputDevice, float volume, double beginTime, double endTime)
         {
             try
             {
                 AudioFileReader audioFileReader = new AudioFileReader(filePath);
                 MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
 
-                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = 1.0f };
+                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = volume };
                 ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
 
                 OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
@@ -57,8 +57,8 @@ namespace SoundboardYourFriends.Core
                 audioOutputDevice.InitializeAndPlay(mixer);
                 audioOutputDevice.PlaybackStopped += (sender, e) =>
                 {
-                //audioFileReader.Close();
-                audioFileReader.Dispose();
+                    //audioFileReader.Close();
+                    audioFileReader.Dispose();
                 };
             }
             catch (Exception ex)
@@ -89,8 +89,8 @@ namespace SoundboardYourFriends.Core
 
                     WasapiLoopbackCapture.DataAvailable += (sender, e) =>
                     {
-                    // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
-                    if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
+                        // Copy a clip-sized chunk of audio to a new large buffer upon filling this one up
+                        if (_audioByteBuffer.Count + e.BytesRecorded > audioBufferMax)
                         {
                             List<byte> retainedBytes = _audioByteBuffer.GetRange(_audioByteBuffer.Count - audioSampleSize, audioSampleSize);
                             _audioByteBuffer.Clear();

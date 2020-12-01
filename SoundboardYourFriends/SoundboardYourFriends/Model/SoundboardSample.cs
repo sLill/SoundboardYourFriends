@@ -185,6 +185,15 @@ namespace SoundboardYourFriends.Model
             }
         }
         #endregion PlaybackCursorValue
+
+        #region Volume
+        private float _volume = 1.0f;
+        public float Volume
+        {
+            get { return _volume; }
+            set { _volume = value; }
+        }
+        #endregion Volume
         #endregion Properties..
 
         #region Constructors..

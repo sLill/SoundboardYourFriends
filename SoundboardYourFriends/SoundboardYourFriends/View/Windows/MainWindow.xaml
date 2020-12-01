@@ -143,7 +143,7 @@
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="2" VerticalAlignment="Bottom">
-            <TextBox x:Name="txtRecord" Margin="5,2,2,0" DockPanel.Dock="Right" Width="140" BorderThickness="1" VerticalAlignment="Center" Foreground="Gray" IsReadOnly="True" Opacity="0.7" Text="{Binding RecordHotkeyDisplay}" PreviewMouseLeftButtonDown="txtRecord_PreviewMouseLeftButtonDown"></TextBox>
+            <TextBox x:Name="txtRecord" Margin="5,2,2,0" DockPanel.Dock="Right" Width="140" BorderThickness="1" VerticalAlignment="Center" Foreground="Gray" IsReadOnly="True" Opacity="0.7" Text="{Binding RecordHotkeyDisplay}" PreviewMouseLeftButtonUp="txtRecord_PreviewMouseButtonDown"></TextBox>
             <Label DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0,0,0">
                 <TextBlock FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center">"Record"</TextBlock>
             </Label>
@@ -262,7 +262,7 @@
                                                     <Image Source="/Resources/StopButton.png" Height="20" Width="20"/>
                                                 </StackPanel>
                                             </Button>
-                                            <userControls:RangeSlider x:Name="mediaPlaybackSlider" 
+                                            <userControls:MediaRangeSlider x:Name="mediaPlaybackSlider" 
                                                                   VerticalAlignment="Center" 
                                                                   Margin="5,0,0,0" 
                                                                   Width="200" 
@@ -271,7 +271,7 @@
                                                                   Minimum="{Binding FileTimeMin}" 
                                                                   UpperValue="{Binding FileTimeUpperValue, Mode=TwoWay}" 
                                                                   LowerValue="{Binding FileTimeLowerValue, Mode=TwoWay}"
-                                                                  PlaybackCursorValue="{Binding PlaybackCursorValue}" Foreground="White"></userControls:RangeSlider>
+                                                                  PlaybackCursorValue="{Binding PlaybackCursorValue}" Foreground="White"></userControls:MediaRangeSlider>
                                         </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

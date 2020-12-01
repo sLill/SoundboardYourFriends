@@ -1,10 +1,10 @@
-<UserControl x:Class="SoundboardYourFriends.View.UserControls.RangeSlider"
+<UserControl x:Class="SoundboardYourFriends.View.UserControls.MediaRangeSlider"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:SoundboardYourFriends.View.UserControls"
              xmlns:Converters="clr-namespace:SoundboardYourFriends.Core.Converters"
-             Name="rangeSlider">
+             Name="mediaRangeSlider">
     <UserControl.Resources>
         <!--Simple Slider-->
         <ControlTemplate x:Key="simpleSlider" TargetType="{x:Type Slider}">
@@ -89,30 +89,30 @@
                 Margin="5,0,5,0"/>
 
         <Slider Grid.Column="0" x:Name="PlaybackCursorSlider"
-                Minimum="{Binding Minimum, ElementName=rangeSlider}"
-                Maximum="{Binding Maximum, ElementName=rangeSlider}"
-                Value="{Binding PlaybackCursorValue, ElementName=rangeSlider}"
+                Minimum="{Binding Minimum, ElementName=mediaRangeSlider}"
+                Maximum="{Binding Maximum, ElementName=mediaRangeSlider}"
+                Value="{Binding PlaybackCursorValue, ElementName=mediaRangeSlider}"
                 Template="{StaticResource playbackCursorSlider}"
                 Margin="7,0,7,0"
                 VerticalAlignment="Center"/>
 
         <Slider Grid.Column="0" x:Name="LowerSlider"
-                Minimum="{Binding Minimum, ElementName=rangeSlider}"
-                Maximum="{Binding Maximum, ElementName=rangeSlider}"
-                Value="{Binding LowerValue, ElementName=rangeSlider, Mode=TwoWay}"
+                Minimum="{Binding Minimum, ElementName=mediaRangeSlider}"
+                Maximum="{Binding Maximum, ElementName=mediaRangeSlider}"
+                Value="{Binding LowerValue, ElementName=mediaRangeSlider, Mode=TwoWay}"
                 Template="{StaticResource simpleSlider}"
                 Margin="0,0,10,0"
                 VerticalAlignment="Center"/>
 
         <Slider Grid.Column="0" x:Name="UpperSlider"
-                Minimum="{Binding Minimum, ElementName=rangeSlider}"
-                Maximum="{Binding Maximum, ElementName=rangeSlider}"
-                Value="{Binding UpperValue, ElementName=rangeSlider, Mode=TwoWay}"
+                Minimum="{Binding Minimum, ElementName=mediaRangeSlider}"
+                Maximum="{Binding Maximum, ElementName=mediaRangeSlider}"
+                Value="{Binding UpperValue, ElementName=mediaRangeSlider, Mode=TwoWay}"
                 Template="{StaticResource simpleSlider}"
                 Margin="10,0,0,0"
                 VerticalAlignment="Center"/>
-        <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="5,0,0,0" Content="{Binding LowerValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}" Foreground="White"/>
+        <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="5,0,0,0" Content="{Binding LowerValue, ElementName=mediaRangeSlider, Converter={StaticResource IntegerConverter}}" Foreground="White"/>
         <Label Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0" Foreground="White">-</Label>
-        <Label Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0" Content="{Binding UpperValue, ElementName=rangeSlider, Converter={StaticResource IntegerConverter}}" Foreground="White"/>
+        <Label Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" FontSize="10" Padding="0,0,0,0" Content="{Binding UpperValue, ElementName=mediaRangeSlider, Converter={StaticResource IntegerConverter}}" Foreground="White"/>
     </Grid>
 </UserControl>
