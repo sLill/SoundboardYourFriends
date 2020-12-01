@@ -10,7 +10,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
-namespace SoundboardYourFriends
+namespace SoundboardYourFriends.Core.Config
 {
     public class ApplicationConfiguration
     {
@@ -98,6 +98,18 @@ namespace SoundboardYourFriends
             set { _soundboardSampleDirectory = value; }
         }
         #endregion SoundboardSampleDirectory
+
+        #region SoundboardSampleGroupExpansionStates
+        private Dictionary<string, bool> _soundboardSampleGroupExpansionStates;
+        public Dictionary<string, bool> SoundboardSampleGroupExpansionStates
+        {
+            get { return _soundboardSampleGroupExpansionStates; }
+            set
+            {
+                _soundboardSampleGroupExpansionStates = value;
+            }
+        }
+        #endregion SoundboardSampleGroupExpansions
 
         #region SoundboardSampleSeconds
         private int _soundboardSampleSeconds = 20;

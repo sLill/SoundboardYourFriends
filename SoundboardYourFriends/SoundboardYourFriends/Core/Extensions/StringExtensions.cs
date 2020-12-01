@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SoundboardYourFriends.Core
+namespace SoundboardYourFriends.Core.Extensions
 {
     public static class StringExtensions
     {

@@ -1,6 +1,7 @@
 ﻿using DSOFile;
 using NAudio.Wave;
 using SoundboardYourFriends.Core;
+using SoundboardYourFriends.Core.Config;
 using System;
 using System.IO;
 using System.Linq;

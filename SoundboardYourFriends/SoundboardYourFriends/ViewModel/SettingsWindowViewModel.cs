@@ -1,4 +1,5 @@
 ﻿using SoundboardYourFriends.Core;
+using SoundboardYourFriends.Core.Config;
 using SoundboardYourFriends.Core.Windows;
 
 namespace SoundboardYourFriends.ViewModel

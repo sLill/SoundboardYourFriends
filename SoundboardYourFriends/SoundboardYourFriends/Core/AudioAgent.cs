@@ -4,6 +4,7 @@ using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using SharpDX.DirectSound;
+using SoundboardYourFriends.Core.Config;
 using SoundboardYourFriends.Model;
 using System;
 using System.Collections.Generic;

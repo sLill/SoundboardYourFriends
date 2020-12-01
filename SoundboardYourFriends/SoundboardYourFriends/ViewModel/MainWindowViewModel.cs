@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using SoundboardYourFriends.Core;
+using SoundboardYourFriends.Core.Config;
 using SoundboardYourFriends.Core.Windows;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.View.Windows;
@@ -160,7 +161,7 @@ namespace SoundboardYourFriends.ViewModel
 
                 SoundboardSample NewSoundboardSample = new SoundboardSample(filePath)
                 {
-                    GroupName = "Ungrouped",
+                    GroupName = string.Empty,
                     FileTimeMax = totalSeconds,
                     FileTimeMin = 0,
                     FileTimeUpperValue = totalSeconds,
@@ -494,7 +495,7 @@ namespace SoundboardYourFriends.ViewModel
                 // File name
                 if (Path.GetFileNameWithoutExtension(soundboardSample.FilePath) != soundboardSample.Name)
                 {
-                    string targetDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, soundboardSample.GroupName);
+                    string targetDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, soundboardSample.GroupName == "Ungrouped" ? string.Empty : soundboardSample.GroupName);
                     string newFilePath = Path.Combine(targetDirectory, $"{soundboardSample.Name}.wav");
 
                     Directory.CreateDirectory(targetDirectory);

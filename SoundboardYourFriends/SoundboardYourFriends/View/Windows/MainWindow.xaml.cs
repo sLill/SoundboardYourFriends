@@ -1,4 +1,6 @@
 ﻿using SoundboardYourFriends.Core;
+using SoundboardYourFriends.Core.Config;
+using SoundboardYourFriends.Core.Extensions;
 using SoundboardYourFriends.Model;
 using SoundboardYourFriends.ViewModel;
 using System;
@@ -16,6 +18,7 @@ namespace SoundboardYourFriends.View.Windows
     public partial class MainWindow : Window
     {
         #region Member Variables..
+        private CollectionView _collectionView;
         List<SoundboardSample> _soundboardSamplesInFocus = new List<SoundboardSample>();
         #endregion Member Variables..
 
@@ -209,13 +212,15 @@ namespace SoundboardYourFriends.View.Windows
         }
         #endregion txtPlaybackHotkey_PreviewMouseLeftButtonDown
 
+        #region txtRecord_PreviewMouseButtonDown
         private void txtRecord_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
         {
             //this.KeyDown -= OnRegisterRecordKeyPressed;
             //this.KeyDown += OnRegisterRecordKeyPressed;
 
             //_mainWindowViewModel.RecordHotkeyDisplay = "Press any key..";
-        }
+        } 
+        #endregion txtRecord_PreviewMouseButtonDown
 
         #region Window_Loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -255,9 +260,9 @@ namespace SoundboardYourFriends.View.Windows
         {
             try
             {
-                CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
+                _collectionView = (CollectionView)CollectionViewSource.GetDefaultView(lstSoundboardSamples.ItemsSource);
                 PropertyGroupDescription groupDescription = new PropertyGroupDescription("GroupName");
-                collectionView.GroupDescriptions.Add(groupDescription);
+                _collectionView.GroupDescriptions.Add(groupDescription);
             }
             catch (Exception ex)
             {
@@ -265,6 +270,45 @@ namespace SoundboardYourFriends.View.Windows
             }
         }
         #endregion InitializeControls
+
         #endregion Methods..
+
+        private void soundboardSample_Drop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                var sourceSoundboardSample = e.Data.GetData(typeof(SoundboardSample)) as SoundboardSample;
+
+                if (sender is ListViewItem)
+                {
+                    if (e.Data.GetDataPresent(typeof(SoundboardSample)))
+                    {
+                        var dependencyObject = e.OriginalSource as DependencyObject;
+                        var targetListViewItem = dependencyObject.FindAnchestor<ListViewItem>();
+                        var targetSoundboardSample = (SoundboardSample)targetListViewItem.DataContext;
+
+                        // Switch groups if necessary
+                        sourceSoundboardSample.GroupName = targetSoundboardSample.GroupName;
+
+                        int sourceIndex = _mainWindowViewModel.SoundboardSampleCollection.IndexOf(sourceSoundboardSample);
+                        int targetIndex = _mainWindowViewModel.SoundboardSampleCollection.IndexOf(targetSoundboardSample);
+
+                        _mainWindowViewModel.SoundboardSampleCollection.Move(sourceIndex, targetIndex);
+                        _collectionView.Refresh();
+                    }
+                }
+            }
+            catch { }
+            finally
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void soundboardSample_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock draggedItem = sender as TextBlock;
+            DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+        }
     }
 }

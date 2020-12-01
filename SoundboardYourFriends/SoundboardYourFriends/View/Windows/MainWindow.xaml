@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
+        xmlns:config="clr-namespace:SoundboardYourFriends.Core.Config"
         xmlns:converters="clr-namespace:SoundboardYourFriends.Core.Converters"
         xmlns:userControls="clr-namespace:SoundboardYourFriends.View.UserControls"
         mc:Ignorable="d"
@@ -19,6 +20,7 @@
         <converters:GlobalPlaybackVisibilityConverter x:Key="GlobalPlaybackVisibilityConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
+        <converters:GroupExpansionConverter x:Key="GroupExpansionConverter"/>
 
         <!--Styles-->
         <Style x:Key="headerStyleHidden" TargetType="{x:Type GridViewColumnHeader}">
@@ -147,7 +149,7 @@
             <Label DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0,0,0">
                 <TextBlock FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center">"Record"</TextBlock>
             </Label>
-                <Button Name="btnRecordButton" Style="{StaticResource buttonRoundCorner}" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnRecord_PreviewMouseButtonDown">
+                <Button Name="btnRecord" Style="{StaticResource buttonRoundCorner}" Height="18" Width="18" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource controlBackcolor}" PreviewMouseLeftButtonUp="btnRecord_PreviewMouseButtonDown">
                     <Image Source="/Resources/RecordButton.png"/>
                 </Button>
         </DockPanel>
@@ -212,17 +214,20 @@
         <!--Row 5-->
         <DockPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
             <Border Margin="0,10,0,0" CornerRadius="5" BorderThickness="2" Padding="1" BorderBrush="#9c9c9c" >
-                <ListView Name="lstSoundboardSamples" Background="#717171" BorderThickness="0" ItemsSource="{Binding SoundboardSampleCollection}" SelectedItem="{Binding SelectedSoundboardSample}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick">
+                <ListView Name="lstSoundboardSamples" Background="#717171" BorderThickness="0" ItemsSource="{Binding SoundboardSampleCollection, Mode=TwoWay}" SelectedItem="{Binding SelectedSoundboardSample, Mode=TwoWay}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick"
+                          AllowDrop="True" Drop="soundboardSample_Drop">
 
                     <ListView.ItemContainerStyle>
                         <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="AllowDrop" Value="True"/>
+                            <EventSetter Event="Drop" Handler="soundboardSample_Drop"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="Transparent"/>
+                                    <!--<Setter Property="Foreground" Value="Transparent"/>-->
                                     <Setter Property="Background" Value="Transparent"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="Transparent"/>
+                                    <!--<Setter Property="Foreground" Value="Transparent"/>-->
                                     <Setter Property="Background" Value="Transparent"/>
                                 </Trigger>
                             </Style.Triggers>
@@ -232,11 +237,25 @@
                     <!--View-->
                     <ListView.View>
                         <GridView ColumnHeaderContainerStyle="{StaticResource headerStyleHidden}">
+                            
+                            <!--Drag & Drop Kabob-->
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Background="Transparent" Margin="-2,0,0,0" Width="15">
+                                            <TextBlock Text="&#8942;" Width="10" FontSize="16" FontWeight="SemiBold" Background="Transparent" HorizontalAlignment="Right"
+                                                       PreviewMouseLeftButtonDown="soundboardSample_PreviewMouseLeftButtonDown"/>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <!--Name-->
                             <GridViewColumn>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <DockPanel>
-                                            <TextBox Text="{Binding Name}" Foreground="White" BorderThickness="0" VerticalAlignment="Center" Background="Transparent"></TextBox>
+                                            <TextBox Text="{Binding Name}" Margin="-5,0,0,0" Foreground="White" BorderThickness="0" VerticalAlignment="Center" Background="Transparent"></TextBox>
                                         </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
