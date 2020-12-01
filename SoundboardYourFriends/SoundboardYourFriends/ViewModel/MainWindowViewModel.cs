@@ -331,7 +331,7 @@ namespace SoundboardYourFriends.ViewModel
                     var activeCaptureDevices = from activeDevice in activeWindowsAudioDevices
                                                join audioDeviceId in ApplicationConfiguration.Instance.AudioCaptureDevices.Select(x => x.DeviceId)
                                                 on activeDevice.DeviceId equals audioDeviceId
-                                               select new AudioCaptureDevice(activeDevice);
+                                               select new AudioCaptureDevice(activeDevice) { DeviceActive = true };
 
                     SelectedCaptureDevicesCollection = new ObservableCollection<AudioCaptureDevice>(activeCaptureDevices);
                 }
@@ -342,7 +342,7 @@ namespace SoundboardYourFriends.ViewModel
                     var activeOutputDevices = from activeDevice in activeWindowsAudioDevices
                                               join audioDeviceId in ApplicationConfiguration.Instance.AudioOutputDevices.Select(x => x.DeviceId)
                                                   on activeDevice.DeviceId equals audioDeviceId
-                                              select new AudioOutputDevice(activeDevice) { PlaybackScope = ApplicationConfiguration.Instance.AudioOutputDevices.First(x => x.DeviceId == activeDevice.DeviceId).PlaybackScope };
+                                              select new AudioOutputDevice(activeDevice) { DeviceActive = true, PlaybackScope = ApplicationConfiguration.Instance.AudioOutputDevices.First(x => x.DeviceId == activeDevice.DeviceId).PlaybackScope };
 
                     SelectedOutputDevicesCollection = new ObservableCollection<AudioOutputDevice>(activeOutputDevices);
                 }

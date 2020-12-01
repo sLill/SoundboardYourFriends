@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SoundboardYourFriends.View.Windows"
         xmlns:converters="clr-namespace:SoundboardYourFriends.Core.Converters"
         mc:Ignorable="d"
-        Title="Audio Output Devices" Height="300" Width="500"
+        Title="Audio Output Devices" Height="300" Width="550"
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
@@ -56,6 +56,22 @@
 
               <ListView.View>
                     <GridView x:Name="audioDeviceGrid">
+                        
+                        <GridViewColumn Width="60">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <DockPanel HorizontalAlignment="Right">
+                                        <TextBlock DockPanel.Dock="Right" Text="Enabled"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="cbEnabled" Margin="15,0,0,0" HorizontalAlignment="Stretch" IsChecked="{Binding DeviceActive}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
                         <GridViewColumn Header="Device" Width="auto" DisplayMemberBinding="{Binding FriendlyName}"/>
                         <GridViewColumn Width="60">
                             <GridViewColumn.HeaderTemplate>
@@ -87,21 +103,6 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-
-                      <GridViewColumn Width="60">
-                        <GridViewColumn.HeaderTemplate>
-                          <DataTemplate>
-                            <DockPanel HorizontalAlignment="Right">
-                              <TextBlock DockPanel.Dock="Right" Text="Enabled"/>
-                            </DockPanel>
-                          </DataTemplate>
-                        </GridViewColumn.HeaderTemplate>
-                        <GridViewColumn.CellTemplate>
-                          <DataTemplate>
-                            <CheckBox Name="cbEnabled" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding DeviceActive}"/>
-                          </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                      </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>

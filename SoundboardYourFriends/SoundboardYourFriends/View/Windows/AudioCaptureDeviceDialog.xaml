@@ -56,21 +56,22 @@
 
                 <ListView.View>
                     <GridView x:Name="audioDeviceGrid">
-                        <GridViewColumn Header="Device" Width="auto" DisplayMemberBinding="{Binding FriendlyName}"/>
                         <GridViewColumn Width="60">
-                        <GridViewColumn.HeaderTemplate>
-                          <DataTemplate>
-                            <DockPanel HorizontalAlignment="Right">
-                              <TextBlock DockPanel.Dock="Right" Text="Enabled"/>
-                            </DockPanel>
-                          </DataTemplate>
-                        </GridViewColumn.HeaderTemplate>
-                        <GridViewColumn.CellTemplate>
-                          <DataTemplate>
-                            <CheckBox Name="cbEnabled" Margin="0" HorizontalAlignment="Stretch" IsChecked="{Binding DeviceActive}"/>
-                          </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                      </GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <DockPanel HorizontalAlignment="Right">
+                                        <TextBlock DockPanel.Dock="Right" Text="Enabled"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="cbEnabled" Margin="15,0,0,0" HorizontalAlignment="Stretch" IsChecked="{Binding DeviceActive}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        
+                        <GridViewColumn Header="Device" Width="auto" DisplayMemberBinding="{Binding FriendlyName}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
