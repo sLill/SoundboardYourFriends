@@ -23,12 +23,12 @@ namespace SoundboardYourFriends.Model.JsonConverters
                 {
                     writer.WriteStartObject();
 
-                // Device Id
-                writer.WritePropertyName("DeviceId");
+                    // Device Id
+                    writer.WritePropertyName("DeviceId");
                     writer.WriteValue(device.DeviceId);
 
-                // Playback Scope
-                writer.WritePropertyName("PlaybackScope");
+                    // Playback Scope
+                    writer.WritePropertyName("PlaybackScope");
                     writer.WriteValue(device.PlaybackScope.ToString());
 
                     writer.WriteEndObject();
@@ -50,28 +50,25 @@ namespace SoundboardYourFriends.Model.JsonConverters
 
             try
             {
-                if (reader.TokenType != JsonToken.None)
+                while (reader.TokenType != JsonToken.EndArray && reader.TokenType != JsonToken.None)
                 {
-                    while (reader.TokenType != JsonToken.EndArray)
+                    if (reader.Value?.ToString() == "DeviceId")
                     {
-                        if (reader.Value?.ToString() == "DeviceId")
-                        {
-                            reader.Read();
+                        reader.Read();
 
-                            // DeviceId
-                            var deviceId = Guid.Parse((string)reader.Value);
-                            reader.Read();
+                        // DeviceId
+                        var deviceId = Guid.Parse((string)reader.Value);
+                        reader.Read();
 
-                            // PlaybackScope
-                            reader.Read();
-                            var playbackScope = (PlaybackScope)Enum.Parse(typeof(PlaybackScope), (string)reader.Value);
+                        // PlaybackScope
+                        reader.Read();
+                        var playbackScope = (PlaybackScope)Enum.Parse(typeof(PlaybackScope), (string)reader.Value);
 
-                            deviceCollection.Add(new AudioOutputDevice(deviceId) { PlaybackScope = playbackScope, DeviceActive = true });
-                        }
-                        else
-                        {
-                            reader.Read();
-                        }
+                        deviceCollection.Add(new AudioOutputDevice(deviceId) { PlaybackScope = playbackScope, DeviceActive = true });
+                    }
+                    else
+                    {
+                        reader.Read();
                     }
                 }
 

@@ -161,7 +161,7 @@ namespace SoundboardYourFriends.ViewModel
 
                 SoundboardSample NewSoundboardSample = new SoundboardSample(filePath)
                 {
-                    GroupName = string.Empty,
+                    GroupName = "Ungrouped",
                     FileTimeMax = totalSeconds,
                     FileTimeMin = 0,
                     FileTimeUpperValue = totalSeconds,
@@ -311,10 +311,9 @@ namespace SoundboardYourFriends.ViewModel
         #region Initialize
         public void Initialize()
         {
-            ApplicationConfiguration.Instance.ImportUserSettings();
-
             LoadAudioSamples();
             LoadConfig();
+
             BeginAudioCapture();
         }
         #endregion Initialize
@@ -415,7 +414,7 @@ namespace SoundboardYourFriends.ViewModel
 
                 outputDevices.ForEach(outputDevice =>
                 {
-                    AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, outputDevice, soundboardSample.Volume, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
+                    AudioAgent.BeginAudioPlayback(soundboardSample.FilePath, outputDevice, (float)soundboardSample.Volume / (float)100, soundboardSample.FileTimeLowerValue, soundboardSample.FileTimeUpperValue);
                 });
             }
             catch (Exception ex)
@@ -481,7 +480,7 @@ namespace SoundboardYourFriends.ViewModel
         {
             try
             {
-                // File length
+                // Trimming
                 if (soundboardSample.FileTimeUpperValue != soundboardSample.FileTimeMax || soundboardSample.FileTimeLowerValue != soundboardSample.FileTimeMin)
                 {
                     AudioAgent.TrimFile(soundboardSample.FilePath, soundboardSample.FileTimeLowerValue * 1000, soundboardSample.FileTimeUpperValue * 1000);

@@ -294,6 +294,8 @@ namespace SoundboardYourFriends.View.Windows
                         int targetIndex = _mainWindowViewModel.SoundboardSampleCollection.IndexOf(targetSoundboardSample);
 
                         _mainWindowViewModel.SoundboardSampleCollection.Move(sourceIndex, targetIndex);
+                        _mainWindowViewModel.SaveSample(sourceSoundboardSample);
+
                         _collectionView.Refresh();
                     }
                 }

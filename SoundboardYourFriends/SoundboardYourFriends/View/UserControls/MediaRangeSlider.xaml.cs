@@ -66,7 +66,7 @@ namespace SoundboardYourFriends.View.UserControls
 
         #region Event Handlers/Delegates..
         public delegate void OnPlaybackTimerElapsed();
-        #endregion Event Handlers..
+        #endregion Event Handlers/Delegates..
 
         #region Constructors..
         #region MediaRangeSlider

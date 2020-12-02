@@ -24,8 +24,8 @@ namespace SoundboardYourFriends.Model.JsonConverters
                 {
                     writer.WriteStartObject();
 
-                // Device Id
-                writer.WritePropertyName("DeviceId");
+                    // Device Id
+                    writer.WritePropertyName("DeviceId");
                     writer.WriteValue(device.DeviceId);
 
                     writer.WriteEndObject();
@@ -47,22 +47,19 @@ namespace SoundboardYourFriends.Model.JsonConverters
 
             try
             {
-                if (reader.TokenType != JsonToken.None)
+                while (reader.TokenType != JsonToken.EndArray && reader.TokenType != JsonToken.None)
                 {
-                    while (reader.TokenType != JsonToken.EndArray)
+                    if (reader.Value?.ToString() == "DeviceId")
                     {
-                        if (reader.Value?.ToString() == "DeviceId")
-                        {
-                            reader.Read();
+                        reader.Read();
 
-                            // DeviceId
-                            var deviceId = Guid.Parse((string)reader.Value);
-                            deviceCollection.Add(new AudioCaptureDevice(deviceId) { DeviceActive = true }); ;
-                        }
-                        else
-                        {
-                            reader.Read();
-                        }
+                        // DeviceId
+                        var deviceId = Guid.Parse((string)reader.Value);
+                        deviceCollection.Add(new AudioCaptureDevice(deviceId) { DeviceActive = true }); ;
+                    }
+                    else
+                    {
+                        reader.Read();
                     }
                 }
 

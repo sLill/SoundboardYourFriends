@@ -122,7 +122,7 @@ namespace SoundboardYourFriends.Model
         #endregion GroupName
 
         #region Hotkey
-        private Key _hotkey;
+        private Key _hotkey = Key.None;
         public Key Hotkey
         {
             get { return _hotkey; }
@@ -188,8 +188,8 @@ namespace SoundboardYourFriends.Model
         #endregion PlaybackCursorValue
 
         #region Volume
-        private float _volume = 1.0f;
-        public float Volume
+        private int _volume = 100;
+        public int Volume
         {
             get { return _volume; }
             set { _volume = value; }
@@ -237,10 +237,12 @@ namespace SoundboardYourFriends.Model
                 if (!FileCustomPropertyCollection.Any())
                 {
                     FileUniqueId = Guid.NewGuid();
+
                     documentProperties.CustomProperties.Add("SoundboardSample_FileUniqueIdentifier", FileUniqueId.ToString());
 
                     Hotkey = Key.None;
                     documentProperties.CustomProperties.Add("SoundboardSample_Hotkey", Hotkey.ToString());
+                    documentProperties.CustomProperties.Add("SoundboardSample_Volume", Volume.ToString());
 
                     documentProperties.Save();
                 }
@@ -248,6 +250,7 @@ namespace SoundboardYourFriends.Model
                 {
                     FileUniqueId = Guid.Parse((string)FileCustomPropertyCollection["SoundboardSample_FileUniqueIdentifier"].get_Value());
                     Enum.TryParse(typeof(Key), (string)FileCustomPropertyCollection["SoundboardSample_Hotkey"].get_Value(), out object hotkey);
+                    Volume = Convert.ToInt32(FileCustomPropertyCollection["SoundboardSample_Volume"].get_Value());
 
                     hotkey = hotkey ?? Key.None;
                     Hotkey = (Key)hotkey;
@@ -273,9 +276,24 @@ namespace SoundboardYourFriends.Model
                 var FileCustomPropertyCollection = documentProperties.CustomProperties.Cast<CustomProperty>()
                     .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x);
 
+                // Hotkey
                 if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_Hotkey"))
                 {
                     FileCustomPropertyCollection["SoundboardSample_Hotkey"].set_Value(Hotkey.ToString());
+                }
+                else
+                {
+                    documentProperties.CustomProperties.Add("SoundboardSample_Hotkey", Hotkey.ToString());
+                }
+
+                // Volume
+                if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_Volume"))
+                {
+                    FileCustomPropertyCollection["SoundboardSample_Volume"].set_Value(Volume.ToString());
+                }
+                else
+                {
+                    documentProperties.CustomProperties.Add("SoundboardSample_Volume", Volume.ToString());
                 }
 
                 documentProperties.Save();

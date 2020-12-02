@@ -12,10 +12,10 @@ using System.Windows.Input;
 
 namespace SoundboardYourFriends.Core.Config
 {
-    public class ApplicationConfiguration
+    public class ApplicationConfiguration : ObservableObject
     {
         #region Member Variables..
-        private string _localAppDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        private static string _localAppDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         private const string RECORD_HOTKEY = "RECORD_HOTKEY";
         private const string RECORD_HOTKEY_MODIFIER = "RECORD_HOTKEY_MODIFIER";   
@@ -25,9 +25,9 @@ namespace SoundboardYourFriends.Core.Config
         private const string AUDIO_CAPTURE_DEVICES = "AUDIO_CAPTURE_DEVICES";
         private const string AUDIO_OUTPUT_DEVICES = "AUDIO_OUTPUT_DEVICES";
 
-        private string ApplicationSettingsDirectory => Path.Combine(_localAppDataDirectory, "SoundboardYourFriends");
+        private static string ApplicationSettingsDirectory => Path.Combine(_localAppDataDirectory, "SoundboardYourFriends");
 
-        private string SettingsFilePath => Path.Combine(ApplicationSettingsDirectory, "settings.json");
+        private static string SettingsFilePath => Path.Combine(ApplicationSettingsDirectory, "settings.json");
         #endregion Member Variables..
 
         #region Properties..
@@ -50,21 +50,47 @@ namespace SoundboardYourFriends.Core.Config
         #endregion AudioOutputDevices
 
         #region Instance
-        private static ApplicationConfiguration _Instance;
+        private static ApplicationConfiguration _instance;
         [JsonIgnore]
         public static ApplicationConfiguration Instance
         {
             get 
             {
-                _Instance = _Instance ?? new ApplicationConfiguration();
-                return _Instance; 
+                _instance = _instance ?? LoadApplicationConfiguration();
+                return _instance; 
             }
-            private set { _Instance = value; }
+            private set { _instance = value; }
         }
         #endregion Instance
 
+        #region MainWindowHeight
+        private int _mainWindowHeight = 550;
+        public int MainWindowHeight
+        {
+            get { return _mainWindowHeight; }
+            set 
+            { 
+                _mainWindowHeight = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion MainWindowHeight
+
+        #region MainWindowWidth
+        private int _mainWindowWidth = 1050;
+        public int MainWindowWidth
+        {
+            get { return _mainWindowWidth; }
+            set 
+            {
+                _mainWindowWidth = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion MainWindowWidth
+
         #region RecordHotkey
-        private Key _recordHotkey = Key.None;
+        private Key _recordHotkey = Key.Up;
         public Key RecordHotkey
         {
             get { return _recordHotkey; }
@@ -73,7 +99,7 @@ namespace SoundboardYourFriends.Core.Config
         #endregion RecordHotkey
 
         #region RecordKeyModifer
-        private KeyModifier _recordKeyModifier = KeyModifier.None;
+        private KeyModifier _recordKeyModifier = KeyModifier.Ctrl;
         public KeyModifier RecordKeyModifer
         {
             get { return _recordKeyModifier; }
@@ -82,7 +108,7 @@ namespace SoundboardYourFriends.Core.Config
         #endregion RecordKeyModifer
 
         #region SampleKeyModifier
-        private KeyModifier _sampleKeyModifier = KeyModifier.None;
+        private KeyModifier _sampleKeyModifier = KeyModifier.Ctrl;
         public KeyModifier SampleKeyModifier
         {
             get { return _sampleKeyModifier; }
@@ -128,16 +154,18 @@ namespace SoundboardYourFriends.Core.Config
             // Save settings on application closing
             Application.Current.Exit += (sender, e) =>
             {
-                SaveUserSettings();
+                SaveApplicationConfiguration();
             };
         }
         #endregion ApplicationConfiguration
         #endregion Constructors..
 
         #region Methods..
-        #region ImportUserSettings
-        public void ImportUserSettings()
+        #region LoadApplicationConfiguration
+        public static ApplicationConfiguration LoadApplicationConfiguration()
         {
+            var applicationConfiguration = new ApplicationConfiguration();
+
             try
             {
                 if (File.Exists(SettingsFilePath))
@@ -146,19 +174,20 @@ namespace SoundboardYourFriends.Core.Config
                     jsonSerializerSettings.Converters.Add(new AudioOutputDeviceJsonConverter());
                     jsonSerializerSettings.Converters.Add(new AudioCaptureDeviceJsonConverter());
 
-                    var applicationConfigurationFromFile = JsonConvert.DeserializeObject<ApplicationConfiguration>(File.ReadAllText(SettingsFilePath), jsonSerializerSettings);
-                    ApplicationConfiguration.Instance = applicationConfigurationFromFile;
+                    applicationConfiguration = JsonConvert.DeserializeObject<ApplicationConfiguration>(File.ReadAllText(SettingsFilePath), jsonSerializerSettings);
                 }
             } 
             catch (Exception ex)
             {
                 ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
-        }
-        #endregion ImportUserSettings
 
-        #region SaveUserSettings
-        public void SaveUserSettings()
+            return applicationConfiguration;
+        }
+        #endregion LoadApplicationConfiguration
+
+        #region SaveApplicationConfiguration
+        public void SaveApplicationConfiguration()
         {
             try
             {
@@ -180,7 +209,7 @@ namespace SoundboardYourFriends.Core.Config
                 ApplicationLogger.Log(ex.Message, ex.StackTrace);
             }
         }
-        #endregion SaveUserSettings
+        #endregion SaveApplicationConfiguration
         #endregion Methods..
     }
 }

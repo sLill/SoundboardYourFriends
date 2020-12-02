@@ -130,4 +130,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="View\UserControls\VolumeRangeSlider.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
 </Project>
