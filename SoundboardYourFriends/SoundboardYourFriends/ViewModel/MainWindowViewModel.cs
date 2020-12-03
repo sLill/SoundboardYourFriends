@@ -237,6 +237,7 @@ namespace SoundboardYourFriends.ViewModel
             {
                 var soundboardSampleClone = soundboardSample.GetShallowCopy();
 
+                // Increment filename if one already exists with the same name
                 int sameNameIndex = 1;
                 while (File.Exists(Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, soundboardSampleClone.GroupName, $"{soundboardSampleClone.Name} Copy {sameNameIndex}.wav")))
                 {
