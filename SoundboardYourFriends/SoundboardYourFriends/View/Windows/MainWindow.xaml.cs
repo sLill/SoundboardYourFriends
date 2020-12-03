@@ -53,6 +53,14 @@ namespace SoundboardYourFriends.View.Windows
 
         #region Methods..
         #region Events..
+        #region ctxItemCreateDuplicate_PreviewMouseLeftButtonDown
+        private void ctxItemCreateDuplicate_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _mainWindowViewModel.CreateDuplicate(lstSoundboardSamples.SelectedItems.Cast<SoundboardSample>());
+            _collectionView.Refresh();
+        }
+        #endregion ctxItemCreateDuplicate_PreviewMouseLeftButtonDown
+
         #region ctxItemSendToNewGroup_PreviewMouseLeftButtonDown
         private void ctxItemSendToNewGroup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -353,7 +361,6 @@ namespace SoundboardYourFriends.View.Windows
             }
         }
         #endregion InitializeControls
-
         #endregion Methods..
     }
 }

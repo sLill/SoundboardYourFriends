@@ -230,29 +230,46 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion ClearAllSoundboardSampleHotkeys
 
+        #region CreateDuplicate
+        public void CreateDuplicate(IEnumerable<SoundboardSample> soundboardSamples)
+        {
+            foreach (var soundboardSample in soundboardSamples)
+            {
+                var soundboardSampleClone = soundboardSample.GetShallowCopy();
+
+                int sameNameIndex = 1;
+                while (File.Exists(Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, soundboardSampleClone.GroupName, $"{soundboardSampleClone.Name} Copy {sameNameIndex}.wav")))
+                {
+                    sameNameIndex++;
+                }
+
+                // Change the name and filepath
+                soundboardSampleClone.Name = $"{soundboardSampleClone.Name} Copy {sameNameIndex}";
+                soundboardSampleClone.FilePath = soundboardSampleClone.GetVirtualFilePath();
+
+                File.Copy(soundboardSample.FilePath, soundboardSampleClone.FilePath);
+                SaveSample(soundboardSampleClone);
+
+                SoundboardSampleCollection.Add(soundboardSampleClone);
+            }
+        }
+        #endregion CreateDuplicate
+
         #region CreateNewGroup
         public void CreateNewGroup(IEnumerable<SoundboardSample> soundboardSamples)
         {
             // Create new directory
-            string defaultGroupName = "New Group";
+            string defaultGroupName = "New Soundboard Sample Group";
             string proposedDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, defaultGroupName);
 
             // Increment directory name if one already exists with the same name
             int sameNameIndex = 1;
-            if (Directory.Exists(proposedDirectory))
+            while (Directory.Exists(Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, $"{defaultGroupName} {sameNameIndex}")))
             {
-                string sameNameDirectory = proposedDirectory;
-
-                while (Directory.Exists(sameNameDirectory))
-                {
-                    sameNameDirectory = $"{proposedDirectory} {sameNameIndex}";
-                    sameNameIndex++;
-                }
-
-                proposedDirectory = sameNameDirectory;
+                sameNameIndex++;
             }
 
-            Directory.CreateDirectory(proposedDirectory);
+            Directory.CreateDirectory(Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, $"{defaultGroupName} {sameNameIndex}"));
 
             // Change selected soundboard sample directories
             foreach (var soundboardSample in soundboardSamples)

@@ -219,8 +219,9 @@
 
                     <ListView.Resources>
                         <ContextMenu x:Key="SoundboardSampleContextMenu">
-                            <MenuItem Name="ctxItemSendToNewGroup" Header="Send To New Group" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SendToNewGroupCommand}" PreviewMouseLeftButtonDown="ctxItemSendToNewGroup_PreviewMouseLeftButtonDown"/>
-                            <MenuItem Name="ctxItemDelete" Header="Delete" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DeleteSoundboardSampleCommand}" PreviewMouseLeftButtonDown="ctxItemDelete_PreviewMouseLeftButtonDown" />
+                            <MenuItem Name="ctxItemSendToNewGroup" Header="Send To New Group" PreviewMouseLeftButtonDown="ctxItemSendToNewGroup_PreviewMouseLeftButtonDown"/>
+                            <MenuItem Name="ctxItemDelete" Header="Delete" PreviewMouseLeftButtonDown="ctxItemDelete_PreviewMouseLeftButtonDown" />
+                            <MenuItem Name="ctxItemCreateDuplicate" Header="Create Duplicate" PreviewMouseLeftButtonDown="ctxItemCreateDuplicate_PreviewMouseLeftButtonDown" />
                         </ContextMenu>
                     </ListView.Resources>
 

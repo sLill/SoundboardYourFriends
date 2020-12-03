@@ -222,6 +222,10 @@ namespace SoundboardYourFriends.Model
         #endregion OnPlaybackTimerElapsed
         #endregion Event Handlers..
 
+        #region GetShallowCopy
+        public SoundboardSample GetShallowCopy() => (SoundboardSample)this.MemberwiseClone();
+        #endregion GetShallowCopy
+
         #region GetCurrentFilePath
         public string GetVirtualFilePath()
             => Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, GroupName == "Ungrouped" ? string.Empty : GroupName, $"{Name}.wav");
