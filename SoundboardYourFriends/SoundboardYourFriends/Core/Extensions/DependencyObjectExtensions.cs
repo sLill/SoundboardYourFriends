@@ -26,6 +26,31 @@ namespace SoundboardYourFriends.Core.Extensions
             return null;
         }
         #endregion FindAnchestor
+     
+        #region GetChildrenOfType
+        public static List<T> GetChildrenOfType<T>(this DependencyObject dependencyObject) where T : DependencyObject
+        {
+            List<T> children = new List<T>();
+
+            if (dependencyObject != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(dependencyObject); i++)
+                {
+                    var child = VisualTreeHelper.GetChild(dependencyObject, i);
+
+                    if (child is T)
+                    {
+                        children.Add((T)child);
+                    }
+                        
+                    var grandChildren = child.GetChildrenOfType<T>();
+                    children.AddRange(grandChildren);
+                }
+            }
+
+            return children;
+        }
+        #endregion GetChildrenOfType
         #endregion Methods..
     }
 }

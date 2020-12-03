@@ -6,7 +6,7 @@ namespace SoundboardYourFriends.Core
     public class DelegateCommand : ICommand
     {
         #region Member Variables..
-        private SimpleEventHandler _handler;
+        private CommandEventHandler _handler;
         #endregion Member Variables..
 
         #region Properties..
@@ -26,13 +26,13 @@ namespace SoundboardYourFriends.Core
         #endregion Properties..
 
         #region Delegates/Events..
-        public delegate void SimpleEventHandler();
+        public delegate void CommandEventHandler(object commandParameter);
         public event EventHandler CanExecuteChanged;
         #endregion Delegates/Events..
 
         #region Constructors..
         #region DelegateCommand
-        public DelegateCommand(SimpleEventHandler handler)
+        public DelegateCommand(CommandEventHandler handler)
         {
             _handler = handler;
         } 
@@ -62,7 +62,7 @@ namespace SoundboardYourFriends.Core
         #region Execute
         void ICommand.Execute(object arg)
         {
-            _handler();
+            _handler(arg);
         }
         #endregion Execute
         #endregion Methods..

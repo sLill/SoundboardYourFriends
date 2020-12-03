@@ -5,6 +5,7 @@ using SoundboardYourFriends.Model;
 using SoundboardYourFriends.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -52,6 +53,88 @@ namespace SoundboardYourFriends.View.Windows
 
         #region Methods..
         #region Events..
+        #region ctxItemSendToNewGroup_PreviewMouseLeftButtonDown
+        private void ctxItemSendToNewGroup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _mainWindowViewModel.CreateNewGroup(lstSoundboardSamples.SelectedItems.Cast<SoundboardSample>());
+            _collectionView.Refresh();
+        } 
+        #endregion ctxItemSendToNewGroup_PreviewMouseLeftButtonDown
+
+        #region ctxItemDelete_PreviewMouseLeftButtonDown
+        private async void ctxItemDelete_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (MessageBox.Show(this, "Confirm Delete", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                var selectedItems = new List<SoundboardSample>(lstSoundboardSamples.SelectedItems.Cast<SoundboardSample>());
+                foreach (var soundboardSample in selectedItems)
+                {
+                    await _mainWindowViewModel.DeleteSampleAsync(soundboardSample);
+                }
+            };
+
+        }
+        #endregion ctxItemDelete_PreviewMouseLeftButtonDown
+
+        #region soundboardSample_Drop
+        private void soundboardSample_Drop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                var sourceSoundboardSample = e.Data.GetData(typeof(SoundboardSample)) as SoundboardSample;
+
+                if (sender is ListViewItem)
+                {
+                    if (e.Data.GetDataPresent(typeof(SoundboardSample)))
+                    {
+                        var dependencyObject = e.OriginalSource as DependencyObject;
+                        var targetListViewItem = dependencyObject.FindAnchestor<ListViewItem>();
+                        var targetSoundboardSample = (SoundboardSample)targetListViewItem.DataContext;
+
+                        // Switch groups if necessary
+                        sourceSoundboardSample.GroupName = targetSoundboardSample.GroupName;
+                        string newFilePath = sourceSoundboardSample.GetVirtualFilePath();
+
+                        File.Move(sourceSoundboardSample.FilePath, newFilePath);
+                        sourceSoundboardSample.FilePath = newFilePath;
+
+                        int sourceIndex = _mainWindowViewModel.SoundboardSampleCollection.IndexOf(sourceSoundboardSample);
+                        int targetIndex = _mainWindowViewModel.SoundboardSampleCollection.IndexOf(targetSoundboardSample);
+
+                        _mainWindowViewModel.SoundboardSampleCollection.Move(sourceIndex, targetIndex);
+                        _mainWindowViewModel.SaveSample(sourceSoundboardSample);
+
+                        _collectionView.Refresh();
+                    }
+                }
+
+                if (sender is GroupItem groupItem)
+                {
+                    sourceSoundboardSample.GroupName = groupItem.GetChildrenOfType<TextBlock>().FirstOrDefault().Text;
+                    string newFilePath = sourceSoundboardSample.GetVirtualFilePath();
+
+                    File.Move(sourceSoundboardSample.FilePath, newFilePath);
+                    sourceSoundboardSample.FilePath = newFilePath;
+
+                    _collectionView.Refresh();
+                }
+            }
+            catch { }
+            finally
+            {
+                e.Handled = true;
+            }
+        }
+        #endregion soundboardSample_Drop
+
+        #region soundboardSample_PreviewMouseLeftButtonDown
+        private void soundboardSample_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock draggedItem = sender as TextBlock;
+            DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+        } 
+        #endregion soundboardSample_PreviewMouseLeftButtonDown
+
         #region lstSoundboardSamples_MouseDoubleClick
         private void lstSoundboardSamples_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -272,45 +355,5 @@ namespace SoundboardYourFriends.View.Windows
         #endregion InitializeControls
 
         #endregion Methods..
-
-        private void soundboardSample_Drop(object sender, DragEventArgs e)
-        {
-            try
-            {
-                var sourceSoundboardSample = e.Data.GetData(typeof(SoundboardSample)) as SoundboardSample;
-
-                if (sender is ListViewItem)
-                {
-                    if (e.Data.GetDataPresent(typeof(SoundboardSample)))
-                    {
-                        var dependencyObject = e.OriginalSource as DependencyObject;
-                        var targetListViewItem = dependencyObject.FindAnchestor<ListViewItem>();
-                        var targetSoundboardSample = (SoundboardSample)targetListViewItem.DataContext;
-
-                        // Switch groups if necessary
-                        sourceSoundboardSample.GroupName = targetSoundboardSample.GroupName;
-
-                        int sourceIndex = _mainWindowViewModel.SoundboardSampleCollection.IndexOf(sourceSoundboardSample);
-                        int targetIndex = _mainWindowViewModel.SoundboardSampleCollection.IndexOf(targetSoundboardSample);
-
-                        _mainWindowViewModel.SoundboardSampleCollection.Move(sourceIndex, targetIndex);
-                        _mainWindowViewModel.SaveSample(sourceSoundboardSample);
-
-                        _collectionView.Refresh();
-                    }
-                }
-            }
-            catch { }
-            finally
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void soundboardSample_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            TextBlock draggedItem = sender as TextBlock;
-            DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
-        }
     }
 }

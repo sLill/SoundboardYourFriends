@@ -217,23 +217,29 @@
                 <ListView Name="lstSoundboardSamples" Background="#717171" BorderThickness="0" ItemsSource="{Binding SoundboardSampleCollection, Mode=TwoWay}" SelectedItem="{Binding SelectedSoundboardSample, Mode=TwoWay}" MouseDoubleClick="lstSoundboardSamples_MouseDoubleClick"
                           AllowDrop="True" Drop="soundboardSample_Drop">
 
-                    <ListView.ContextMenu>
-                        <ContextMenu>
-                            <!--<MenuItem Header="Remove" Command="{Binding DeleteItem}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />-->
+                    <ListView.Resources>
+                        <ContextMenu x:Key="SoundboardSampleContextMenu">
+                            <MenuItem Name="ctxItemSendToNewGroup" Header="Send To New Group" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SendToNewGroupCommand}" PreviewMouseLeftButtonDown="ctxItemSendToNewGroup_PreviewMouseLeftButtonDown"/>
+                            <MenuItem Name="ctxItemDelete" Header="Delete" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DeleteSoundboardSampleCommand}" PreviewMouseLeftButtonDown="ctxItemDelete_PreviewMouseLeftButtonDown" />
                         </ContextMenu>
-                    </ListView.ContextMenu>
+                    </ListView.Resources>
+
+                    <!--<ListView.ContextMenu>
+                        <ContextMenu>
+                        </ContextMenu>
+                    </ListView.ContextMenu>-->
                     
                     <ListView.ItemContainerStyle>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Setter Property="AllowDrop" Value="True"/>
+                            <Setter Property="ContextMenu" Value="{StaticResource SoundboardSampleContextMenu}"/>
                             <EventSetter Event="Drop" Handler="soundboardSample_Drop"/>
+                            
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <!--<Setter Property="Foreground" Value="Transparent"/>-->
                                     <Setter Property="Background" Value="Transparent"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <!--<Setter Property="Foreground" Value="Transparent"/>-->
                                     <Setter Property="Background" Value="Transparent"/>
                                 </Trigger>
                             </Style.Triggers>
@@ -360,6 +366,8 @@
                         <GroupStyle>
                             <GroupStyle.ContainerStyle>
                                 <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="AllowDrop" Value="True"/>
+                                    <EventSetter Event="Drop" Handler="soundboardSample_Drop"/>
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate>

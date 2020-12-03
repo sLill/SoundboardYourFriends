@@ -222,6 +222,11 @@ namespace SoundboardYourFriends.Model
         #endregion OnPlaybackTimerElapsed
         #endregion Event Handlers..
 
+        #region GetCurrentFilePath
+        public string GetVirtualFilePath()
+            => Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, GroupName == "Ungrouped" ? string.Empty : GroupName, $"{Name}.wav");
+        #endregion GetCurrentFilePath
+
         #region InitializePropertiesFromMetaData
         private void InitializePropertiesFromMetaData()
         {

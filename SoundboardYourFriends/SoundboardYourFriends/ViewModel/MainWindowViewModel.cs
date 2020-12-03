@@ -230,6 +230,42 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion ClearAllSoundboardSampleHotkeys
 
+        #region CreateNewGroup
+        public void CreateNewGroup(IEnumerable<SoundboardSample> soundboardSamples)
+        {
+            // Create new directory
+            string defaultGroupName = "New Group";
+            string proposedDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, defaultGroupName);
+
+            // Increment directory name if one already exists with the same name
+            int sameNameIndex = 1;
+            if (Directory.Exists(proposedDirectory))
+            {
+                string sameNameDirectory = proposedDirectory;
+
+                while (Directory.Exists(sameNameDirectory))
+                {
+                    sameNameDirectory = $"{proposedDirectory} {sameNameIndex}";
+                    sameNameIndex++;
+                }
+
+                proposedDirectory = sameNameDirectory;
+            }
+
+            Directory.CreateDirectory(proposedDirectory);
+
+            // Change selected soundboard sample directories
+            foreach (var soundboardSample in soundboardSamples)
+            {
+                string newFilePath = Path.Combine(proposedDirectory, $"{soundboardSample.Name}.wav");
+                soundboardSample.GroupName = $"{defaultGroupName} {sameNameIndex}";
+
+                File.Move(soundboardSample.FilePath, newFilePath);
+                soundboardSample.FilePath = newFilePath;
+            }
+        }
+        #endregion CreateNewGroup
+
         #region DeleteSampleAsync
         public async Task DeleteSampleAsync(SoundboardSample soundboardSample)
         {
@@ -495,7 +531,7 @@ namespace SoundboardYourFriends.ViewModel
                 if (Path.GetFileNameWithoutExtension(soundboardSample.FilePath) != soundboardSample.Name)
                 {
                     string targetDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, soundboardSample.GroupName == "Ungrouped" ? string.Empty : soundboardSample.GroupName);
-                    string newFilePath = Path.Combine(targetDirectory, $"{soundboardSample.Name}.wav");
+                    string newFilePath = soundboardSample.GetVirtualFilePath();
 
                     Directory.CreateDirectory(targetDirectory);
                     File.Move(soundboardSample.FilePath, newFilePath);
