@@ -1,8 +1,5 @@
 ﻿using SoundboardYourFriends.Core;
-using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using System.Windows;
 
 namespace SoundboardYourFriends
@@ -12,11 +9,7 @@ namespace SoundboardYourFriends
     /// </summary>
     public partial class App : Application
     {
-        private bool IsDebug = Debugger.IsAttached;
-
-        public App()
-        {
-        }
+        public App() { }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
@@ -32,7 +25,7 @@ namespace SoundboardYourFriends
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            ApplicationLogger.Log("Application Closing");
+            ApplicationLogger.Log("Application closing");
         }
     }
 }

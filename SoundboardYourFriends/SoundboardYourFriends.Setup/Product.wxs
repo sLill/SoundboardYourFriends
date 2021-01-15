@@ -3,8 +3,16 @@
   <Product Id="*" Name="SoundboardYourFriends" Language="1033" Version="1.0.0.0" Manufacturer="sLill" UpgradeCode="cb925a61-ff0e-4de0-ab2a-f774bf6d658b">
     <Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine"/>
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-    <MediaTemplate EmbedCab="yes" />
+    <MajorUpgrade Schedule="afterInstallInitialize" AllowDowngrades="yes"/>
+    <Media Id="1" Cabinet="SoundboardYourFriends.cab" EmbedCab="yes"/>
+
+    <?if $(var.Platform) = x64 ?>
+    <?define Win64 = "yes" ?>
+    <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+    <?else ?>
+    <?define Win64 = "no" ?>
+    <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+    <?endif ?>
 
     <!--Features-->
     <Feature Id="ProductFeature" Title="SoundboardYourFriends.Setup" Level="1" Description="Install SoundboardYourFriends">
@@ -20,8 +28,8 @@
     <UIRef Id="WixUI_InstallDir"/>
 
     <!--Application Icon-->
-    <Icon Id="AppIcon" SourceFile="$(var.SolutionDir)SoundboardYourFriends/SoundboardYourFriendsIcon.ico"/>
-    <Property Id="ARPPRODUCTION" Value="AppIcon"/>
+    <Icon Id="icon.ico" SourceFile="$(var.SolutionDir)SoundboardYourFriends/Resources/SoundboardYourFriendsIcon.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico"/>
 
     <!--Custom Actions-->
     <Binary Id ="CustomActions" src="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.CA.dll"/>
@@ -40,38 +48,41 @@
 
   <!--Directories-->
   <Fragment>
-    <Directory Id="TARGETDIR" Name="SourceDir">
-
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)" />
+      <Directory Id="TARGETDIR" Name="SourceDir">
+        
+        <!--Program Files-->
+        <Directory Id="$(var.PlatformProgramFilesFolder)">
+          <Directory Id="INSTALLFOLDER" Name="SoundboardYourFriends" />
+        </Directory>
+        
+        <!--Start Menu-->
+        <Directory Id="ProgramMenuFolder">
+          <Directory Id="ApplicationProgramsFolder" Name="SoundboardYourFriends"/>
+        </Directory>
+        
+        <!--Desktop-->
+        <Directory Id="DesktopFolder" Name="Desktop"/>
+        
       </Directory>
-
-      <Directory Id="ProgramMenuFolder">
-        <Directory Id="ApplicationProgramsFolder" Name="SoundboardYourFriends"/>
-      </Directory>
-
-      <Directory Id="DesktopFolder" Name="Desktop"/>
-
-    </Directory>
   </Fragment>
 
   <!--SoundboardYourFriends Components-->
   <Fragment>
-    <ComponentGroup Id="SoundboardYourFriendsComponents">
+    <ComponentGroup Id="SoundboardYourFriendsComponents" Directory="INSTALLFOLDER">
 
       <!--Executable-->
-      <Component Id="ApplicationExecutable" Guid="C4EC9BB0-BE19-40AE-BF76-7FD0582A924D" Directory="INSTALLFOLDER">
-        <File Id="SoundboardYourFriends.exe" Source="$(var.SolutionDir)SoundboardYourFriends\bin\Release\publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
+      <Component Id="ApplicationExecutable" Guid="C4EC9BB0-BE19-40AE-BF76-7FD0582A924D">
+        <File Id="SoundboardYourFriends.exe" Source="$(var.SoundboardYourFriends.TargetDir)publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
       </Component>
 
       <!--Updater-->
-      <!--<Component Id="ApplicationUpdater" Guid="3390180B-885A-4BCC-ACB3-1825BBFB8EEE" Directory="INSTALLFOLDER">
+      <!--<Component Id="ApplicationUpdater" Guid="3390180B-885A-4BCC-ACB3-1825BBFB8EEE">
         <File Id="update.exe" Source="$(var.SolutionDir)SoundboardYourFriends.Update\bin\Release\netcoreapp3.1\publish\update.exe" Vital="yes" KeyPath="yes"/>
       </Component>-->
 
       <!--README-->
-      <Component Id="ApplicationReadMe" Guid="42569300-872E-40FF-9561-E199CD2EE44D" Directory="INSTALLFOLDER">
-        <File Id="README" Name="ReadMe.txt" Source="$(var.SolutionDir)..\README.MD" Vital="yes" KeyPath="yes"/>
+      <Component Id="ApplicationReadMe" Guid="42569300-872E-40FF-9561-E199CD2EE44D">
+        <File Id="README" Name="ReadMe.txt" Source="$(var.SolutionDir)..\README.MD" Vital="no" KeyPath="yes"/>
       </Component>
     </ComponentGroup>
   </Fragment>
@@ -103,7 +114,6 @@
 
       <RemoveFolder Id="RemoveApplicationProgramsFolder" Directory="ApplicationProgramsFolder" On="uninstall" />
     </Component>
-    <!--Icon="icon.ico"-->
   </Fragment>
 
 </Wix>

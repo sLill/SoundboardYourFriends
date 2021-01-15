@@ -10,6 +10,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <PackageIcon>SoundboardYourFriendsIcon.ico</PackageIcon>
     <RepositoryUrl>https://github.com/sLill/SoundboardYourFriends</RepositoryUrl>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -117,10 +118,6 @@
     <PackageReference Include="SharpDX.DirectSound" Version="4.2.0" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SoundboardYourFriends.Update\SoundboardYourFriends.Update.csproj" />
   </ItemGroup>
 
   <ItemGroup>
