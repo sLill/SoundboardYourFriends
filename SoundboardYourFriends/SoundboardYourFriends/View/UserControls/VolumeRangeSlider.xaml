@@ -56,7 +56,7 @@
 
         <Slider Grid.Column="0" x:Name="VolumeSlider"
                 Minimum="0"
-                Maximum="100"
+                Maximum="200"
                 Value="{Binding VolumeValue, ElementName=volumeRangeSlider, Mode=TwoWay}"
                 Template="{StaticResource simpleSlider}"
                 Margin="0,0,0,0"

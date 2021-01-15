@@ -72,7 +72,7 @@ namespace SoundboardYourFriends.View.Windows
         #region ctxItemDelete_PreviewMouseLeftButtonDown
         private async void ctxItemDelete_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (MessageBox.Show(this, "Confirm Delete", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show(this, "Delete Sample?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 var selectedItems = new List<SoundboardSample>(lstSoundboardSamples.SelectedItems.Cast<SoundboardSample>());
                 foreach (var soundboardSample in selectedItems)
@@ -185,7 +185,7 @@ namespace SoundboardYourFriends.View.Windows
         {
             var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
 
-            if (MessageBox.Show(this, "Confirm Delete", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show(this, "Delete Sample?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 await _mainWindowViewModel.DeleteSampleAsync(soundboardSample);
             };
@@ -247,7 +247,7 @@ namespace SoundboardYourFriends.View.Windows
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             var soundboardSample = (SoundboardSample)(((Button)sender).DataContext);
-            if (MessageBox.Show(this, "Confirm Save", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show(this, "Save Sample?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 _mainWindowViewModel.SaveSample(soundboardSample);
             };
@@ -299,7 +299,7 @@ namespace SoundboardYourFriends.View.Windows
             this.KeyDown -= OnRegisterSoundboardSampleKeyPressed;
             this.KeyDown += OnRegisterSoundboardSampleKeyPressed;
 
-            soundboardSample.HotkeyDisplay = "Press any key..";
+            soundboardSample.HotkeyDisplay = "__";
         }
         #endregion txtPlaybackHotkey_PreviewMouseLeftButtonDown
 
