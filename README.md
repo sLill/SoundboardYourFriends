@@ -25,8 +25,7 @@ The blue playback button <img src="https://i.imgur.com/MXLZi1N.png" width="18"/>
 	- Select properties and check the 'Listen to this device' box
 	- Under the 'Playback through this device' dropdown, select the VBCABLE device 
 	- <b>Right-click the VBCABLE output device</b>
-	- Select Properties
-	- Go to the Advanced tab and set the quality to match your microphone quality (typically 1 Channel 44800/44100)
+	- Select Properties, go to the Advanced tab and set the quality to match your microphone quality (typically 1 Channel 44800/44100)
 5. Set VBCABLE as the input device in Steam/Discord etc.
 
 <i>* For developers: To add the DSOFile reference, run DSOFile/DSOFile_Install.bat as Administrator and then add the COM reference "DSO OLE Document Properties Reader 2.1"</i>
