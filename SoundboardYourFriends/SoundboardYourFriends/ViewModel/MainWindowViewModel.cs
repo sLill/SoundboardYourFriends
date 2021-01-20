@@ -261,7 +261,6 @@ namespace SoundboardYourFriends.ViewModel
         {
             // Create new directory
             string defaultGroupName = "New Soundboard Sample Group";
-            string proposedDirectory = Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, defaultGroupName);
 
             // Increment directory name if one already exists with the same name
             int sameNameIndex = 1;
@@ -270,7 +269,8 @@ namespace SoundboardYourFriends.ViewModel
                 sameNameIndex++;
             }
 
-            Directory.CreateDirectory(Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, $"{defaultGroupName} {sameNameIndex}"));
+            string proposedDirectory = $"{Path.Combine(ApplicationConfiguration.Instance.SoundboardSampleDirectory, defaultGroupName)} {sameNameIndex}";
+            Directory.CreateDirectory(proposedDirectory);
 
             // Change selected soundboard sample directories
             foreach (var soundboardSample in soundboardSamples)
