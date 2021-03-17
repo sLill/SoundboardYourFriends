@@ -1,4 +1,4 @@
-# SoundboardYourFriends
+# SoundboardYourFriends <img src="https://i.imgur.com/8FQAhfR.png" width="32"/> 
 <i>Don't ever never not miss what your friends say again</i>
 
 SoundboardYourFriends continuously stores the last 20 seconds of user audio into a audio buffer in memory. When the Record hotkey <img src="https://i.imgur.com/clb0yUN.png" width="18"/> is pressed, all audio within the buffer is written to a replayable audio file. <br/>
