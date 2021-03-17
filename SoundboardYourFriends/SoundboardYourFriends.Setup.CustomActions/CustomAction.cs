@@ -16,22 +16,20 @@ namespace SoundboardYourFriends.Setup.CustomActions
         {
             session.Log("Begin InstallVBCable");
 
+            string setupDirectory = session.CustomActionData["SetupDirectory"];
+            string vbCableSetupPath = Path.Combine(setupDirectory, "VBCABLE_Setup_x64.exe");
+
             try
             {
-                string solutionDirectory = session.CustomActionData["SolutionDirectory"];
-                string VBCableSetupPath = Path.Combine(Regex.Replace(solutionDirectory,
-                    @"SoundboardYourFriends\\SoundboardYourFriends",
-                    @"SoundboardYourFriends\\VBCable\\VBCABLE_Setup_x64.exe"));
+                var vbCableProcess = new Process();
+                vbCableProcess.StartInfo.UseShellExecute = true;
+                vbCableProcess.StartInfo.FileName = vbCableSetupPath;
+                vbCableProcess.StartInfo.Verb = "runas";
 
-                var VBCableProcess = new Process();
-                VBCableProcess.StartInfo.UseShellExecute = true;
-                VBCableProcess.StartInfo.FileName = VBCableSetupPath;
-                VBCableProcess.StartInfo.Verb = "runas";
+                vbCableProcess.Start();
+                vbCableProcess.WaitForExit();
 
-                VBCableProcess.Start();
-                VBCableProcess.WaitForExit();
-
-                session.Log($"CustomAction InstallVBCable completed successfully - ExitCode({VBCableProcess.ExitCode})");
+                session.Log($"CustomAction InstallVBCable completed successfully - ExitCode({vbCableProcess.ExitCode})");
             }
             catch (Exception ex)
             {
@@ -47,15 +45,13 @@ namespace SoundboardYourFriends.Setup.CustomActions
             session.Log("Begin RegisterDSOFileDll");
             var actionResult = ActionResult.Success;
 
+            string setupDirectory = session.CustomActionData["SetupDirectory"];
+            string dsoFileSetupPath = Path.Combine(setupDirectory, "DSOFile_Install.bat");
+
             try
             {
-                string solutionDirectory = session.CustomActionData["SolutionDirectory"];
-                string DSOFileSetupPath = Path.Combine(Regex.Replace(solutionDirectory,
-                    @"SoundboardYourFriends\\SoundboardYourFriends",
-                    @"SoundboardYourFriends\\DSOFile\\DSOFile_Install.bat"));
-
                 var registerDSOFileProcess = new Process();
-                registerDSOFileProcess.StartInfo.FileName = DSOFileSetupPath;
+                registerDSOFileProcess.StartInfo.FileName = dsoFileSetupPath;
                 registerDSOFileProcess.StartInfo.Verb = "runas";
                 registerDSOFileProcess.StartInfo.CreateNoWindow = true;
                 registerDSOFileProcess.StartInfo.UseShellExecute = true;

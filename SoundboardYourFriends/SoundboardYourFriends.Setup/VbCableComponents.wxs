@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  
+  <?define VbCableSourceDir = "$(var.SolutionDir)..\VBCable\"?>
+
+    <Fragment>
+      <ComponentGroup Id="VbCableComponents" Directory="VbCableSetupFolder">
+            <Component Id="cmp08E618C29B4AC23E1C925911C479028B" Guid="01b09745-2b72-4105-a7c9-a14e5ef94331">
+                <File Id="filB4E8887391398C4A354E3D97D6535A94" KeyPath="yes" Source="$(var.VbCableSourceDir)pin_out.ico" />
+            </Component>
+      
+            <Component Id="cmp0AB23170BA6692CE005274DDA9DECE09" Guid="ca13758a-aa95-475a-a44d-0de2a934ad6d">
+                <File Id="fil3F92C91CF9343F40B40CF378CBFFAF1C" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable64_vista.cat" />
+            </Component>
+
+            <Component Id="cmp151DF47F445CDFEA6B09D1B3897B8CAA" Guid="a19ef81e-6808-45ab-8f66-bfc39dff50c9">
+                <File Id="fil0B613B255885417761D17AA9BA024436" KeyPath="yes" Source="$(var.VbCableSourceDir)vbMmeCable64_vista.inf" />
+            </Component>
+
+            <Component Id="cmp156CF5EFFCDDF3CC3BEF9E44266DA3CA" Guid="9a7db729-750b-42c0-b76d-32b2d5fd425b">
+                <File Id="filEE06426D89E84314F703A7B33C514AFC" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable_win7.sys" />
+            </Component>
+
+            <Component Id="cmp16C75345DA9EB366DFE3664E1BA64365" Guid="97e24e82-a9b5-4746-b690-a0cd3e69857f">
+                <File Id="filC044F0F81AF7137F0C4782687BBD6671" KeyPath="yes" Source="$(var.VbCableSourceDir)vbMmeCable64_win7.inf" />
+            </Component>
+
+            <Component Id="cmp21AD503A4A2C2FE28D0301BBDDF313B8" Guid="137f635d-07bb-4f1c-82cf-0f5c6d927c37">
+                <File Id="fil02F5559E734496A0923AA687228AD179" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable_2003.cat" />
+            </Component>
+
+            <Component Id="cmp308C35FD37C8418FCB5FAA3540703780" Guid="43a8ef4a-4396-49ea-85fc-aadb837a7413">
+                <File Id="fil50CFDB3E3D97260DCF4AF335D973FA47" KeyPath="yes" Source="$(var.VbCableSourceDir)pin_in.ico" />
+            </Component>
+
+            <Component Id="cmp4003B1F88336BC3D1E31E3A2129E1366" Guid="b6347df1-60cc-4db1-bd47-d941d3c32e77">
+                <File Id="filB85E67B06645FC1F537A30BDB020E66B" KeyPath="yes" Source="$(var.VbCableSourceDir)VBCABLE_Setup.exe" />
+            </Component>
+
+            <Component Id="cmp4DC85D2AC3F9969DF31E30C4A71D3361" Guid="2cab4cce-e81f-4dc1-941c-967fb0fd3d0d">
+                <File Id="fil0729CACB6774704FC7C7ECC66AB234D2" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable_xp.cat" />
+            </Component>
+
+            <Component Id="cmp4F1CA6B822F9A1249888DE9E62A49F57" Guid="3ed80184-1b8e-4af8-9c59-3fe105d7342b">
+                <File Id="fil4746897E56877400FBF875D6BEA2D9DB" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable64_2003.sys" />
+            </Component>
+
+            <Component Id="cmp5411DFCED21765CC743B8F2AA95A04EE" Guid="f4c6ffc2-8be3-4b23-a0c7-1b1fecf18a96">
+                <File Id="fil67841BDBC9A1F6FD55D0E4AE5F23D545" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable64_win7.sys" />
+            </Component>
+
+            <Component Id="cmp5587B79C7F09DAD22744F23EF2F873CF" Guid="ce46e0a0-6bfa-44fa-a131-78797f84322a">
+                <File Id="fil6FF3F1E5F74C09D1CBE855CB557F014E" KeyPath="yes" Source="$(var.VbCableSourceDir)vbMmeCable_vista.inf" />
+            </Component>
+
+            <Component Id="cmp5C1E2221C5F6D0EB9D691B6D790B7F48" Guid="22be1fd8-2869-4254-b033-f08d7eefecd3">
+                <File Id="fil469523FA2C90DA6B54A7766C608124FF" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable_vista.sys" />
+            </Component>
+
+            <Component Id="cmp64DF1E541A2D18E841902DD570E461A3" Guid="437e27e2-0fdd-4c30-83b6-88470de18b27">
+                <File Id="fil23122509F77CD7CA4A40D4A79836C80B" KeyPath="yes" Source="$(var.VbCableSourceDir)vbMmeCable_win7.inf" />
+            </Component>
+
+            <Component Id="cmp657368BD7E431F6F6E76E2BFB31334B4" Guid="2374622d-f611-4c6d-84e0-fa0f657ee0c2">
+                <File Id="fil0DE9EA3E759B72599E50DC2CF4D7824B" KeyPath="yes" Source="$(var.VbCableSourceDir)VBCABLE_ControlPanel.exe" />
+            </Component>
+
+            <Component Id="cmp718E79C2730E1382AA7B83C2F887B7A9" Guid="f60f330a-00a2-4366-b791-8ba4be711d8c">
+                <File Id="fil57A3E40FDD3AFFFA3E8EE7D8C507E9F2" KeyPath="yes" Source="$(var.VbCableSourceDir)vbMmeCable_xp.inf" />
+            </Component>
+
+            <Component Id="cmp7EAB3F53770BA5D39303A008FBE15DDB" Guid="be1bc7a0-8dbc-4857-b75c-78cb12cbad66">
+                <File Id="fil4735D0093580DB6CBF2D5A44FB5DAF98" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable_2003.sys" />
+            </Component>
+
+            <Component Id="cmp8099C88AECD8E367DCE87DE1CCBDCB5E" Guid="bb8986eb-7ed4-4a15-a44d-1d4f17756def">
+                <File Id="fil205503DA4399D0CE82BD667F430E0D13" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable64_2003.cat" />
+            </Component>
+
+            <Component Id="cmp87B0407E31EF4E9290130DB07E86C544" Guid="e5b800b9-3cdc-41e3-b4a1-0f3d3b3e6eff">
+                <File Id="fil3986556022E4D64137D028523D96EDF9" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable_vista.cat" />
+            </Component>
+
+            <Component Id="cmp9B00B1B0BD1556FECE388BC9E8CD9BA4" Guid="eeee6df2-2c88-47a0-8be4-912a61ce1782">
+                <File Id="filBBE397DFDCCC7842B878B3A956290167" KeyPath="yes" Source="$(var.VbCableSourceDir)vbMmeCable_2003.inf" />
+            </Component>
+
+            <Component Id="cmp9C7528CB5163BB03AA6DC1DACDCBD006" Guid="75c816c3-6b81-4ac7-8e5c-e00db2ad7fcb">
+                <File Id="fil680F87606D9BD16FBF4F224E34BE0D90" KeyPath="yes" Source="$(var.VbCableSourceDir)readme.txt" />
+            </Component>
+
+            <Component Id="cmpAFC4223DC701627F5D103BF9939AA64C" Guid="1324ad53-2e1b-4fd3-ae4a-06e4ebb98e2c">
+                <File Id="fil2333F8F9B17A45DBADB7ACA732853044" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable64_win7.cat" />
+            </Component>
+
+            <Component Id="cmpC50DAB1F67EB6EAC279AC4B8810AB94E" Guid="82c851b0-5bdb-424e-979f-9c5911768eaf">
+                <File Id="fil78EFC323181599A5786866470611CD51" KeyPath="yes" Source="$(var.VbCableSourceDir)VBCABLE_Setup_x64.exe" />
+            </Component>
+
+            <Component Id="cmpD32E9E208968AF5EFCE575D36CF9E88B" Guid="012b4672-dbbb-4653-a830-c569a3ae7398">
+                <File Id="fil150EE83236F57CACAC1A35D47484AB3A" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable_xp.sys" />
+            </Component>
+
+            <Component Id="cmpDAF6C61143C8D35E1F2F0F8B47FF7FA1" Guid="8b5986af-7b88-4891-b677-58614f7c3943">
+                <File Id="fil806E2D00F8C42A265A3F639F0C638B9C" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable64_vista.sys" />
+            </Component>
+
+            <Component Id="cmpE25AA082792BC4D3EF1FFFC3BF5A5735" Guid="a7b7d3f9-e002-4cf2-b485-58dcae8f2421">
+                <File Id="fil7485D274377160590D95D3B1C40BD9CE" KeyPath="yes" Source="$(var.VbCableSourceDir)vbMmeCable64_2003.inf" />
+            </Component>
+
+            <Component Id="cmpFE8C8E3ADD59A506B29515EA9E072AE5" Guid="f12a408d-e700-4447-9d6b-f6dcd881d586">
+                <File Id="filADD8FA9214AFF6246D012D21CEB28EFA" KeyPath="yes" Source="$(var.VbCableSourceDir)vbaudio_cable_win7.cat" />
+            </Component>
+      </ComponentGroup>
+    </Fragment>
+</Wix>

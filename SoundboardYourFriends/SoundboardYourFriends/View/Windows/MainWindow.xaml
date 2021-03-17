@@ -8,7 +8,9 @@
         xmlns:converters="clr-namespace:SoundboardYourFriends.Core.Converters"
         xmlns:userControls="clr-namespace:SoundboardYourFriends.View.UserControls"
         mc:Ignorable="d"
-        Title="Soundboard Your Friends" Height="{Binding Source={x:Static config:ApplicationConfiguration.Instance}, Path=MainWindowHeight, Mode=TwoWay}" Width="{Binding Source={x:Static config:ApplicationConfiguration.Instance}, Path=MainWindowWidth, Mode=TwoWay}" 
+        Title="Soundboard Your Friends" 
+        Height="{Binding Source={x:Static config:ApplicationConfiguration.Instance}, Path=MainWindowHeight, Mode=TwoWay}" 
+        Width="{Binding Source={x:Static config:ApplicationConfiguration.Instance}, Path=MainWindowWidth, Mode=TwoWay}" 
         Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>

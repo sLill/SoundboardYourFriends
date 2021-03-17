@@ -14,9 +14,16 @@
     <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
     <?endif ?>
 
+    <CustomAction Id="PatchInstall" Property="REINSTALL" Value="ALL" />
+    <InstallExecuteSequence>
+      <Custom Action="PatchInstall" Before="InstallInitialize">PATCH</Custom>
+    </InstallExecuteSequence>
+
     <!--Features-->
     <Feature Id="ProductFeature" Title="SoundboardYourFriends.Setup" Level="1" Description="Install SoundboardYourFriends">
       <ComponentGroupRef Id="SoundboardYourFriendsComponents" />
+      <ComponentGroupRef Id="DsoFileComponents" />
+      <ComponentGroupRef Id="VbCableComponents" />
       <ComponentRef Id="DesktopShortcut"/>
     </Feature>
 
@@ -33,14 +40,14 @@
 
     <!--Custom Actions-->
     <Binary Id ="CustomActions" src="$(var.SoundboardYourFriends.Setup.CustomActions.TargetDir)\SoundboardYourFriends.Setup.CustomActions.CA.dll"/>
-    <CustomAction Id="RegisterDSOFileDllAction1" Property="RegisterDSOFileDllAction2" Value="SolutionDirectory=$(var.SolutionDir)"/>
+    <CustomAction Id="RegisterDSOFileDllAction1" Property="RegisterDSOFileDllAction2" Value="SetupDirectory=[DsoFileSetupFolder]"/>
     <CustomAction Id="RegisterDSOFileDllAction2" Impersonate="no" Return="check" Execute="deferred" BinaryKey="CustomActions" DllEntry="RegisterDSOFileDll" HideTarget="no"/>
-    <CustomAction Id="InstallVBCableAction1" Property="InstallVBCableAction2" Value="SolutionDirectory=$(var.SolutionDir)"/>
+    <CustomAction Id="InstallVBCableAction1" Property="InstallVBCableAction2" Value="SetupDirectory=[VbCableSetupFolder]"/>
     <CustomAction Id="InstallVBCableAction2" Impersonate="no" Return="check" Execute="deferred" BinaryKey="CustomActions" DllEntry="InstallVBCable" HideTarget="no"/>
 
     <InstallExecuteSequence>
       <Custom Action='RegisterDSOFileDllAction1' Before='RegisterDSOFileDllAction2'>NOT Installed AND NOT REMOVE</Custom>
-      <Custom Action='RegisterDSOFileDllAction2' Before='InstallFiles'>NOT Installed AND NOT REMOVE</Custom>
+      <Custom Action='RegisterDSOFileDllAction2' After='InstallFiles'>NOT Installed AND NOT REMOVE</Custom>
       <Custom Action='InstallVBCableAction1' Before='InstallVBCableAction2'>NOT Installed AND NOT REMOVE</Custom>
       <Custom Action='InstallVBCableAction2' After='InstallFiles'>NOT Installed AND NOT REMOVE</Custom>
     </InstallExecuteSequence>
@@ -50,11 +57,14 @@
   <Fragment>
       <Directory Id="TARGETDIR" Name="SourceDir">
         
-        <!--Program Files-->
+        <!--Program Files -->
         <Directory Id="$(var.PlatformProgramFilesFolder)">
-          <Directory Id="INSTALLFOLDER" Name="SoundboardYourFriends" />
+          <Directory Id="INSTALLFOLDER" Name="SoundboardYourFriends" >
+            <Directory Id="VbCableSetupFolder" Name="VbCable" />
+            <Directory  Id="DsoFileSetupFolder"  Name="DsoFile" />
+          </Directory>
         </Directory>
-        
+
         <!--Start Menu-->
         <Directory Id="ProgramMenuFolder">
           <Directory Id="ApplicationProgramsFolder" Name="SoundboardYourFriends"/>
@@ -69,16 +79,11 @@
   <!--SoundboardYourFriends Components-->
   <Fragment>
     <ComponentGroup Id="SoundboardYourFriendsComponents" Directory="INSTALLFOLDER">
-
+      
       <!--Executable-->
       <Component Id="ApplicationExecutable" Guid="C4EC9BB0-BE19-40AE-BF76-7FD0582A924D">
         <File Id="SoundboardYourFriends.exe" Source="$(var.SoundboardYourFriends.TargetDir)publish\SoundboardYourFriends.exe" Vital="yes" KeyPath="yes"/>
       </Component>
-
-      <!--Updater-->
-      <!--<Component Id="ApplicationUpdater" Guid="3390180B-885A-4BCC-ACB3-1825BBFB8EEE">
-        <File Id="update.exe" Source="$(var.SolutionDir)SoundboardYourFriends.Update\bin\Release\netcoreapp3.1\publish\update.exe" Vital="yes" KeyPath="yes"/>
-      </Component>-->
 
       <!--README-->
       <Component Id="ApplicationReadMe" Guid="42569300-872E-40FF-9561-E199CD2EE44D">

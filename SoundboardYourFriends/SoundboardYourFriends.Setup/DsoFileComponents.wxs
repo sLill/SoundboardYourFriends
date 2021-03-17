@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  
+  <?define DsoFileSourceDir = "$(var.SolutionDir)..\DSOFile\"?>
+  
+  <Fragment>
+    <ComponentGroup Id="DsoFileComponents" Directory="DsoFileSetupFolder">
+      <Component Id="cmp122F907FC9D5BB08AD62001DBE0ED203" Guid="67e934be-be68-41a7-af6c-787d2c2369e8">
+        <File Id="filAFEB4A0C59574E50A99FF0838680109B" KeyPath="yes" Source="$(var.DsoFileSourceDir)dsofile_x64.dll" />
+      </Component>
+      <Component Id="cmp9C558C8149DF2EC06DA835973499859C" Guid="3f3abc8a-63c2-4c04-bdc5-e6550154ee1b">
+        <File Id="filB0C15202C3F70CE5FC0B8DADBA61D6E5" KeyPath="yes" Source="$(var.DsoFileSourceDir)DSOFile_Install.bat" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
