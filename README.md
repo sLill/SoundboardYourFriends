@@ -3,11 +3,7 @@
 
 SoundboardYourFriends continuously stores the last 20 seconds of user audio into a audio buffer in memory. When the Record hotkey <img src="https://i.imgur.com/clb0yUN.png" width="18"/> is pressed, all audio within the buffer is written to a replayable audio file. <br/>
 
-Buffer size, file locations, hotkey modifiers and more can be changed in the application settings <img src="https://i.imgur.com/xFbGoPV.png" width="18"/>
-
-The gray playback button <img src="https://i.imgur.com/MNAFpTI.png" width="18"/> indicates playback to local <b>Output Devices</b> to allow for playback/editing that other users cannot hear. (Only applies to output devices that were selected with the Local property checked)
-
-The blue playback button <img src="https://i.imgur.com/MXLZi1N.png" width="18"/> indicates global playback to all <b>Output Devices</b>
+<b>* Simply put, this application can record, edit, playback or redirect any and all desktop audio. Its' use-cases extend beyond just being a meme machine. That just happens to be what it was originally built for</b>
 
 <h2>TO INSTALL</h2>
 
@@ -27,5 +23,13 @@ The blue playback button <img src="https://i.imgur.com/MXLZi1N.png" width="18"/>
 	- <b>Right-click the VBCABLE output device</b>
 	- Select Properties, go to the Advanced tab and set the quality to match your microphone quality (typically 1 Channel 44800/44100)
 5. Set VBCABLE as the input device in Steam/Discord etc.
+
+<h2>USAGE</h2>
+
+Buffer size, file locations, hotkey modifiers and more can be changed in the application settings <img src="https://i.imgur.com/xFbGoPV.png" width="18"/>
+
+The gray playback button <img src="https://i.imgur.com/MNAFpTI.png" width="18"/> indicates playback to local <b>Output Devices</b> to allow for playback/editing that other users cannot hear. (Only applies to output devices that were selected with the Local property checked)
+
+The blue playback button <img src="https://i.imgur.com/MXLZi1N.png" width="18"/> indicates global playback to all <b>Output Devices</b>
 
 <i>* For developers: To add the DSOFile reference, run DSOFile/DSOFile_Install.bat as Administrator and then add the COM reference "DSO OLE Document Properties Reader 2.1"</i>
