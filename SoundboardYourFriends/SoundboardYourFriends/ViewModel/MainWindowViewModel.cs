@@ -540,7 +540,7 @@ namespace SoundboardYourFriends.ViewModel
                     AudioAgent.TrimFile(soundboardSample.FilePath, soundboardSample.FileTimeLowerValue * 1000, soundboardSample.FileTimeUpperValue * 1000);
 
                     soundboardSample.FileTimeMin = 0;
-                    soundboardSample.FileTimeMax = AudioAgent.GetFileAudioDuration(soundboardSample.FilePath).Seconds;
+                    soundboardSample.FileTimeMax = AudioAgent.GetFileAudioDuration(soundboardSample.FilePath).TotalSeconds;
                     soundboardSample.FileTimeLowerValue = 0;
                     soundboardSample.FileTimeUpperValue = soundboardSample.FileTimeMax;
                 }
