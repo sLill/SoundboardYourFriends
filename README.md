@@ -1,7 +1,7 @@
 # SoundboardYourFriends <img src="https://i.imgur.com/8FQAhfR.png" width="32"/> 
 <i>Don't ever never not miss what your friends say again</i>
 
-This application can record, edit, playback or redirect any and all desktop audio. SoundboardYourFriends continuously stores the last 20 seconds of user audio into a audio buffer in memory. When the Record hotkey <img src="https://i.imgur.com/clb0yUN.png" width="18"/> is pressed, all audio within the buffer is saved to a wav audio file. <br/>
+This application can record, edit, playback or redirect any and all desktop audio. SoundboardYourFriends continuously stores the last 20 seconds of user audio into a audio buffer in memory. When the Record hotkey <img src="https://i.imgur.com/clb0yUN.png" width="18"/> is pressed, all audio within the buffer is saved to a replayable wav audio file. <br/>
 
 <h2>TO INSTALL</h2>
 
