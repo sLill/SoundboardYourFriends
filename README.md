@@ -10,7 +10,7 @@ This application can record, edit, playback or redirect any and all desktop audi
 
 <h2>AFTER INSTALL</h2>
 
-1. Restart your computer (not always necessary) and open <b>Sound Settings</b> &#8594; <b>Sound Control Panel</b>
+1. Restart your computer and open <b>Sound Settings</b> &#8594; <b>Sound Control Panel</b>
 3. On the Playback tab
 	- Right-click the VBCABLE Input device and select Properties
 	- Go to the Advanced tab and set the quality to match your headphone quality
