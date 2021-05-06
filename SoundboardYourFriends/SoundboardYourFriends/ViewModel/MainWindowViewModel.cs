@@ -478,6 +478,30 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion PlayAudioSample
 
+        #region RefreshSoundboardSampleCollection
+        public void RefreshSoundboardSampleCollection()
+        {
+            // Unbind shortcuts
+            SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
+            {
+                UnregisterSoundboardSampleHotKey(soundboardSample.HotkeyId);
+            });
+
+            SoundboardSampleCollection.Clear();
+
+            LoadAudioSamples();
+
+            // Rebind shortcuts
+            SoundboardSampleCollection.ToList().ForEach(soundboardSample =>
+            {
+                if (soundboardSample.Hotkey != Key.None)
+                {
+                    RegisterSoundboardSampleHotKey(soundboardSample.Hotkey, soundboardSample.HotkeyId);
+                }
+            });
+        }
+        #endregion RefreshSoundboardSampleCollection
+
         #region RegisterHotKeysAndHooks
         public void RegisterHotKeysAndHooks()
         {
