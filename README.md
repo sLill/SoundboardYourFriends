@@ -3,6 +3,8 @@
 
 SoundboardYourFriends records, edits and plays back sound from any desktop audio source. Simply press the Record hotkey <img src="https://i.imgur.com/clb0yUN.png" width="18"/> to save the last 30-180 seconds of dekstop audio as a replayable wav audio file that can then be edited and played back within the application. <br/> 
 
+<img src="https://i.imgur.com/NJMIcPk.png" width="500"/>
+
 <h2>TO INSTALL</h2>
 
 1. Visit the release tab (https://github.com/sLill/SoundboardYourFriends/releases)
