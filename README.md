@@ -28,8 +28,8 @@ SoundboardYourFriends records, edits and plays back sound from any desktop audio
 
 Buffer size, file locations, hotkey modifiers and more can be changed in the application settings <img src="https://i.imgur.com/xFbGoPV.png" width="18"/>
 
-The gray playback button <img src="https://i.imgur.com/MNAFpTI.png" width="18"/> indicates playback to <b>LOCAL</b> Output Devices to allow for playback/editing that other users cannot hear. (Only applies to output devices that were selected with the Local property checked)
+The gray playback button <img src="https://i.imgur.com/MNAFpTI.png" width="18"/> indicates playback to all <b>LOCAL</b> Output Devices- allowing for playback/editing that other users cannot . (Only applies to output devices that were selected with the 'Local' property checked)
 
-The blue playback button <img src="https://i.imgur.com/MXLZi1N.png" width="18"/> indicates <b>GLOBAL</b> playback to all Output Devices
+The blue playback button <img src="https://i.imgur.com/MXLZi1N.png" width="18"/> indicates playback to all <b>GLOBAL</b> Output Devices
 
 <i>* For developers: To add the DSOFile reference, run DSOFile/DSOFile_Install.bat as Administrator and then add the COM reference "DSO OLE Document Properties Reader 2.1"</i>
