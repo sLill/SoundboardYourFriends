@@ -258,11 +258,10 @@ namespace SoundboardYourFriends.Model
                 else
                 {
                     FileUniqueId = Guid.Parse((string)FileCustomPropertyCollection["SoundboardSample_FileUniqueIdentifier"].get_Value());
-                    Enum.TryParse(typeof(Key), (string)FileCustomPropertyCollection["SoundboardSample_Hotkey"].get_Value(), out object hotkey);
                     Volume = Convert.ToInt32(FileCustomPropertyCollection["SoundboardSample_Volume"].get_Value());
 
-                    hotkey = hotkey ?? Key.None;
-                    Hotkey = (Key)hotkey;
+                    var hotkeyValue = FileCustomPropertyCollection["SoundboardSample_Hotkey"].get_Value();
+                    Hotkey = hotkeyValue == null ? Key.None : (Key)hotkeyValue;
                 }
 
                 documentProperties.Close();
@@ -285,14 +284,24 @@ namespace SoundboardYourFriends.Model
                 var FileCustomPropertyCollection = documentProperties.CustomProperties.Cast<CustomProperty>()
                     .Where(property => property.Name.Contains("SoundboardSample")).ToDictionary(x => x.Name, x => x);
 
-                // Hotkey
-                if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_Hotkey"))
+                // File Unique Id
+                if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_FileUniqueIdentifier"))
                 {
-                    FileCustomPropertyCollection["SoundboardSample_Hotkey"].set_Value(Hotkey.ToString());
+                    FileCustomPropertyCollection["SoundboardSample_FileUniqueIdentifier"].set_Value(FileUniqueId.ToString());
                 }
                 else
                 {
-                    documentProperties.CustomProperties.Add("SoundboardSample_Hotkey", Hotkey.ToString());
+                    documentProperties.CustomProperties.Add("SoundboardSample_FileUniqueIdentifier", FileUniqueId.ToString());
+                }
+
+                // Hotkey
+                if (FileCustomPropertyCollection.ContainsKey("SoundboardSample_Hotkey"))
+                {
+                    FileCustomPropertyCollection["SoundboardSample_Hotkey"].set_Value((int)Hotkey);
+                }
+                else
+                {
+                    documentProperties.CustomProperties.Add("SoundboardSample_Hotkey", (int)Hotkey);
                 }
 
                 // Volume
