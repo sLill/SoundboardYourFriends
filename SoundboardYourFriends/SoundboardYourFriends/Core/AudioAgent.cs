@@ -44,15 +44,25 @@ namespace SoundboardYourFriends.Core
             try
             {
                 AudioFileReader audioFileReader = new AudioFileReader(filePath);
-                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
 
-                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(audioFileReader) { Volume = volume };
+                // Configure mixer
+                MixingSampleProvider mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(audioFileReader.WaveFormat.SampleRate, 2));
+
+                // Force audio to stereo 2-channel
+                MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { audioFileReader.ToWaveProvider() }, audioFileReader.WaveFormat.Channels > 1 ? 2 : 1);
+                
+                // Apply volume preferences
+                VolumeSampleProvider volumeSampleProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = volume };
+                
+                // Force sample rate
                 ISampleProvider convertedSampleProvider = ConvertToMixerSampleRate(mixer, ConvertToMixerChannelCount(mixer, volumeSampleProvider));
 
+                // Seek
                 OffsetSampleProvider offsetSampleProvider = new OffsetSampleProvider(convertedSampleProvider);
                 offsetSampleProvider.SkipOver = TimeSpan.FromSeconds(beginTime);
                 offsetSampleProvider.Take = TimeSpan.FromSeconds(endTime) - offsetSampleProvider.SkipOver;
 
+                // Configure mixer
                 mixer.AddMixerInput(offsetSampleProvider);
 
                 audioOutputDevice.InitializeAndPlay(mixer);
