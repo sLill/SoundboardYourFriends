@@ -26,6 +26,7 @@
             <RowDefinition Height="26"/>
             <RowDefinition Height="26"/>
             <RowDefinition Height="26"/>
+            <RowDefinition Height="26"/>
             <RowDefinition Height="22"/>
             <RowDefinition Height="26*"/>
             <RowDefinition Height="8"/>
@@ -49,12 +50,8 @@
         </DockPanel>
 
         <!--Row 2-->
-        <DockPanel Grid.Row="2" Grid.Column="1">
-            <Label HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Audio Quality"/>
-            </Label>
-        </DockPanel>
-        
+        <DockPanel Grid.Row="2" Grid.Column="1"/>
+
         <!--Row 3-->
         <DockPanel Grid.Row="3" Grid.Column="1">
             <Label HorizontalAlignment="Right" VerticalAlignment="Center">
@@ -76,32 +73,36 @@
         </DockPanel>
 
         <!--Row 5-->
-        <DockPanel Grid.Row="5" Grid.Column="1">
-            <Label HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Sample Size (Seconds)"/>
-            </Label>
-        </DockPanel>
-        <DockPanel Grid.Row="5" Grid.Column="2" Margin="5,0,0,0">
-            <TextBox FontSize="11" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding SoundboardSampleSeconds}"/>
-        </DockPanel>
+        <DockPanel Grid.Row="5" Grid.Column="1"/>
 
         <!--Row 6-->
         <DockPanel Grid.Row="6" Grid.Column="1">
             <Label HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Sample Rate"/>
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Sample Size"/>
             </Label>
         </DockPanel>
         <DockPanel Grid.Row="6" Grid.Column="2" Margin="5,0,0,0">
-            <TextBox FontSize="11" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding RecordingSampleRate}" ToolTip="-1 for device default. Otherwise, typical sample rates normally range 10000-48100. Lower sample rate = lower file size"/>
-            <TextBlock Margin="6,0,0,0" FontSize="11" VerticalAlignment="Center" Text="hz"/>
+            <TextBox FontSize="11" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding SoundboardSampleSeconds}"/>
+            <TextBlock Margin="6,0,0,0" FontSize="11" VerticalAlignment="Center" Text="Seconds "/>
         </DockPanel>
 
         <!--Row 7-->
-        <DockPanel Grid.Row="7" Grid.Column="2" Margin="0,-5,0,0">
+        <DockPanel Grid.Row="7" Grid.Column="1">
+            <Label HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock FontSize="11" VerticalAlignment="Center" Text="Sample Rate"/>
+            </Label>
+        </DockPanel>
+        <DockPanel Grid.Row="7" Grid.Column="2" Margin="5,0,0,0">
+            <TextBox FontSize="11" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding RecordingSampleRate}" ToolTip="-1 for device default. Otherwise, typical sample rates normally range 10000-48100. Lower sample rate = lower file size"/>
+            <TextBlock Margin="6,0,0,0" FontSize="11" VerticalAlignment="Center" Text="Hz"/>
         </DockPanel>
 
         <!--Row 8-->
-        <DockPanel Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2">
+        <DockPanel Grid.Row="8" Grid.Column="2" Margin="0,-5,0,0">
+        </DockPanel>
+
+        <!--Row 9-->
+        <DockPanel Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2">
             <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnCancel" Width="60" Height="20" Content="Cancel" Margin="0,0,0,0" Click="btnCancel_Click"/>
             <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" HorizontalAlignment="Right" Name="btnSave" Width="80" Height="20" Content="Save" Margin="0,0,4,0" Click="btnSave_Click"/>
         </DockPanel>
