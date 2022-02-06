@@ -145,6 +145,15 @@ namespace SoundboardYourFriends.Core.Config
             set { _soundboardSampleSeconds = value; }
         }
         #endregion SoundboardSampleSeconds
+
+        #region RecordingSampleRate
+        private int _recordingSampleRate;
+        public int RecordingSampleRate
+        {
+            get { return _recordingSampleRate; }
+            set { _recordingSampleRate = value; }
+        }
+        #endregion RecordingSampleRate
         #endregion Properties..
 
         #region Constructors..

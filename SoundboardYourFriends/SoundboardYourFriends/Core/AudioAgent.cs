@@ -305,6 +305,20 @@ namespace SoundboardYourFriends.Core
                     }
 
                     _audioByteBuffer.Clear();
+
+                    // Resample if necessary
+                    if (ApplicationConfiguration.Instance.RecordingSampleRate != -1)
+                    {
+                        using (var audioFileReader = new AudioFileReader(fileNameFull))
+                        using (var mediaFoundationResampler = new MediaFoundationResampler(audioFileReader, ApplicationConfiguration.Instance.RecordingSampleRate))
+                        {
+                            WaveFileWriter.CreateWaveFile($"{fileNameFull}.BAK", mediaFoundationResampler);
+                        }
+
+                        File.Delete(fileNameFull);
+                        File.Move($"{fileNameFull}.BAK", fileNameFull);
+                    }
+
                     AudioAgent.FileWritten?.Invoke(fileNameFull, EventArgs.Empty);
                 }
             }

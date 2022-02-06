@@ -49,18 +49,18 @@ namespace SoundboardYourFriends.ViewModel
         }
         #endregion SoundboardSampleDirectory
 
-        #region ByteSampleSize
-        private int _byteSampleSize;
-        public int ByteSampleSize
+        #region RecordingSampleRate
+        private int _recordingSampleRate = -1;
+        public int RecordingSampleRate
         {
-            get { return _byteSampleSize; }
-            set
+            get { return _recordingSampleRate; }
+            set 
             {
-                _byteSampleSize = value;
+                _recordingSampleRate = value;
                 RaisePropertyChanged();
             }
         }
-        #endregion ByteSampleSize
+        #endregion RecordingSampleRate
 
         #region SoundboardSampleSeconds
         private int _soundboardSampleSeconds;
@@ -93,6 +93,7 @@ namespace SoundboardYourFriends.ViewModel
             SampleKeyModifier = ApplicationConfiguration.Instance.SampleKeyModifier;
             SoundboardSampleDirectory = ApplicationConfiguration.Instance.SoundboardSampleDirectory;
             SoundboardSampleSeconds = ApplicationConfiguration.Instance.SoundboardSampleSeconds;
+            RecordingSampleRate = ApplicationConfiguration.Instance.RecordingSampleRate;
         }
         #endregion LoadApplicationSettings
 
@@ -103,6 +104,7 @@ namespace SoundboardYourFriends.ViewModel
             ApplicationConfiguration.Instance.SampleKeyModifier = SampleKeyModifier;
             ApplicationConfiguration.Instance.SoundboardSampleDirectory = SoundboardSampleDirectory;
             ApplicationConfiguration.Instance.SoundboardSampleSeconds = SoundboardSampleSeconds;
+            ApplicationConfiguration.Instance.RecordingSampleRate = RecordingSampleRate;
         }
         #endregion Save
         #endregion Methods..
